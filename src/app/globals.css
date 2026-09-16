@@ -3,24 +3,73 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand palette */
+  --kynta-teal: #1a5c57;
+  --kynta-teal-dark: #0f3d39;
+  --kynta-teal-light: #237a73;
+  --kynta-gold: #c67f3b;
+  --kynta-gold-light: #d4944f;
+  --kynta-cream: #f8f5f0;
+  --kynta-charcoal: #2c2c2c;
+  --kynta-warm-gray: #6b6b6b;
+  --kynta-border: #e0dbd4;
+  --kynta-topbar-bg: #f5f2ed;
+  --kynta-rust: #b0603a;
+  --kynta-section-bg: #f7f9f7;
+  --kynta-card-green: #f3f6f3;
+  --kynta-badge-green: #e8f0e8;
+  --kynta-pillars-bg: #f0f3f1;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-kynta-teal: var(--kynta-teal);
+  --color-kynta-teal-dark: var(--kynta-teal-dark);
+  --color-kynta-teal-light: var(--kynta-teal-light);
+  --color-kynta-gold: var(--kynta-gold);
+  --color-kynta-gold-light: var(--kynta-gold-light);
+  --color-kynta-cream: var(--kynta-cream);
+  --color-kynta-charcoal: var(--kynta-charcoal);
+  --color-kynta-warm-gray: var(--kynta-warm-gray);
+  --color-kynta-border: var(--kynta-border);
+  --color-kynta-topbar-bg: var(--kynta-topbar-bg);
+  --color-kynta-rust: var(--kynta-rust);
+  --color-kynta-section-bg: var(--kynta-section-bg);
+  --color-kynta-card-green: var(--kynta-card-green);
+  --color-kynta-badge-green: var(--kynta-badge-green);
+  --color-kynta-pillars-bg: var(--kynta-pillars-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-playfair);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Shared container */
+.container-site {
+  width: 100%;
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (min-width: 768px) {
+  .container-site {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-site {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
 }

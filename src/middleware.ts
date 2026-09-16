@@ -13,6 +13,13 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // Redirect /studio to /studio/structure so the Structure tool loads
+  if (pathname === "/studio") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/studio/structure";
+    return NextResponse.redirect(url);
+  }
+
   // Redirect unauthenticated users away from protected routes
   if (!user && protectedRoutes.some((route) => pathname.startsWith(route))) {
     const url = request.nextUrl.clone();
