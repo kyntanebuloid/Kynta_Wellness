@@ -221,6 +221,7 @@ export interface ExperiencesPage {
     description?: string;
     cards?: {
       title: string;
+      slug?: string;
       description: string;
       duration?: string;
       sensoryNote?: string;
@@ -605,3 +606,51 @@ export interface Faq {
   category?: string;
   order?: number;
 }
+
+export interface Experience {
+  _id: string;
+  _type: "experience";
+  title: string;
+  slug: SanitySlug;
+  eyebrow?: string;
+  description: string;
+  category?: string;
+  duration?: string;
+  sensoryNote?: string;
+  price?: string;
+  primaryCta?: {
+    label?: string;
+    url?: string;
+  };
+  secondaryCta?: {
+    label?: string;
+    url?: string;
+  };
+  image?: SanityImage;
+  gallery?: {
+    mainCard?: {
+      image?: SanityImage;
+      tag?: string;
+      title?: string;
+      badge?: string;
+    };
+    topRightCard?: {
+      image?: SanityImage;
+      tag?: string;
+      title?: string;
+    };
+    bottomRightCard?: {
+      image?: SanityImage;
+      tag?: string;
+      title?: string;
+    };
+  };
+  footerNote?: string;
+  highlights?: string[];
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: SanityImage;
+  };
+}
+

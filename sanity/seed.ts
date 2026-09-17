@@ -274,9 +274,9 @@ const experiencesPage = {
 		heading: "Signature rituals conceived for deep restorative release.",
 		description: "Each treatment is a curated journey through ancient Ayurvedic wisdom.",
 		cards: [
-			{ _key: "tcard-spa", _type: "treatmentCard", title: "SPA SOJOURNS", description: "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
-			{ _key: "tcard-massage", _type: "treatmentCard", title: "MASSAGE SELECTIONS", description: "Step into a world of deep relaxation with our curated Full Body Massage selections.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
-			{ _key: "tcard-glamour", _type: "treatmentCard", title: "GLAMOUR GLOW", description: "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
+			{ _key: "tcard-spa", _type: "treatmentCard", title: "SPA SOJOURNS", slug: "spa-sojourns", description: "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
+			{ _key: "tcard-massage", _type: "treatmentCard", title: "MASSAGE SELECTIONS", slug: "massage-selections", description: "Step into a world of deep relaxation with our curated Full Body Massage selections.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
+			{ _key: "tcard-glamour", _type: "treatmentCard", title: "GLAMOUR GLOW", slug: "glamour-glow", description: "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate.", duration: "75 / 90 Mins", sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver" },
 		],
 	},
 	protocolSection: {
@@ -477,9 +477,9 @@ const blogPage = {
 		heading: "Recent Inquiries & Protocols",
 		description: "REFLECTING 2024–2025 SANCTUARY TRIALS",
 		articles: [
-			{ _key: "inquiry-acoustic", _type: "article", title: "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries", excerpt: "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.", category: "ARCHITECTURE", readTime: "6 MIN READ" },
-			{ _key: "inquiry-circadian", _type: "article", title: "Circadian Chronobiology & The Art of the Evening Abhyanga", excerpt: "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.", category: "AYURVEDIC SCIENCE", readTime: "7 MIN READ" },
-			{ _key: "inquiry-thermal", _type: "article", title: "Thermal Transitions: The Physiological Protocol of Salt Grottos", excerpt: "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.", category: "HYDROTHERAPY", readTime: "5 MIN READ" },
+			{ _key: "inquiry-acoustic", _type: "article", title: "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries", excerpt: "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.", category: "ARCHITECTURE", readTime: "6 MIN READ", author: "Devendra Sengupta" },
+			{ _key: "inquiry-circadian", _type: "article", title: "Circadian Chronobiology & The Art of the Evening Abhyanga", excerpt: "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.", category: "AYURVEDIC SCIENCE", readTime: "7 MIN READ", author: "Dr. Harish Namboodiri" },
+			{ _key: "inquiry-thermal", _type: "article", title: "Thermal Transitions: The Physiological Protocol of Salt Grottos", excerpt: "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.", category: "HYDROTHERAPY", readTime: "5 MIN READ", author: "Dr. Harish Namboodiri" },
 		],
 	},
 	compendiumSection: {
@@ -487,9 +487,9 @@ const blogPage = {
 		heading: "The 2025 Integrative Longevity Compendium",
 		description: "Download our 64-page peer-reviewed monograph examining clinical data from over 14,000 guest retreat journeys across our Indian and overseas sanctuaries.",
 		chapters: [
-			{ _key: "chapter-1", _type: "chapter", title: "Chapter I: Microbiome Restoration via Triphala Protocols", description: "Biomarker shifts over 21 days of continuous botanical assimilation in high-altitude environments." },
-			{ _key: "chapter-2", _type: "chapter", title: "Chapter II: Thermal Shock Proteins in Somatic Healing", description: "Vascular remodeling observed through alternating cedar sweat lodges and copper ice plunge cycles." },
-			{ _key: "chapter-3", _type: "chapter", title: "Chapter III: Spatial Biophilic Engineering in Heritage Palaces", description: "Integrating Vaastu architectural orientations with calibrated acoustic damping for cortisol reduction." },
+			{ _key: "chapter-1", _type: "chapter", title: "Chapter I: Microbiome Restoration via Triphala Protocols", description: "Biomarker shifts over 21 days of continuous botanical assimilation in high-altitude environments.", chapterNumber: "I", author: "Dr. Harish Namboodiri" },
+			{ _key: "chapter-2", _type: "chapter", title: "Chapter II: Thermal Shock Proteins in Somatic Healing", description: "Vascular remodeling observed through alternating cedar sweat lodges and copper ice plunge cycles.", chapterNumber: "II", author: "Dr. Harish Namboodiri" },
+			{ _key: "chapter-3", _type: "chapter", title: "Chapter III: Spatial Biophilic Engineering in Heritage Palaces", description: "Integrating Vaastu architectural orientations with calibrated acoustic damping for cortisol reduction.", chapterNumber: "III", author: "Devendra Sengupta" },
 		],
 		practitionerNotes: [
 			{ _key: "note-bramha", _type: "note", title: "On the Sacred Stillness of Bramha Muhurta", author: "Vaidya Suresh Nair", role: "Kumarakom Retreat", excerpt: "The ninety minutes prior to sunrise possess a rarefied electromagnetic rhythm." },
@@ -811,6 +811,133 @@ const faqs = [
 	},
 ];
 
+// ─── Experiences (Dynamic Detail Pages) ───
+const experiences = [
+	{
+		_id: "experience-spa-sojourns",
+		_type: "experience",
+		title: "Spa Sojourns",
+		slug: { _type: "slug", current: "spa-sojourns" },
+		eyebrow: "SACRED HEALING SERIES",
+		description: "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe, these rituals leave you feeling renewed, centered, and completely at ease.",
+		category: "Signature Bodywork",
+		duration: "75 / 90 Mins",
+		sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver",
+		price: "₹8,500",
+		primaryCta: { label: "EXPLORE MASSAGES", url: "/experiences/massage-selections" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "RITUAL BASELINE", title: "Traditional Abhyanga & Tailam", badge: "01 / MASTER RITUAL" },
+			topRightCard: { tag: "THERAPEUTIC HEAT", title: "Herbal Potli Kizhi Compress" },
+			bottomRightCard: { tag: "SANCTUARY SUITES", title: "Private Stone & Teak Pavilions" },
+		},
+		footerNote: "Curated full-body therapies with cold-pressed botanical infusions",
+		highlights: ["TAILORED PRESSURE", "AROMA ELIXIRS", "PRIVATE SUITES"],
+	},
+	{
+		_id: "experience-massage-selections",
+		_type: "experience",
+		title: "Massage Selections",
+		slug: { _type: "slug", current: "massage-selections" },
+		eyebrow: "THERAPEUTIC RESTORATIVE SERIES",
+		description: "Step into a world of deep relaxation with our curated Full Body Massage selections. Each therapy is thoughtfully designed to release tension, improve circulation, and restore inner harmony. Surrender to skilled hands and experience complete mind-body renewal.",
+		category: "Signature Bodywork",
+		duration: "60 / 90 Mins",
+		sensoryNote: "Brahmi • Ashwagandha • Sandalwood",
+		price: "₹6,500",
+		primaryCta: { label: "RESERVE THERAPY", url: "/contact" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "SOMATIC MASTERY", title: "Deep Somatic Tissue & Marma Release", badge: "02 / RESTORATIVE" },
+			topRightCard: { tag: "THERMAL RELEASE", title: "Warm Herbal Compresses" },
+			bottomRightCard: { tag: "SANCTUARY SUITES", title: "Himalayan Cedar Suites" },
+		},
+		footerNote: "Ancient nadi pressure release synchronized with slow rhythmic breathing",
+		highlights: ["DEEP TISSUE FLOW", "WARM CEDAR OILS", "MARMA BALANCE"],
+	},
+	{
+		_id: "experience-glamour-glow",
+		_type: "experience",
+		title: "Glamour Glow",
+		slug: { _type: "slug", current: "glamour-glow" },
+		eyebrow: "BOTANICAL RADIANCE SERIES",
+		description: "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin. Enriched with skin-loving ingredients, this treatment removes impurities, enhances natural radiance, and leaves your skin smooth, refreshed, and beautifully glowing. Perfect before special occasions or whenever your skin needs a luminous boost.",
+		category: "Signature Bodywork",
+		duration: "60 Mins",
+		sensoryNote: "Floral Jasmine • Mineral Crisp • Sweet Neroli",
+		price: "₹5,500",
+		primaryCta: { label: "EXPLORE RITUALS", url: "/experiences/spa-sojourns" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "BOTANICAL FACIAL", title: "Kumkumadi & Gold Saffron Elixir", badge: "03 / RADIANCE" },
+			topRightCard: { tag: "GENTLE BUFFING", title: "Crushed Walnut & Rose Exfoliation" },
+			bottomRightCard: { tag: "SANCTUARY SUITES", title: "Sunlit Marble Grooming Lounges" },
+		},
+		footerNote: "Single-estate lunar-harvested saffron with pure botanical lipids",
+		highlights: ["CELLULAR POLISH", "KUMKUMADI INFUSION", "LUMINOUS FINISH"],
+	},
+	{
+		_id: "experience-hydrotherapy-plunge",
+		_type: "experience",
+		title: "Hydrotherapy Plunge",
+		slug: { _type: "slug", current: "hydrotherapy-plunge" },
+		eyebrow: "AQUATIC THERMAL SERIES",
+		description: "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration. Our hydrotherapy protocols combine heated mineral pools with cold plunge immersion for maximum therapeutic benefit.",
+		category: "Hydrothermal & Thermal Baths",
+		duration: "45 Mins",
+		price: "₹4,500",
+		primaryCta: { label: "EXPLORE CIRCUITS", url: "/experiences" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "HYDRO CIRCUIT", title: "Stepped Magnesium Flotation Pool", badge: "04 / HYDROTHERMAL" },
+			topRightCard: { tag: "VAPOR CHAMBER", title: "Herbal Steam Cavern" },
+			bottomRightCard: { tag: "CRYOTHERAPY", title: "Glacial Mineral Plunge" },
+		},
+		footerNote: "Closed-loop thermodynamic mineral recirculation with zero hydro waste",
+		highlights: ["THERMAL SHOCK", "SALINE FLOTATION", "LYMPHATIC RESET"],
+	},
+	{
+		_id: "experience-couples-sanctuary",
+		_type: "experience",
+		title: "Couples Sanctuary",
+		slug: { _type: "slug", current: "couples-sanctuary" },
+		eyebrow: "DUET CONTEMPLATION SERIES",
+		description: "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals. Designed for partners seeking a communal path to deep relaxation and cellular renewal.",
+		category: "Couples & Duets",
+		duration: "120 Mins",
+		price: "₹18,000",
+		primaryCta: { label: "RESERVE DUET", url: "/contact" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "SHARED STILLNESS", title: "Synchronized Dual Abhyanga", badge: "05 / DUET" },
+			topRightCard: { tag: "BATH RITUAL", title: "Copper Basin Floral Bath" },
+			bottomRightCard: { tag: "PRIVATE RETREAT", title: "Forest View Teak Pavilion" },
+		},
+		footerNote: "Intimate seclusion with private botanical steam and open garden verandas",
+		highlights: ["SYNCHRONIZED TOUCH", "DUAL TEAK BEDS", "PRIVATE VERANDAH"],
+	},
+	{
+		_id: "experience-sound-immersion",
+		_type: "experience",
+		title: "Sound Immersion",
+		slug: { _type: "slug", current: "sound-immersion" },
+		eyebrow: "SONIC VIBRATION SERIES",
+		description: "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states. Experience the resonant frequencies of Tibetan singing bowls, crystal bowls, and traditional Rudra Veena harmonics.",
+		category: "Sound & Meditative Immersion",
+		duration: "60 Mins",
+		price: "₹5,000",
+		primaryCta: { label: "EXPLORE SOUNDSCAPES", url: "/blog" },
+		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
+		gallery: {
+			mainCard: { tag: "ACOUSTIC CHAMBER", title: "Singing Bowls & Rudra Veena Harmonics", badge: "06 / SONIC" },
+			topRightCard: { tag: "VIBRATIONAL HEALING", title: "Sub-24dB Porous Stone Acoustics" },
+			bottomRightCard: { tag: "MEDITATION VAULT", title: "Lime Plaster Resonance Grottos" },
+		},
+		footerNote: "Calibrated spatial soundscapes engineered for deep parasympathetic alignment",
+		highlights: ["THETA HARMONICS", "TIBETAN BELLS", "ACOUSTIC SILENCE"],
+	},
+];
+
 // ─── Run seed ───
 async function main() {
 	console.log("🌱 Seeding Sanity CMS...\n");
@@ -837,6 +964,12 @@ async function main() {
 		await upsert(treatment);
 	}
 
+	// Collection documents: Experiences (Dynamic Detail Pages)
+	console.log("\n🌿 Seeding Experiences...");
+	for (const experienceItem of experiences) {
+		await upsert(experienceItem);
+	}
+
 	// Collection documents: Blog Posts
 	console.log("\n📝 Seeding Blog Posts...");
 	for (const post of blogPosts) {
@@ -856,7 +989,7 @@ async function main() {
 	}
 
 	console.log("\n✅ Seed complete!");
-	console.log("   8 singleton documents + 6 services + 6 treatments + 6 blog posts + 3 testimonials + 3 FAQs");
+	console.log("   8 singleton documents + 6 services + 6 treatments + 6 experiences + 6 blog posts + 3 testimonials + 3 FAQs");
 }
 
 main().catch((err) => {

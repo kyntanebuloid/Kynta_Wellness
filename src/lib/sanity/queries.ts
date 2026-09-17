@@ -179,6 +179,7 @@ export const experiencesPageQuery =
     description,
     cards[]{
       title,
+      slug,
       description,
       duration,
       sensoryNote,
@@ -600,3 +601,50 @@ export const faqsByCategoryQuery = defineQuery(
     order
   }`,
 );
+
+export const allExperiencesQuery = defineQuery(
+  `*[_type == "experience"] | order(_createdAt asc) {
+    _id,
+    title,
+    slug,
+    eyebrow,
+    description,
+    category,
+    duration,
+    sensoryNote,
+    price,
+    primaryCta,
+    secondaryCta,
+    image,
+    gallery,
+    footerNote,
+    highlights,
+    seo
+  }`,
+);
+
+export const experienceBySlugQuery = defineQuery(
+  `*[_type == "experience" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    eyebrow,
+    description,
+    category,
+    duration,
+    sensoryNote,
+    price,
+    primaryCta,
+    secondaryCta,
+    image,
+    gallery,
+    footerNote,
+    highlights,
+    seo
+  }`,
+);
+
+export const allExperienceSlugsQuery = defineQuery(
+  `*[_type == "experience" && defined(slug.current)][].slug.current`,
+);
+

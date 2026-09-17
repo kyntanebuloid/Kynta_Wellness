@@ -2,6 +2,7 @@ import aboutPage from "./aboutPage";
 import blogPage from "./blogPage";
 import blogPost from "./blogPost";
 import contactPage from "./contactPage";
+import experience from "./experience";
 import experiencesPage from "./experiencesPage";
 import faq from "./faq";
 import homepage from "./homepage";
@@ -16,6 +17,7 @@ export const schemaTypes = [
   siteSettings,
   homepage,
   experiencesPage,
+  experience,
   locationsPage,
   aboutPage,
   hospitalityPage,
