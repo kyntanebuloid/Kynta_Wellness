@@ -257,6 +257,10 @@ export interface LocationsPage {
     name: string;
     address: string;
     region: string;
+    price?: string;
+    slug?: string;
+    imagePath?: string;
+    detailsUrl?: string;
     hours?: string;
     phone?: string;
     email?: string;

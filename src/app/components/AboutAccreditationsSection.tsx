@@ -146,8 +146,8 @@ export function AboutAccreditationsSection({
       className="w-full py-16 md:py-20 lg:py-24 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-charcoal/80 text-center mb-8 md:mb-10">
+      <div className="container-site">
+        <p className="text-sm font-medium tracking-wide text-kynta-charcoal text-center mb-8 md:mb-10">
           {eyebrow}
         </p>
 
@@ -161,14 +161,11 @@ export function AboutAccreditationsSection({
                 <AccreditationIcon type={item.iconType} />
               </div>
 
-              <h3
-                className="font-serif text-[14px] md:text-[14.5px] leading-snug font-normal mb-1.5"
-                style={{ color: "var(--kynta-teal-dark)" }}
-              >
+              <h3 className="font-serif text-base md:text-lg leading-snug font-normal text-kynta-charcoal mb-1.5">
                 {item.title}
               </h3>
 
-              <p className="text-[9.5px] md:text-[10px] font-medium tracking-[0.14em] uppercase text-kynta-warm-gray">
+              <p className="text-[11px] font-medium tracking-[0.14em] uppercase text-kynta-warm-gray">
                 {item.subtitle}
               </p>
             </div>

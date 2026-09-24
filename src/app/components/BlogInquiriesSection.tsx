@@ -97,19 +97,19 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
       className="w-full py-16 md:py-20 lg:py-24 overflow-hidden border-t border-kynta-border/30"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 md:mb-12">
           <div>
-            <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
               {data?.eyebrow || "PEER-REVIEWED FIELDWORK"}
             </p>
-            <h2 className="font-serif text-[28px] sm:text-[32px] md:text-[36px] leading-[1.18] text-kynta-charcoal font-normal">
+            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal">
               {data?.heading || "Recent Inquiries &amp; Protocols"}
             </h2>
           </div>
 
           <div>
-            <p className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.14em] uppercase text-kynta-warm-gray sm:text-right pb-1">
+            <p className="text-xs font-semibold tracking-wider uppercase text-kynta-warm-gray sm:text-right pb-1">
               {data?.description || "REFLECTING 2024–2025 SANCTUARY TRIALS"}
             </p>
           </div>
@@ -132,18 +132,18 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
                   />
 
                   <div className="absolute top-3.5 left-3.5 z-10 bg-white/95 backdrop-blur-md rounded-[5px] px-2.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-white/80">
-                    <span className="text-[8.5px] sm:text-[9px] font-semibold tracking-[0.12em] uppercase text-kynta-rust">
+                    <span className="text-[10px] font-semibold tracking-wider uppercase text-kynta-rust">
                       {article.categoryPill}
                     </span>
                   </div>
                 </div>
 
                 <div className="p-6 sm:p-7 pb-4">
-                  <p className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase text-kynta-rust mb-2.5">
+                  <p className="text-xs font-semibold tracking-wider uppercase text-kynta-rust mb-2.5">
                     {article.metadata}
                   </p>
 
-                  <h3 className="font-serif text-[17px] sm:text-[18px] md:text-[19px] leading-[1.28] font-normal text-kynta-charcoal mb-3">
+                  <h3 className="font-serif text-xl leading-snug font-normal text-kynta-charcoal mb-3">
                     <Link
                       href={article.ctaHref}
                       className="hover:text-kynta-teal-dark transition-colors"
@@ -152,7 +152,7 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
                     </Link>
                   </h3>
 
-                  <p className="text-[11.5px] md:text-[12px] leading-[1.62] text-kynta-warm-gray">
+                  <p className="text-[13px] leading-[1.7] text-kynta-warm-gray">
                     {article.description}
                   </p>
                 </div>
@@ -161,8 +161,7 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
               <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-2 mt-auto">
                 <Link
                   href={article.ctaHref}
-                  className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 group-hover:text-kynta-teal"
-                  style={{ color: "var(--kynta-teal-dark)" }}
+                  className="text-xs font-semibold tracking-wide uppercase transition-colors flex items-center gap-1.5 group-hover:text-kynta-teal text-kynta-teal-dark"
                 >
                   <span>{article.ctaLabel}</span>
                   <span className="transition-transform duration-200 group-hover:translate-x-0.5">

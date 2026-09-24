@@ -103,14 +103,11 @@ function TriadCard({
         <CardIcon color={iconColor} />
       </div>
 
-      <h3
-        className="font-serif text-[16px] leading-snug mb-3"
-        style={{ color: "var(--kynta-teal-dark)" }}
-      >
+      <h3 className="font-serif text-xl lg:text-[22px] leading-snug text-kynta-charcoal mb-3">
         {title}
       </h3>
 
-      <p className="text-[12.5px] leading-[1.7] text-kynta-warm-gray mb-5 flex-1">
+      <p className="text-[13px] leading-[1.7] text-kynta-warm-gray mb-5 flex-1">
         {body}
       </p>
 
@@ -195,20 +192,17 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust whitespace-nowrap">
+              <span className="text-sm font-medium text-kynta-rust tracking-wide">
                 {eyebrow}
               </span>
             </div>
-            <p
-              className="font-serif text-[17px] leading-snug"
-              style={{ color: "var(--kynta-teal-dark)" }}
-            >
+            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading}
-            </p>
+            </h2>
           </div>
 
           <div className="flex items-start md:pt-4">
-            <p className="text-[14px] leading-[1.75] text-kynta-warm-gray max-w-sm">
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
               {description}
             </p>
           </div>

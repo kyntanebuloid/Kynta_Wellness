@@ -88,7 +88,7 @@ export function AboutStewardshipSection({
       className="w-full py-16 md:py-20 lg:py-24 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <div
           className="rounded-[24px] md:rounded-[28px] p-7 sm:p-10 md:p-12 lg:p-14 shadow-[0_12px_44px_rgba(0,45,40,0.15)] relative overflow-hidden"
           style={{ backgroundColor: "#004349" }}
@@ -100,16 +100,16 @@ export function AboutStewardshipSection({
                   className="block w-6 h-px bg-white/40 flex-shrink-0"
                   aria-hidden="true"
                 />
-                <span className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.18em] uppercase text-[#e2ede8]">
+                <span className="text-sm font-medium tracking-wide text-[#e2ede8]">
                   {eyebrow}
                 </span>
               </div>
 
-              <h2 className="font-serif text-[21px] sm:text-[23px] md:text-[25px] leading-[1.3] text-white font-normal mb-3.5">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] leading-[1.2] text-white font-normal mb-3.5">
                 {heading}
               </h2>
 
-              <p className="text-[12px] md:text-[12.5px] leading-[1.7] text-[#a0beb6] max-w-[460px] mb-8 md:mb-9">
+              <p className="text-[14px] sm:text-[15px] leading-[1.7] text-[#a0beb6] max-w-lg mb-8 md:mb-9">
                 {description}
               </p>
 
@@ -136,10 +136,10 @@ export function AboutStewardshipSection({
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-[13px] md:text-[13.5px] font-medium text-white mb-0.5">
+                      <h3 className="text-[14px] md:text-[15px] font-medium text-white mb-0.5">
                         {item.title}
                       </h3>
-                      <p className="text-[11.5px] leading-[1.58] text-[#a0beb6]">
+                      <p className="text-[13px] leading-[1.65] text-[#a0beb6]">
                         {item.description}
                       </p>
                     </div>

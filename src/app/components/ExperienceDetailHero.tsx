@@ -69,7 +69,7 @@ export function ExperienceDetailHero({ experience }: ExperienceDetailHeroProps) 
 
   return (
     <section className="w-full bg-white pt-10 sm:pt-14 md:pt-16 pb-16 md:pb-20">
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-6">
+      <div className="container-site">
         {/* ── Eyebrow Pill ── */}
         <div className="flex justify-center mb-4">
           <span className="inline-flex items-center gap-2 text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase px-4 py-1.5 rounded-full border border-[#ece8e1] bg-[#fbf9f5] text-[#9b5440]">
@@ -84,7 +84,7 @@ export function ExperienceDetailHero({ experience }: ExperienceDetailHeroProps) 
         </h1>
 
         {/* ── Description ── */}
-        <p className="text-center text-[13.5px] sm:text-[14px] md:text-[14.5px] leading-[1.75] text-kynta-warm-gray max-w-[580px] mx-auto mb-7">
+        <p className="text-center text-[15px] sm:text-[16px] leading-[1.75] text-kynta-warm-gray max-w-xl mx-auto mb-8">
           {experience.description}
         </p>
 
@@ -92,13 +92,13 @@ export function ExperienceDetailHero({ experience }: ExperienceDetailHeroProps) 
         <div className="flex flex-wrap items-center justify-center gap-3.5 mb-12 sm:mb-14">
           <Link
             href={experience.primaryCta?.url || "/experiences"}
-            className="bg-kynta-teal-dark hover:bg-kynta-teal text-white text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase px-6 py-3.5 rounded-[4px] transition-colors"
+            className="bg-kynta-teal-dark hover:bg-kynta-teal text-white text-xs font-semibold tracking-widest uppercase px-6 py-3.5 rounded-full transition-all duration-300"
           >
             {experience.primaryCta?.label || "EXPLORE MASSAGES"}
           </Link>
           <Link
             href={experience.secondaryCta?.url || "/contact"}
-            className="bg-white hover:bg-[#f7f9f7] text-kynta-teal-dark border border-kynta-border/80 text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase px-6 py-3.5 rounded-[4px] inline-flex items-center gap-2 transition-colors"
+            className="bg-white hover:bg-[#f7f9f7] text-kynta-teal-dark border border-kynta-border/80 text-xs font-semibold tracking-widest uppercase px-6 py-3.5 rounded-full inline-flex items-center gap-2 transition-all duration-300 shadow-sm"
           >
             {experience.secondaryCta?.label || "CONCIERGE SCHEDULING"}
             <svg

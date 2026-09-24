@@ -102,11 +102,11 @@ function ModelCard({ model }: { model: PartnershipModel }) {
           )}
         </div>
 
-        <h3 className="font-serif text-[18px] sm:text-[19px] leading-snug font-normal text-kynta-charcoal mb-3">
+        <h3 className="font-serif text-xl lg:text-[22px] leading-snug text-kynta-charcoal mb-3">
           {model.title}
         </h3>
 
-        <p className="text-[11.5px] md:text-[12px] leading-[1.65] text-kynta-warm-gray mb-6">
+        <p className="text-[13px] leading-[1.7] text-kynta-warm-gray mb-6">
           {model.description}
         </p>
 
@@ -114,7 +114,7 @@ function ModelCard({ model }: { model: PartnershipModel }) {
           {model.bullets.map((bullet) => (
             <li
               key={bullet}
-              className="flex items-start gap-2.5 text-[11px] md:text-[11.5px] leading-[1.55] text-kynta-charcoal/85"
+              className="flex items-start gap-2.5 text-[13px] leading-[1.6] text-kynta-charcoal/85"
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${
@@ -133,8 +133,7 @@ function ModelCard({ model }: { model: PartnershipModel }) {
       <div className="pt-2 mt-auto">
         <Link
           href={model.ctaHref}
-          className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 group"
-          style={{ color: "var(--kynta-teal-dark)" }}
+          className="text-xs font-semibold tracking-wide uppercase transition-colors flex items-center gap-1.5 group text-kynta-teal-dark hover:text-kynta-teal"
         >
           <span>{model.ctaLabel}</span>
           <span className="transition-transform duration-200 group-hover:translate-x-0.5">
@@ -186,19 +185,19 @@ export function HospitalityModelsSection({
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12 md:mb-16">
           <div>
-            <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
-            <h2 className="font-serif text-[28px] sm:text-[34px] md:text-[38px] leading-[1.15] text-kynta-charcoal font-normal max-w-[440px]">
+            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 max-w-xl">
               {heading}
             </h2>
           </div>
 
           <div className="md:pt-6">
-            <p className="text-[12px] md:text-[12.5px] leading-[1.65] text-kynta-warm-gray max-w-[340px]">
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-md">
               {description}
             </p>
           </div>

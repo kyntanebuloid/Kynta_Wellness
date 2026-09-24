@@ -48,17 +48,11 @@ export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
               Sanctuary Concierge &amp; Transfers
             </span>
 
-            <h2 className="font-serif text-[28px] md:text-[34px] leading-[1.22] text-white mb-4">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] leading-[1.22] text-white mb-4">
               {heading}
             </h2>
 
-            <p
-              className="text-[14px] leading-[1.75]"
-              style={{
-                color: "rgba(255,255,255,0.55)",
-                maxWidth: "480px",
-              }}
-            >
+            <p className="text-[15px] leading-[1.7] text-white/70 max-w-lg">
               {description}
             </p>
           </div>

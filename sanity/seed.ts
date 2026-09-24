@@ -302,12 +302,12 @@ const locationsPage = {
 		subheading: "Discover Kynta sanctuaries across India's most coveted destinations.",
 	},
 	locations: [
-		{ _key: "loc-dharamshala-1", _type: "location", name: "Indraprastha Resort Dharamshala", address: "Dharamshala, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1892 221 234", email: "dharamshala@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
-		{ _key: "loc-dharamshala-2", _type: "location", name: "Asia Spa & Resort - Dharamshala", address: "Dharamshala, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1892 222 345", email: "asiaspa@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
-		{ _key: "loc-dalhousie", _type: "location", name: "Indraprastha Spa Resorts - Dalhousie", address: "Dalhousie, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1899 223 456", email: "dalhousie@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
-		{ _key: "loc-bhanjwar", _type: "location", name: "Bhanjwar Singh Palace Rajasthan", address: "Rajasthan", region: "rajasthan", hours: "08:00 – 21:00 Daily", phone: "+91 141 224 567", email: "bhanjwar@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
-		{ _key: "loc-rawai", _type: "location", name: "Rawai Luxury Tents - Pushkar", address: "Pushkar, Rajasthan", region: "rajasthan", hours: "08:00 – 21:00 Daily", phone: "+91 145 225 678", email: "rawai@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
-		{ _key: "loc-infinitea", _type: "location", name: "Infinitea Sports Club & Tea Garden Resort, Palampur", address: "Palampur, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1894 226 789", email: "infinitea@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-dharamshala-1", _type: "location", name: "Indraprastha Resort Dharamshala", price: "$220 / NIGHT", imagePath: "/location-indraprastha.jpg", slug: "indraprastha-dharamshala", detailsUrl: "/locations/indraprastha-dharamshala", address: "Dharamshala, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1892 221 234", email: "dharamshala@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-dharamshala-2", _type: "location", name: "Asia Spa & Resort- Dharamshala", price: "$200 / NIGHT", imagePath: "/location-asia-spa.jpg", slug: "asia-spa-dharamshala", detailsUrl: "/locations/asia-spa-dharamshala", address: "Dharamshala, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1892 222 345", email: "asiaspa@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-dalhousie", _type: "location", name: "Indraprastha spa Resorts - Dalhousie", price: "$250 / NIGHT", imagePath: "/location-dalhousie.jpg", slug: "indraprastha-dalhousie", detailsUrl: "/locations/indraprastha-dalhousie", address: "Dalhousie, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1899 223 456", email: "dalhousie@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-bhanjwar", _type: "location", name: "Bhanwar Singh Palace Rajasthan", price: "$300 / NIGHT", imagePath: "/location-bhanjwar.jpg", slug: "bhanjwar-palace", detailsUrl: "/locations/bhanjwar-palace", address: "Rajasthan", region: "rajasthan", hours: "08:00 – 21:00 Daily", phone: "+91 141 224 567", email: "bhanjwar@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-rawai", _type: "location", name: "Rawai Luxury Tents - Pushkar", price: "$190 / NIGHT", imagePath: "/location-rawai-tents.jpg", slug: "rawai-tents", detailsUrl: "/locations/rawai-tents", address: "Pushkar, Rajasthan", region: "rajasthan", hours: "08:00 – 21:00 Daily", phone: "+91 145 225 678", email: "rawai@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
+		{ _key: "loc-infinitea", _type: "location", name: "Infinte Sports Club & Tea Garden Resort, Palampur", price: "$300 / NIGHT", imagePath: "/location-infinitea.jpg", slug: "infinitea-palampur", detailsUrl: "/locations/infinitea-palampur", address: "Palampur, Himachal Pradesh", region: "himalayan", hours: "08:00 – 21:00 Daily", phone: "+91 1894 226 789", email: "infinitea@kyntawellness.com", services: ["spa", "dining", "pool", "wifi", "suite"] },
 	],
 	ctaSection: {
 		heading: "Ready to Experience Kynta?",
@@ -477,9 +477,9 @@ const blogPage = {
 		heading: "Recent Inquiries & Protocols",
 		description: "REFLECTING 2024–2025 SANCTUARY TRIALS",
 		articles: [
-			{ _key: "inquiry-acoustic", _type: "article", title: "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries", excerpt: "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.", category: "ARCHITECTURE", readTime: "6 MIN READ", author: "Devendra Sengupta" },
-			{ _key: "inquiry-circadian", _type: "article", title: "Circadian Chronobiology & The Art of the Evening Abhyanga", excerpt: "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.", category: "AYURVEDIC SCIENCE", readTime: "7 MIN READ", author: "Dr. Harish Namboodiri" },
-			{ _key: "inquiry-thermal", _type: "article", title: "Thermal Transitions: The Physiological Protocol of Salt Grottos", excerpt: "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.", category: "HYDROTHERAPY", readTime: "5 MIN READ", author: "Dr. Harish Namboodiri" },
+			{ _key: "inquiry-acoustic", _type: "article", title: "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries", excerpt: "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.", category: "ARCHITECTURE", readTime: "6 MIN READ" },
+			{ _key: "inquiry-circadian", _type: "article", title: "Circadian Chronobiology & The Art of the Evening Abhyanga", excerpt: "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.", category: "AYURVEDIC SCIENCE", readTime: "7 MIN READ" },
+			{ _key: "inquiry-thermal", _type: "article", title: "Thermal Transitions: The Physiological Protocol of Salt Grottos", excerpt: "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.", category: "HYDROTHERAPY", readTime: "5 MIN READ" },
 		],
 	},
 	compendiumSection: {
@@ -507,9 +507,9 @@ const blogPage = {
 			{ _key: "fieldnote-water", _type: "fieldNote", title: "Water Temperature as Emotional Architecture", excerpt: "Immersing the spine in 34–degree spring water mirrors uterine thermal equilibrium, instantly softening the sympathetic nervous flight response.", category: "HYDROTHERAPY", author: "Acharya Devraj" },
 		],
 		audioTracks: [
-			{ _key: "audio-rudra", _type: "track", title: "Rudra Veena Harmonics & Rainfall in Coorg", duration: "18 Min Duration", category: "Acoustic Chamber Vol. 3" },
-			{ _key: "audio-nadi", _type: "track", title: "Guided Nadi Shodhana for Circadian Sunset Transition", duration: "24 Min Duration", category: "Voiced by Dr. Ananya Varma" },
-			{ _key: "audio-water", _type: "track", title: "Subterranean Water Flow & Tibetan Bell Resonances", duration: "45 Min Immersion", category: "Hydrothermal Room Binaural" },
+			{ _key: "audio-rudra", _type: "track", title: "Rudra Veena Harmonics & Rainfall in Coorg", duration: "18 Min Duration", category: "Acoustic Chamber Vol. 3", audioUrl: "https://kyntawellness.com/audio/rudra-veena.mp3" },
+			{ _key: "audio-nadi", _type: "track", title: "Guided Nadi Shodhana for Circadian Sunset Transition", duration: "24 Min Duration", category: "Voiced by Dr. Ananya Varma", audioUrl: "https://kyntawellness.com/audio/nadi-shodhana.mp3" },
+			{ _key: "audio-water", _type: "track", title: "Subterranean Water Flow & Tibetan Bell Resonances", duration: "45 Min Immersion", category: "Hydrothermal Room Binaural", audioUrl: "https://kyntawellness.com/audio/water-flow.mp3" },
 		],
 	},
 };

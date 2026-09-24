@@ -81,7 +81,7 @@ export function HospitalityViabilitySection({
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-6 flex justify-center lg:justify-start">
             <div className="relative w-full max-w-[500px] aspect-[459/344] rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.07)]">
@@ -102,15 +102,15 @@ export function HospitalityViabilitySection({
           </div>
 
           <div className="lg:col-span-6 flex flex-col items-start">
-            <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
 
-            <h2 className="font-serif text-[28px] sm:text-[34px] md:text-[38px] leading-[1.18] text-kynta-charcoal font-normal mb-3">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal font-normal mb-4">
               {heading}
             </h2>
 
-            <p className="text-[12px] md:text-[12.5px] leading-[1.65] text-kynta-warm-gray mb-7 sm:mb-8 max-w-[460px]">
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray mb-8 max-w-lg">
               {description}
             </p>
 
@@ -121,17 +121,17 @@ export function HospitalityViabilitySection({
                   className="bg-white rounded-[14px] p-5 sm:p-5.5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-start"
                 >
                   <span
-                    className="font-serif text-[26px] sm:text-[28px] md:text-[30px] leading-tight font-normal mb-1.5"
+                    className="font-serif text-3xl lg:text-[34px] leading-tight font-normal mb-1.5"
                     style={{ color: "var(--kynta-teal-dark)" }}
                   >
                     {stat.metric}
                   </span>
 
-                  <h3 className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.12em] uppercase text-kynta-charcoal mb-2">
+                  <h3 className="text-xs font-semibold tracking-wider uppercase text-kynta-charcoal mb-2">
                     {stat.label}
                   </h3>
 
-                  <p className="text-[11px] sm:text-[11.5px] leading-[1.58] text-kynta-warm-gray">
+                  <p className="text-[13px] leading-[1.65] text-kynta-warm-gray">
                     {stat.description}
                   </p>
                 </div>

@@ -52,13 +52,13 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
 
   return (
     <section
-      className="w-full py-16 md:py-20 lg:py-24"
+      className="w-full py-20 md:py-24 lg:py-28"
       style={{ backgroundColor: "#f7f9f7" }}
     >
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-20 md:mb-24">
           <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-4 mb-7">
+            <div className="flex items-center gap-4 mb-4">
               <span
                 className="block h-px flex-shrink-0"
                 style={{
@@ -68,80 +68,50 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust whitespace-nowrap">
+              <span className="text-sm font-medium text-kynta-rust tracking-wide">
                 {eyebrow}
               </span>
             </div>
 
-            <p
-              className="font-serif italic text-[18px] md:text-[20px] leading-[1.45] mb-5"
-              style={{ color: "var(--kynta-charcoal)" }}
-            >
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading.split("\n").map((line, i) => (
                 <span key={line}>
                   {i > 0 && <br />}
                   {line}
                 </span>
               ))}
-            </p>
+            </h1>
 
-            <p
-              className="text-[15px] leading-[1.8] mb-8"
-              style={{
-                color: "var(--kynta-warm-gray)",
-                maxWidth: "440px",
-              }}
-            >
+            <p className="text-[16px] leading-[1.75] text-kynta-warm-gray max-w-xl mb-8">
               {description}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="#philosophy"
-                className="inline-flex items-center gap-2.5 text-[13px] font-medium text-white px-6 py-3.5 rounded-full hover:opacity-90 transition-opacity"
-                style={{
-                  backgroundColor: "var(--kynta-teal-dark)",
-                }}
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
               >
                 Explore Our Philosophy
                 <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
                   fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
                   stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
                 >
                   <title>Down arrow</title>
-                  <path d="M12 5v14" />
-                  <path d="m19 12-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                  />
                 </svg>
               </Link>
 
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2.5 text-[13px] font-medium px-6 py-3.5 rounded-full border hover:bg-gray-50 transition-colors"
-                style={{
-                  color: "var(--kynta-charcoal)",
-                  borderColor: "var(--kynta-border)",
-                  backgroundColor: "#ffffff",
-                }}
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <title>Chat</title>
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
                 Inquire With Concierge
               </Link>
             </div>

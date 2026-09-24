@@ -58,23 +58,23 @@ export function BlogHeroSection({ data, filters }: BlogHeroSectionProps) {
       className="w-full py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#eee9df] border border-kynta-border/50 mb-6">
           <span
             className="w-1.5 h-1.5 rounded-full bg-kynta-rust flex-shrink-0"
             aria-hidden="true"
           />
-          <span className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
+          <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
             {data?.eyebrow || "THE KYNTA SANCTUARY GAZETTE — VOL. IV"}
           </span>
         </div>
 
-        <h1 className="font-serif text-[34px] sm:text-[42px] md:text-[48px] lg:text-[50px] leading-[1.12] text-kynta-charcoal font-normal mb-5 max-w-[720px]">
+        <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal font-normal mb-5 max-w-2xl">
           {data?.heading ||
             "Treatises on Stillness, Botanical Formulations &amp; Restorative Space."}
         </h1>
 
-        <p className="text-[13px] md:text-[13.5px] leading-[1.68] text-kynta-warm-gray max-w-[560px] mb-8 md:mb-10">
+        <p className="text-base sm:text-lg text-kynta-warm-gray leading-relaxed max-w-xl mb-8 md:mb-10">
           {data?.subheading ||
             "Dispatches from our Ayurvedic practitioners, spatial masterplanners, and apothecary artisans exploring the intersection of Vedic healing, circadian biology, and contemporary architecture."}
         </p>

@@ -138,7 +138,7 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden text-white"
       style={{ backgroundColor: "#004349" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           <div className="lg:col-span-7 flex flex-col items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase text-[#a5c8c2] mb-5">
@@ -160,11 +160,11 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
               <span>{data?.eyebrow || "SPECIAL MONOGRAPH COLLECTION"}</span>
             </div>
 
-            <h2 className="font-serif text-[30px] sm:text-[36px] md:text-[42px] leading-[1.15] text-white font-normal mb-4 max-w-[500px]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-white font-normal mb-4 max-w-xl">
               {data?.heading || "The 2025 Integrative Longevity Compendium"}
             </h2>
 
-            <p className="text-[12px] md:text-[12.5px] leading-[1.65] text-[#90b8b1] max-w-[490px] mb-8">
+            <p className="text-[15px] leading-[1.7] text-[#a0beb6] max-w-xl mb-8">
               {data?.description ||
                 "Download our 64-page peer-reviewed monograph examining clinical data from over 14,000 guest retreat journeys across our Indian and overseas sanctuaries."}
             </p>
@@ -183,10 +183,10 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-[13px] sm:text-[13.5px] font-serif text-white font-normal mb-1 leading-snug">
+                    <h3 className="text-sm sm:text-[15px] font-serif text-white font-normal mb-1 leading-snug">
                       {chapter.title}
                     </h3>
-                    <p className="text-[11px] leading-[1.55] text-[#90b8b1]">
+                    <p className="text-[13px] leading-[1.6] text-[#a0beb6]">
                       {chapter.subtitle}
                     </p>
                   </div>

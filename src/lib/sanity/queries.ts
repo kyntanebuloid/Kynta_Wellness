@@ -209,6 +209,10 @@ export const locationsPageQuery = defineQuery(`*[_type == "locationsPage"][0]{
     name,
     address,
     region,
+    price,
+    slug,
+    imagePath,
+    detailsUrl,
     hours,
     phone,
     email,
@@ -223,6 +227,27 @@ export const locationsPageQuery = defineQuery(`*[_type == "locationsPage"][0]{
   },
   seo
 }`);
+
+export const locationBySlugQuery = defineQuery(`*[_type == "locationsPage"][0]{
+  "location": locations[slug == $slug][0]{
+    name,
+    address,
+    region,
+    price,
+    slug,
+    imagePath,
+    detailsUrl,
+    hours,
+    phone,
+    email,
+    image,
+    services
+  }
+}.location`);
+
+export const allLocationSlugsQuery = defineQuery(
+  `*[_type == "locationsPage"][0].locations[].slug`,
+);
 
 export const aboutPageQuery = defineQuery(`*[_type == "aboutPage"][0]{
   hero{

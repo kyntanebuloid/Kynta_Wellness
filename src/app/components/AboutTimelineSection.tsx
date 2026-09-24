@@ -257,18 +257,15 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
       className="w-full py-20 md:py-28 lg:py-32 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
-        <div className="text-center mb-16 md:mb-24">
-          <p className="text-[10px] md:text-[11px] font-semibold tracking-[0.2em] uppercase text-kynta-rust mb-2.5">
+      <div className="container-site">
+        <div className="text-center mb-14 md:mb-20">
+          <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
             {eyebrow}
           </p>
-          <h2
-            className="font-serif text-[21px] sm:text-[24px] md:text-[26px] leading-[1.3] font-normal mb-3"
-            style={{ color: "var(--kynta-teal-dark)" }}
-          >
+          <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
             {heading}
           </h2>
-          <p className="text-[12px] md:text-[12.5px] leading-[1.7] text-kynta-warm-gray max-w-md mx-auto">
+          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg mx-auto">
             {description}
           </p>
         </div>
@@ -296,22 +293,19 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
 
               const textContent = (align: "left" | "right") => (
                 <div
-                  className={`max-w-[340px] flex flex-col ${
+                  className={`max-w-[360px] flex flex-col ${
                     align === "right"
                       ? "text-right items-end ml-auto"
                       : "text-left items-start mr-auto"
                   }`}
                 >
-                  <span className="text-[11px] font-medium text-kynta-rust mb-1 tracking-wide">
+                  <span className="text-xs font-semibold text-kynta-rust mb-1 tracking-wide">
                     {item.year}
                   </span>
-                  <h3
-                    className="font-serif text-[15.5px] md:text-[16.5px] leading-[1.35] font-normal mb-2"
-                    style={{ color: "var(--kynta-teal-dark)" }}
-                  >
+                  <h3 className="font-serif text-lg md:text-xl text-kynta-charcoal leading-snug mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-[11.5px] md:text-[12px] leading-[1.7] text-kynta-warm-gray mb-3">
+                  <p className="text-[13px] sm:text-[14px] leading-[1.7] text-kynta-warm-gray mb-3">
                     {item.description}
                   </p>
                   <div
@@ -320,7 +314,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
                     }`}
                   >
                     <span
-                      className={`text-[9.5px] font-semibold tracking-[0.14em] uppercase ${categoryColorClass}`}
+                      className={`text-[11px] font-semibold tracking-[0.14em] uppercase ${categoryColorClass}`}
                     >
                       {item.category}
                     </span>

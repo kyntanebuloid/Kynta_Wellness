@@ -18,7 +18,7 @@ const destinations: Destination[] = [
   {
     id: "indraprastha-dharamshala",
     image: "/location-indraprastha.jpg",
-    price: "200$ / Night",
+    price: "$220 / NIGHT",
     title: "Indraprastha Resort Dharamshala",
     region: "himalayan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
@@ -27,8 +27,8 @@ const destinations: Destination[] = [
   {
     id: "asia-spa-dharamshala",
     image: "/location-asia-spa.jpg",
-    price: "200$ / Night",
-    title: "Asia spa & Resort - Dharamshala",
+    price: "$200 / NIGHT",
+    title: "Asia Spa & Resort- Dharamshala",
     region: "himalayan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
     detailsHref: "/locations/asia-spa-dharamshala",
@@ -36,7 +36,7 @@ const destinations: Destination[] = [
   {
     id: "indraprastha-dalhousie",
     image: "/location-dalhousie.jpg",
-    price: "200$ / Night",
+    price: "$250 / NIGHT",
     title: "Indraprastha spa Resorts - Dalhousie",
     region: "himalayan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
@@ -45,8 +45,8 @@ const destinations: Destination[] = [
   {
     id: "bhanjwar-palace",
     image: "/location-bhanjwar.jpg",
-    price: "300$ / Night",
-    title: "Bhanjwar Singh Palace Rajasthan",
+    price: "$300 / NIGHT",
+    title: "Bhanwar Singh Palace Rajasthan",
     region: "rajasthan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
     detailsHref: "/locations/bhanjwar-palace",
@@ -54,7 +54,7 @@ const destinations: Destination[] = [
   {
     id: "rawai-tents-pushkar",
     image: "/location-rawai-tents.jpg",
-    price: "300$ / Night",
+    price: "$190 / NIGHT",
     title: "Rawai Luxury Tents - Pushkar",
     region: "rajasthan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
@@ -63,8 +63,8 @@ const destinations: Destination[] = [
   {
     id: "infinitea-palampur",
     image: "/location-infinitea.jpg",
-    price: "100$ / Night",
-    title: "Infinitea Sports Club & Tea Garden Resort, Palampur",
+    price: "$300 / NIGHT",
+    title: "Infinte Sports Club & Tea Garden Resort, Palampur",
     region: "himalayan",
     facilities: ["spa", "dining", "pool", "wifi", "suite"],
     detailsHref: "/locations/infinitea-palampur",
@@ -252,13 +252,6 @@ function LocationCard({
   );
 }
 
-const filters = [
-  { key: "all", label: "All Enclaves (6)" },
-  { key: "himalayan", label: "Himachal Pradesh (4)" },
-  { key: "rajasthan", label: "Rajasthan (2)" },
-  { key: "facilities", label: "Filter Facilities" },
-] as const;
-
 interface LocationsSectionProps {
   data?: {
     eyebrow?: string;
@@ -269,6 +262,10 @@ interface LocationsSectionProps {
     name: string;
     address: string;
     region: string;
+    price?: string;
+    slug?: string;
+    imagePath?: string;
+    detailsUrl?: string;
     hours?: string;
     phone?: string;
     email?: string;
@@ -288,22 +285,35 @@ export function LocationsSection({
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
   const mappedDestinations: Destination[] = sanityLocations
-    ? sanityLocations.map((loc, i) => ({
-        id: loc.name.toLowerCase().replace(/\s+/g, "-"),
-        image: loc.image?.asset?._ref
-          ? `/locations/${loc.name.toLowerCase().replace(/\s+/g, "-")}.jpg`
-          : destinations[i % destinations.length].image,
-        price: `${loc.region === "rajasthan" ? "300" : "200"}$ / Night`,
-        title: loc.name,
-        region: loc.region.toLowerCase().includes("rajasthan")
-          ? "rajasthan"
-          : "himalayan",
-        facilities: loc.services?.length
-          ? loc.services
-          : ["spa", "dining", "pool", "wifi", "suite"],
-        detailsHref: `/locations/${loc.name.toLowerCase().replace(/\s+/g, "-")}`,
-      }))
+    ? sanityLocations.map((loc, i) => {
+        const fallback = destinations[i % destinations.length];
+        const isRajasthan = loc.region?.toLowerCase().includes("rajasthan");
+        return {
+          id: loc.slug || fallback.id || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          image: loc.imagePath || fallback.image,
+          price: loc.price || fallback.price,
+          title: loc.name || fallback.title,
+          region: isRajasthan ? "rajasthan" : "himalayan",
+          facilities: loc.services?.length ? loc.services : fallback.facilities,
+          detailsHref: loc.detailsUrl || (loc.slug ? `/locations/${loc.slug}` : fallback.detailsHref),
+        };
+      })
     : destinations;
+
+  const totalCount = mappedDestinations.length;
+  const himachalCount = mappedDestinations.filter(
+    (d) => d.region === "himalayan"
+  ).length;
+  const rajasthanCount = mappedDestinations.filter(
+    (d) => d.region === "rajasthan"
+  ).length;
+
+  const filters = [
+    { key: "all", label: `All Enclaves (${totalCount})` },
+    { key: "himalayan", label: `Himachal Pradesh (${himachalCount})` },
+    { key: "rajasthan", label: `Rajasthan (${rajasthanCount})` },
+    { key: "facilities", label: "Filter Facilities" },
+  ] as const;
 
   const filtered =
     activeFilter === "all" || activeFilter === "facilities"
@@ -327,9 +337,9 @@ export function LocationsSection({
     >
       <div className="container-site">
         <div className="flex justify-center mb-4">
-          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal">
+          <span className="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-kynta-charcoal">
             <span
-              className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0"
+              className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: "var(--kynta-rust)" }}
               aria-hidden="true"
             />
@@ -337,25 +347,11 @@ export function LocationsSection({
           </span>
         </div>
 
-        <h2
-          className="font-serif text-center leading-[1.18] mb-4"
-          style={{
-            fontSize: "clamp(30px, 3.5vw, 48px)",
-            color: "var(--kynta-charcoal)",
-          }}
-        >
+        <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-center mb-4 text-kynta-charcoal">
           <span style={{ color: "var(--kynta-teal)" }}>{headingHeading}</span>
         </h2>
 
-        <p
-          className="text-center mx-auto mb-8"
-          style={{
-            maxWidth: "520px",
-            fontSize: "14px",
-            lineHeight: "1.75",
-            color: "var(--kynta-warm-gray)",
-          }}
-        >
+        <p className="text-center mx-auto mb-8 max-w-xl text-[15px] leading-[1.7] text-kynta-warm-gray">
           {description}
         </p>
 

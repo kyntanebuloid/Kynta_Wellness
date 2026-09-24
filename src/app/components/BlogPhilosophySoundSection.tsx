@@ -114,17 +114,17 @@ export function BlogPhilosophySoundSection({
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden border-t border-kynta-border/30"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-start">
           <div className="flex flex-col">
             <div className="mb-8">
-              <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+              <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
                 {data?.eyebrow || "LIVING PHILOSOPHY"}
               </p>
-              <h2 className="font-serif text-[28px] sm:text-[32px] md:text-[36px] leading-[1.18] text-kynta-charcoal font-normal mb-2.5">
+              <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">
                 {data?.heading || "Practitioner Field Notes"}
               </h2>
-              <p className="text-[12px] md:text-[12.5px] leading-[1.6] text-kynta-warm-gray">
+              <p className="text-[15px] leading-[1.7] text-kynta-warm-gray">
                 {data?.description ||
                   "Concise reflections on daily mindfulness, prana containment, and herbal decoctions by resident Vaidyas."}
               </p>
@@ -138,19 +138,19 @@ export function BlogPhilosophySoundSection({
                   style={{ backgroundColor: "#f1f4f2" }}
                 >
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal">
+                    <span className="text-xs font-semibold tracking-wide uppercase text-kynta-charcoal">
                       {note.author}
                     </span>
-                    <span className="text-[10.5px] text-kynta-warm-gray">
+                    <span className="text-xs text-kynta-warm-gray">
                       {note.location}
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-[15px] sm:text-[15.5px] leading-snug font-normal text-kynta-charcoal mb-2">
+                  <h3 className="font-serif text-lg leading-snug font-normal text-kynta-charcoal mb-2">
                     {note.title}
                   </h3>
 
-                  <p className="text-[11px] sm:text-[11.5px] leading-[1.62] text-kynta-warm-gray">
+                  <p className="text-[13px] leading-[1.65] text-kynta-warm-gray">
                     {note.quote}
                   </p>
                 </div>
@@ -160,13 +160,13 @@ export function BlogPhilosophySoundSection({
 
           <div className="flex flex-col">
             <div className="mb-8">
-              <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+              <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
                 SONIC RESTORATIVES
               </p>
-              <h2 className="font-serif text-[28px] sm:text-[32px] md:text-[36px] leading-[1.18] text-kynta-charcoal font-normal mb-2.5">
+              <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">
                 Soundscapes &amp; Audio Treatises
               </h2>
-              <p className="text-[12px] md:text-[12.5px] leading-[1.6] text-kynta-warm-gray">
+              <p className="text-[15px] leading-[1.7] text-kynta-warm-gray">
                 Bespoke spatial soundscapes recorded inside our temple
                 courtyards, calibrated for deep theta meditation.
               </p>
@@ -201,10 +201,10 @@ export function BlogPhilosophySoundSection({
                       </button>
 
                       <div className="min-w-0">
-                        <h3 className="font-serif text-[14px] sm:text-[15px] leading-snug font-normal text-kynta-charcoal truncate mb-0.5">
+                        <h3 className="font-serif text-base sm:text-lg leading-snug font-normal text-kynta-charcoal truncate mb-0.5">
                           {track.title}
                         </h3>
-                        <p className="text-[11px] text-kynta-warm-gray truncate">
+                        <p className="text-[13px] text-kynta-warm-gray truncate">
                           <span>{track.subtitle}</span>
                           <span className="mx-1.5">•</span>
                           <span className="text-kynta-rust font-medium">

@@ -66,7 +66,7 @@ export function HospitalityStatsSection({
       className="w-full py-12 sm:py-16 md:py-20 border-t border-b border-kynta-border/40"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-8">
           {metrics.map((item) => (
             <div key={item.id} className="flex flex-col items-start">

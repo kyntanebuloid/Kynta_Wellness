@@ -124,24 +124,21 @@ function LeadershipCard({ member }: { member: LeadershipMember }) {
       </div>
 
       <div className="p-[22px] flex flex-col flex-1">
-        <p className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust mb-1.5">
+        <p className="text-xs font-semibold tracking-wider uppercase text-kynta-rust mb-1.5">
           {member.role}
         </p>
 
-        <h3
-          className="text-[12.5px] md:text-[13px] font-medium mb-3.5"
-          style={{ color: "var(--kynta-teal-dark)" }}
-        >
+        <h3 className="font-serif text-xl leading-snug text-kynta-charcoal mb-2">
           {member.name}
         </h3>
 
-        <p className="text-[12px] md:text-[12.5px] leading-[1.58] text-kynta-warm-gray mb-6 flex-1">
+        <p className="text-[13px] leading-[1.65] text-kynta-warm-gray mb-6 flex-1">
           {member.bio}
         </p>
 
         <div className="flex items-center gap-2 pt-1 mt-auto">
           <CredentialIcon type={member.credentialIcon} />
-          <span className="text-[11px] text-kynta-warm-gray font-normal">
+          <span className="text-xs text-kynta-warm-gray font-normal">
             {member.credentialText}
           </span>
         </div>
@@ -194,18 +191,15 @@ export function AboutLeadershipSection({ data }: AboutLeadershipSectionProps) {
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[920px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="text-left mb-12 md:mb-14">
-          <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+          <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
             {eyebrow}
           </p>
-          <h2
-            className="font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-snug font-normal mb-3"
-            style={{ color: "var(--kynta-teal-dark)" }}
-          >
+          <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
             {heading}
           </h2>
-          <p className="text-[12px] md:text-[12.5px] leading-[1.65] text-kynta-warm-gray max-w-[520px]">
+          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-xl">
             {description}
           </p>
         </div>

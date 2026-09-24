@@ -33,7 +33,7 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
       className="w-full py-16 sm:py-20 lg:py-24 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           <div className="lg:col-span-7 flex flex-col items-start">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#eee9df] border border-kynta-border/50 mb-6">
@@ -41,23 +41,23 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                 className="w-1.5 h-1.5 rounded-full bg-kynta-rust flex-shrink-0"
                 aria-hidden="true"
               />
-              <span className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
+              <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
                 {eyebrow}
               </span>
             </div>
 
-            <h1 className="font-serif text-[34px] sm:text-[40px] md:text-[46px] lg:text-[48px] leading-[1.12] text-kynta-charcoal font-normal mb-5 max-w-[520px]">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal font-normal mb-5 max-w-xl">
               {heading}
             </h1>
 
-            <p className="text-[13px] md:text-[13.5px] leading-[1.68] text-kynta-warm-gray max-w-[460px] mb-8">
+            <p className="text-base sm:text-lg text-kynta-warm-gray leading-relaxed max-w-lg mb-8">
               {description}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3.5 mb-8 md:mb-10">
+            <div className="flex flex-wrap items-center gap-4 mb-8 md:mb-10">
               <Link
                 href="/contact"
-                className="px-6 py-3 rounded-full bg-[#004349] hover:bg-[#023338] text-white text-[11px] font-medium tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
               >
                 <span>REQUEST FEASIBILITY STUDY</span>
                 <svg

@@ -82,16 +82,16 @@ export function HospitalityTransformationsSection({
       className="w-full py-20 md:py-24 lg:py-28 overflow-hidden"
       style={{ backgroundColor: "#f7faf8" }}
     >
-      <div className="max-w-[1060px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-12 md:mb-16">
           <div className="lg:col-span-5 flex flex-col items-start">
-            <p className="text-[10.5px] md:text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
-            <h2 className="font-serif text-[28px] sm:text-[32px] md:text-[36px] leading-[1.18] text-kynta-charcoal font-normal mb-3.5 max-w-[420px]">
+            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 max-w-xl">
               {heading}
             </h2>
-            <p className="text-[12px] md:text-[12.5px] leading-[1.65] text-kynta-warm-gray max-w-[400px]">
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
               {description}
             </p>
           </div>
@@ -117,7 +117,7 @@ export function HospitalityTransformationsSection({
             >
               <div className="p-6 sm:p-7 flex flex-col flex-1">
                 <div className="flex items-center justify-between gap-2 mb-3.5">
-                  <span className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.12em] uppercase text-kynta-rust">
+                  <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
                     {item.location}
                   </span>
                   <span
@@ -131,11 +131,11 @@ export function HospitalityTransformationsSection({
                   </span>
                 </div>
 
-                <h3 className="font-serif text-[17px] sm:text-[18px] md:text-[19px] leading-snug font-normal text-kynta-charcoal mb-2.5">
+                <h3 className="font-serif text-xl lg:text-[22px] leading-snug text-kynta-charcoal mb-2.5">
                   {item.title}
                 </h3>
 
-                <p className="text-[11.5px] md:text-[12px] leading-[1.62] text-kynta-warm-gray flex-1">
+                <p className="text-[13px] leading-[1.7] text-kynta-warm-gray flex-1">
                   {item.description}
                 </p>
               </div>

@@ -52,21 +52,21 @@ export function ContactSection({ data }: ContactSectionProps) {
 
   return (
     <section
-      className="w-full py-12 sm:py-16 md:py-20 lg:py-24"
+      className="w-full py-16 md:py-20 lg:py-24"
       style={{ backgroundColor: "#f1f4f2" }}
     >
-      <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+      <div className="container-site">
         <div className="mb-12 sm:mb-14 lg:mb-16">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-kynta-rust flex-shrink-0" />
-            <span className="text-[10px] sm:text-[10.5px] md:text-[11px] font-semibold tracking-[0.18em] uppercase text-kynta-rust">
+            <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
               {data?.hero?.eyebrow || "SANCTUARY LIAISON &amp; CONCIERGE"}
             </span>
           </div>
-          <h1 className="font-serif text-[34px] sm:text-[42px] md:text-[48px] lg:text-[52px] leading-[1.12] text-kynta-teal-dark font-normal mb-3.5">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-teal-dark font-normal mb-4">
             {data?.hero?.heading || "Connect With Our Sanctuary Desks"}
           </h1>
-          <p className="text-[13px] sm:text-[13.5px] md:text-[14px] leading-[1.65] text-kynta-warm-gray max-w-[760px]">
+          <p className="text-[15px] sm:text-[16px] leading-[1.75] text-kynta-warm-gray max-w-2xl">
             {data?.hero?.subheading ||
               "Connect with our sanctuary curators for retreat reservations, clinical Vaidya consultations, and institutional advisory. Our team responds with ancestral precision and unyielding discretion."}
           </p>
