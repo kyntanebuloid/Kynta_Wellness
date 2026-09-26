@@ -638,6 +638,8 @@ export const allExperiencesQuery = defineQuery(
     duration,
     sensoryNote,
     price,
+    priceAmount,
+    currency,
     primaryCta,
     secondaryCta,
     image,
@@ -645,6 +647,36 @@ export const allExperiencesQuery = defineQuery(
     footerNote,
     highlights,
     seo
+  }`,
+);
+
+export const bookableExperiencesQuery = defineQuery(
+  `*[
+    _type == "experience" &&
+    !(_id in path("drafts.**")) &&
+    defined(priceAmount) &&
+    priceAmount > 0 &&
+    currency == "INR"
+  ] | order(title asc) {
+    _id,
+    title,
+    duration,
+    price,
+    priceAmount,
+    currency
+  }`,
+);
+
+export const experiencePricingByIdQuery = defineQuery(
+  `*[
+    _type == "experience" &&
+    !(_id in path("drafts.**")) &&
+    _id == $id
+  ][0] {
+    _id,
+    title,
+    priceAmount,
+    currency
   }`,
 );
 
@@ -659,6 +691,8 @@ export const experienceBySlugQuery = defineQuery(
     duration,
     sensoryNote,
     price,
+    priceAmount,
+    currency,
     primaryCta,
     secondaryCta,
     image,
@@ -672,4 +706,3 @@ export const experienceBySlugQuery = defineQuery(
 export const allExperienceSlugsQuery = defineQuery(
   `*[_type == "experience" && defined(slug.current)][].slug.current`,
 );
-

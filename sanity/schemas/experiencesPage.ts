@@ -41,8 +41,8 @@ export default defineType({
       type: "array",
       of: [
         defineField({
-          name: "experience",
-          title: "Experience",
+          name: "experienceCard",
+          title: "Experience Card",
           type: "object",
           fields: [
             defineField({ name: "title", title: "Title", type: "string" }),
@@ -141,6 +141,13 @@ export default defineType({
               type: "object",
               fields: [
                 defineField({ name: "title", title: "Title", type: "string" }),
+                defineField({
+                  name: "slug",
+                  title: "Slug / Link",
+                  type: "string",
+                  description:
+                    "Experience path segment, e.g. spa-sojourns → /experiences/spa-sojourns",
+                }),
                 defineField({
                   name: "description",
                   title: "Description",

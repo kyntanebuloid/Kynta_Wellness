@@ -251,12 +251,12 @@ const experiencesPage = {
 		{ _key: "filter-sound", _type: "filter", label: "Sound & Meditative Immersion", value: "sound" },
 	],
 	experiences: [
-		{ _key: "exp-spa-sojourns", _type: "experience", title: "SPA SOJOURNS", description: "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe.", category: "Signature Rituals", duration: "75 / 90 Mins", price: "₹8,500" },
-		{ _key: "exp-massage", _type: "experience", title: "MASSAGE SELECTIONS", description: "Step into a world of deep relaxation with our curated Full Body Massage selections.", category: "Signature Rituals", duration: "60 / 90 Mins", price: "₹6,500" },
-		{ _key: "exp-glamour", _type: "experience", title: "GLAMOUR GLOW", description: "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin.", category: "Signature Rituals", duration: "60 Mins", price: "₹5,500" },
-		{ _key: "exp-hydro", _type: "experience", title: "HYDROTHERAPY PLUNGE", description: "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration.", category: "Hydrothermal & Thermal Baths", duration: "45 Mins", price: "₹4,500" },
-		{ _key: "exp-couples", _type: "experience", title: "COUPLES SANCTUARY", description: "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals.", category: "Couples & Duets", duration: "120 Mins", price: "₹18,000" },
-		{ _key: "exp-sound", _type: "experience", title: "SOUND IMMERSION", description: "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states.", category: "Sound & Meditative Immersion", duration: "60 Mins", price: "₹5,000" },
+		{ _key: "exp-spa-sojourns", _type: "experienceCard", title: "SPA SOJOURNS", description: "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe.", category: "Signature Rituals", duration: "75 / 90 Mins", price: "₹8,500" },
+		{ _key: "exp-massage", _type: "experienceCard", title: "MASSAGE SELECTIONS", description: "Step into a world of deep relaxation with our curated Full Body Massage selections.", category: "Signature Rituals", duration: "60 / 90 Mins", price: "₹6,500" },
+		{ _key: "exp-glamour", _type: "experienceCard", title: "GLAMOUR GLOW", description: "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin.", category: "Signature Rituals", duration: "60 Mins", price: "₹5,500" },
+		{ _key: "exp-hydro", _type: "experienceCard", title: "HYDROTHERAPY PLUNGE", description: "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration.", category: "Hydrothermal & Thermal Baths", duration: "45 Mins", price: "₹4,500" },
+		{ _key: "exp-couples", _type: "experienceCard", title: "COUPLES SANCTUARY", description: "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals.", category: "Couples & Duets", duration: "120 Mins", price: "₹18,000" },
+		{ _key: "exp-sound", _type: "experienceCard", title: "SOUND IMMERSION", description: "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states.", category: "Sound & Meditative Immersion", duration: "60 Mins", price: "₹5,000" },
 	],
 	pillars: {
 		eyebrow: "The Four Pillars of Kynta",
@@ -824,6 +824,8 @@ const experiences = [
 		duration: "75 / 90 Mins",
 		sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver",
 		price: "₹8,500",
+		priceAmount: 8500,
+		currency: "INR",
 		primaryCta: { label: "EXPLORE MASSAGES", url: "/experiences/massage-selections" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {
@@ -845,6 +847,8 @@ const experiences = [
 		duration: "60 / 90 Mins",
 		sensoryNote: "Brahmi • Ashwagandha • Sandalwood",
 		price: "₹6,500",
+		priceAmount: 6500,
+		currency: "INR",
 		primaryCta: { label: "RESERVE THERAPY", url: "/contact" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {
@@ -866,6 +870,8 @@ const experiences = [
 		duration: "60 Mins",
 		sensoryNote: "Floral Jasmine • Mineral Crisp • Sweet Neroli",
 		price: "₹5,500",
+		priceAmount: 5500,
+		currency: "INR",
 		primaryCta: { label: "EXPLORE RITUALS", url: "/experiences/spa-sojourns" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {
@@ -886,6 +892,8 @@ const experiences = [
 		category: "Hydrothermal & Thermal Baths",
 		duration: "45 Mins",
 		price: "₹4,500",
+		priceAmount: 4500,
+		currency: "INR",
 		primaryCta: { label: "EXPLORE CIRCUITS", url: "/experiences" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {
@@ -906,6 +914,8 @@ const experiences = [
 		category: "Couples & Duets",
 		duration: "120 Mins",
 		price: "₹18,000",
+		priceAmount: 18000,
+		currency: "INR",
 		primaryCta: { label: "RESERVE DUET", url: "/contact" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {
@@ -926,6 +936,8 @@ const experiences = [
 		category: "Sound & Meditative Immersion",
 		duration: "60 Mins",
 		price: "₹5,000",
+		priceAmount: 5000,
+		currency: "INR",
 		primaryCta: { label: "EXPLORE SOUNDSCAPES", url: "/blog" },
 		secondaryCta: { label: "CONCIERGE SCHEDULING", url: "/contact" },
 		gallery: {

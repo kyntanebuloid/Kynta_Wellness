@@ -1,3 +1,4 @@
+import { getBookableExperienceOptions } from "@/lib/actions/bookings";
 import { getHomepage, getSiteSettings } from "@/lib/sanity/data";
 import { DestinationsSection } from "./components/DestinationsSection";
 import { Footer } from "./components/Footer";
@@ -13,10 +14,12 @@ import { TopBar } from "./components/TopBar";
 import { TreatmentsSection } from "./components/TreatmentsSection";
 
 export default async function Home() {
-  const [siteSettings, homepage] = await Promise.all([
+  const [siteSettings, homepage, experiencesResult] = await Promise.all([
     getSiteSettings(),
     getHomepage(),
+    getBookableExperienceOptions(),
   ]);
+  const services = experiencesResult.data ?? [];
 
   return (
     <>
@@ -31,7 +34,10 @@ export default async function Home() {
         <GuestPathSection data={homepage?.guestPathSection} />
         <PartnershipSection data={homepage?.partnershipSection} />
         <JournalSection data={homepage?.journalSection} />
-        <ReservationSection data={homepage?.reservationSection} />
+        <ReservationSection
+          data={homepage?.reservationSection}
+          services={services}
+        />
       </main>
       <Footer data={siteSettings?.footer} />
     </>

@@ -25,7 +25,7 @@ export function Hero({ data }: HeroProps) {
 
   return (
     <section className="relative w-full overflow-hidden" id="hero">
-      <div className="relative w-full" style={{ aspectRatio: "16 / 7.5" }}>
+      <div className="hero-frame relative w-full">
         <Image
           src="/hero-bg.jpg"
           alt="Luxurious Indian heritage spa courtyard with lotus pool"
@@ -43,7 +43,7 @@ export function Hero({ data }: HeroProps) {
           }}
         />
 
-        <div className="absolute inset-0 flex items-center">
+        <div className="hero-content absolute inset-0 flex items-center">
           <div className="container-site w-full">
             <div className="max-w-xl lg:max-w-2xl">
               <div className="flex items-center gap-2 mb-6">
@@ -103,9 +103,25 @@ export function Hero({ data }: HeroProps) {
       </div>
 
       <style>{`
+				#hero .hero-frame {
+					aspect-ratio: 16 / 7.5;
+				}
+
 				@media (max-width: 639px) {
-					#hero > div:first-child {
-						aspect-ratio: 4 / 5;
+					#hero .hero-frame {
+						aspect-ratio: auto;
+						min-height: 480px;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+					}
+
+					#hero .hero-content {
+						position: relative;
+						inset: auto;
+						width: 100%;
+						padding-top: 48px;
+						padding-bottom: 48px;
 					}
 				}
 			`}</style>

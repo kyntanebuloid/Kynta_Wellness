@@ -88,6 +88,9 @@ export default defineConfig({
               ),
             S.divider(),
             S.listItem()
+              .title("Experiences")
+              .child(S.documentTypeList("experience").title("Experiences")),
+            S.listItem()
               .title("Services & Treatments")
               .child(
                 S.list()

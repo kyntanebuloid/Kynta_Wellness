@@ -17,6 +17,19 @@ export function sanityClient() {
   });
 }
 
+export function sanityNoCdnClient() {
+  if (!projectId) {
+    throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
+  }
+
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+  });
+}
+
 export function sanityPreviewClient() {
   if (!projectId) {
     throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");

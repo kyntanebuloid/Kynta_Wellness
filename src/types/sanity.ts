@@ -622,6 +622,8 @@ export interface Experience {
   duration?: string;
   sensoryNote?: string;
   price?: string;
+  priceAmount?: number;
+  currency?: string;
   primaryCta?: {
     label?: string;
     url?: string;
@@ -657,4 +659,3 @@ export interface Experience {
     ogImage?: SanityImage;
   };
 }
-

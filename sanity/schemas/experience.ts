@@ -51,9 +51,27 @@ export default defineType({
     }),
     defineField({
       name: "price",
-      title: "Price",
+      title: "Price (display)",
       type: "string",
-      description: "e.g. ₹8,500",
+      description: "Display only, e.g. ₹8,500 — not used for payments",
+    }),
+    defineField({
+      name: "priceAmount",
+      title: "Price Amount",
+      type: "number",
+      description:
+        "Numeric price in INR major units for Razorpay (e.g. 8500 = ₹8,500). Source of truth for booking charges.",
+      validation: (rule) => rule.min(0).precision(2),
+    }),
+    defineField({
+      name: "currency",
+      title: "Currency",
+      type: "string",
+      options: {
+        list: [{ title: "INR (₹)", value: "INR" }],
+      },
+      initialValue: "INR",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "primaryCta",
@@ -78,9 +96,7 @@ export default defineType({
       title: "Main Thumbnail Image",
       type: "image",
       options: { hotspot: true },
-      fields: [
-        defineField({ name: "alt", title: "Alt Text", type: "string" }),
-      ],
+      fields: [defineField({ name: "alt", title: "Alt Text", type: "string" })],
     }),
     defineField({
       name: "gallery",
@@ -98,9 +114,17 @@ export default defineType({
               type: "image",
               options: { hotspot: true },
             }),
-            defineField({ name: "tag", title: "Tag / Eyebrow", type: "string" }),
+            defineField({
+              name: "tag",
+              title: "Tag / Eyebrow",
+              type: "string",
+            }),
             defineField({ name: "title", title: "Card Title", type: "string" }),
-            defineField({ name: "badge", title: "Right Badge", type: "string" }),
+            defineField({
+              name: "badge",
+              title: "Right Badge",
+              type: "string",
+            }),
           ],
         }),
         defineField({
@@ -114,7 +138,11 @@ export default defineType({
               type: "image",
               options: { hotspot: true },
             }),
-            defineField({ name: "tag", title: "Tag / Eyebrow", type: "string" }),
+            defineField({
+              name: "tag",
+              title: "Tag / Eyebrow",
+              type: "string",
+            }),
             defineField({ name: "title", title: "Card Title", type: "string" }),
           ],
         }),
@@ -129,7 +157,11 @@ export default defineType({
               type: "image",
               options: { hotspot: true },
             }),
-            defineField({ name: "tag", title: "Tag / Eyebrow", type: "string" }),
+            defineField({
+              name: "tag",
+              title: "Tag / Eyebrow",
+              type: "string",
+            }),
             defineField({ name: "title", title: "Card Title", type: "string" }),
           ],
         }),
@@ -139,7 +171,8 @@ export default defineType({
       name: "footerNote",
       title: "Footer Note",
       type: "string",
-      description: "e.g. Curated full-body therapies with cold-pressed botanical infusions",
+      description:
+        "e.g. Curated full-body therapies with cold-pressed botanical infusions",
     }),
     defineField({
       name: "highlights",
