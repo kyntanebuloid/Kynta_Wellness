@@ -106,11 +106,16 @@ type GenericRelationship = {
   referencedColumns: string[];
 };
 
-type TableTypes<Row, Insert, Update> = {
+type TableTypes<
+  Row,
+  Insert,
+  Update,
+  Rel extends GenericRelationship[] = GenericRelationship[],
+> = {
   Row: Row;
   Insert: Insert;
   Update: Update;
-  Relationships: GenericRelationship[];
+  Relationships: Rel;
 };
 
 export type Database = {
@@ -174,7 +179,15 @@ export type Database = {
           razorpay_order_id?: string | null;
           razorpay_payment_id?: string | null;
         },
-        Partial<Omit<Payment, "id" | "created_at" | "updated_at">>
+        Partial<Omit<Payment, "id" | "created_at" | "updated_at">>,
+        [
+          {
+            foreignKeyName: "payments_booking_id_fkey";
+            columns: ["booking_id"];
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ]
       >;
     };
     Views: Record<string, never>;
