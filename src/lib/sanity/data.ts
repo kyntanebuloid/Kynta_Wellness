@@ -46,7 +46,8 @@ import {
 } from "./queries";
 
 export const SANITY_CACHE_TAG = "sanity";
-const SANITY_REVALIDATE_SECONDS = 300;
+const SANITY_REVALIDATE_SECONDS = 60;
+const IS_DEV = process.env.NODE_ENV === "development";
 const SANITY_TIMEOUT_MS = 5000;
 const PRICING_TIMEOUT_MS = 8000;
 const BREAKER_FAILURE_THRESHOLD = 3;
@@ -105,7 +106,9 @@ async function fetchSanity<T>(
   params?: Record<string, string>,
 ): Promise<T | null> {
   try {
-    return (await cachedSanityFetch(query, params ?? {})) as T;
+    // Skip the cache in dev so Studio edits show on the next refresh.
+    const fetcher = IS_DEV ? fetchFromSanity<unknown> : cachedSanityFetch;
+    return (await fetcher(query, params ?? {})) as T;
   } catch (err) {
     console.warn(
       "[sanity] fetch failed, using fallback content:",
