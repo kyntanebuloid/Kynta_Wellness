@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import type {
   AboutPage,
   BlogPage,
@@ -44,17 +45,72 @@ import {
   treatmentBySlugQuery,
 } from "./queries";
 
+export const SANITY_CACHE_TAG = "sanity";
+const SANITY_REVALIDATE_SECONDS = 300;
+const SANITY_TIMEOUT_MS = 5000;
+const PRICING_TIMEOUT_MS = 8000;
+const BREAKER_FAILURE_THRESHOLD = 3;
+const BREAKER_COOLDOWN_MS = 30_000;
+
+let consecutiveFailures = 0;
+let breakerOpenUntil = 0;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Sanity request timed out after ${ms}ms`)),
+      ms,
+    );
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+// While the breaker is open, cache misses fail fast instead of each waiting
+// out the timeout; cached entries are still served since this runs on a miss.
+async function fetchFromSanity<T>(
+  query: string,
+  params: Record<string, string>,
+): Promise<T> {
+  if (Date.now() < breakerOpenUntil) {
+    throw new Error("Sanity temporarily skipped after repeated failures");
+  }
+  try {
+    const result = await withTimeout(
+      sanityClient().fetch<T>(query, params),
+      SANITY_TIMEOUT_MS,
+    );
+    consecutiveFailures = 0;
+    return result;
+  } catch (err) {
+    consecutiveFailures += 1;
+    if (consecutiveFailures >= BREAKER_FAILURE_THRESHOLD) {
+      breakerOpenUntil = Date.now() + BREAKER_COOLDOWN_MS;
+      consecutiveFailures = 0;
+    }
+    throw err;
+  }
+}
+
+// Failures throw instead of returning null so they are never cached.
+const cachedSanityFetch = unstable_cache(
+  (query: string, params: Record<string, string>) =>
+    fetchFromSanity<unknown>(query, params),
+  ["sanity-query"],
+  { tags: [SANITY_CACHE_TAG], revalidate: SANITY_REVALIDATE_SECONDS },
+);
+
 async function fetchSanity<T>(
   query: string,
   params?: Record<string, string>,
 ): Promise<T | null> {
   try {
-    const client = sanityClient();
-    if (params) {
-      return await client.fetch<T>(query, params);
-    }
-    return await client.fetch<T>(query);
-  } catch {
+    return (await cachedSanityFetch(query, params ?? {})) as T;
+  } catch (err) {
+    console.warn(
+      "[sanity] fetch failed, using fallback content:",
+      err instanceof Error ? err.message : err,
+    );
     return null;
   }
 }
@@ -544,9 +600,11 @@ export async function getExperiencePricing(experienceId: string): Promise<{
 
   try {
     const client = sanityNoCdnClient();
-    const result = await client.fetch<ExperiencePricing | null>(
-      experiencePricingByIdQuery,
-      { id: experienceId },
+    const result = await withTimeout(
+      client.fetch<ExperiencePricing | null>(experiencePricingByIdQuery, {
+        id: experienceId,
+      }),
+      PRICING_TIMEOUT_MS,
     );
 
     if (!result) {

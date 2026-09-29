@@ -35,6 +35,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+
+  // The Supabase user lookup is a network round-trip; public pages don't need it.
+  if (!isProtectedRoute && !isAuthRoute) {
+    return NextResponse.next();
+  }
+
   const supabase = await createClient();
 
   const {
@@ -42,14 +52,14 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Redirect unauthenticated users away from protected routes
-  if (!user && protectedRoutes.some((route) => pathname.startsWith(route))) {
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 
   // Redirect authenticated users away from auth routes
-  if (user && authRoutes.some((route) => pathname.startsWith(route))) {
+  if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
