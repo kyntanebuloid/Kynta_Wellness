@@ -16,39 +16,39 @@ interface PartnershipSectionProps {
 const defaultServices = [
   {
     icon: "spatial",
-    title: "Spatial Concept & Flow",
+    title: "Spa Design & Planning",
     description:
-      "Advisory on wet/dry zoning, MEP requirements, acoustic buffering, treatment room ergonomics, and thermal water circuits.",
+      "We help you plan the spa rooms, water areas, quiet spaces and the full layout.",
   },
   {
     icon: "management",
-    title: "Turnkey Daily Management",
+    title: "We Run Your Spa Daily",
     description:
-      "100% outsourced operations: reservation desk management, luxury service standards, inventory, linen stewardship, and safety audits.",
+      "We do everything: bookings, guest service, supplies, towels and safety checks.",
   },
   {
     icon: "sourcing",
-    title: "Academy Therapist Sourcing",
+    title: "Trained Therapists",
     description:
-      "Certified residential recruitment pipeline. We absorb therapist payroll, ongoing certification, medical compliance, and retention risk.",
+      "We hire and train the therapists. We pay them and take care of all their paperwork.",
   },
   {
     icon: "formulation",
-    title: "Apothecary Formulation",
+    title: "Our Own Herbal Products",
     description:
-      "Exclusive single-estate herbal formulations and custom hotel-branded apothecary lines packaged in sustainable apothecary glass.",
+      "Pure herbal oils and products, even with your hotel's name on them, in eco-friendly glass bottles.",
   },
   {
     icon: "revpash",
-    title: "RevPASH Optimization",
+    title: "More Spa Income",
     description:
-      "Proprietary yield algorithms driving treatment room utilization across peak and non-peak hours, increasing overall property ADR.",
+      "Smart booking keeps your spa rooms busy at all hours, so your hotel earns more money.",
   },
   {
     icon: "brand",
-    title: "Brand Asset Elevation",
+    title: "Better Hotel Reviews",
     description:
-      "Enhance your luxury hotel credentials. Partner properties report immediate boosts in Condé Nast and TripAdvisor wellness ratings.",
+      "A great spa makes your hotel look better. Our partner hotels get higher ratings on sites like TripAdvisor.",
   },
 ];
 
@@ -68,7 +68,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "spatial":
       return (
         <svg {...common}>
-          <title>Spatial Concept</title>
+          <title>Spa Design</title>
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
           <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
@@ -76,7 +76,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "management":
       return (
         <svg {...common}>
-          <title>Daily Management</title>
+          <title>Daily Running</title>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           <path d="m9 12 2 2 4-4" />
         </svg>
@@ -84,7 +84,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "sourcing":
       return (
         <svg {...common}>
-          <title>Therapist Sourcing</title>
+          <title>Therapists</title>
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -94,7 +94,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "formulation":
       return (
         <svg {...common}>
-          <title>Apothecary Formulation</title>
+          <title>Herbal Products</title>
           <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" />
           <path d="M8.5 2h7" />
           <path d="M7 16.5h10" />
@@ -103,7 +103,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "revpash":
       return (
         <svg {...common}>
-          <title>RevPASH Optimization</title>
+          <title>More Income</title>
           <line x1="12" y1="20" x2="12" y2="10" />
           <line x1="18" y1="20" x2="18" y2="4" />
           <line x1="6" y1="20" x2="6" y2="14" />
@@ -112,7 +112,7 @@ function ServiceIcon({ type }: { type: string }) {
     case "brand":
       return (
         <svg {...common}>
-          <title>Brand Asset Elevation</title>
+          <title>Better Reviews</title>
           <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
           <polyline points="16 7 22 7 22 13" />
         </svg>
@@ -147,10 +147,8 @@ function ServiceCard({
 }
 
 export function PartnershipSection({ data }: PartnershipSectionProps) {
-  const eyebrow = data?.eyebrow || "Institutional Hospitality Management";
-  const heading =
-    data?.heading ||
-    "A turnkey wellness operation built for five-star hospitality.";
+  const eyebrow = data?.eyebrow || "For Hotel Owners";
+  const heading = data?.heading || "We run your hotel spa for you.";
 
   const services =
     data?.services?.map((s) => ({
@@ -174,10 +172,9 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               {heading}
             </h2>
             <p className="text-[14px] leading-[1.7] text-white/55 max-w-md">
-              We eliminate the operational friction of hotel spa management.
-              Kynta assumes full custodial responsibility—from architecting
-              physical footprints to hiring certified therapists and driving
-              ancillary guest folio spend.
+              Running a spa is hard work. We do it all for you. We plan the
+              space, hire trained therapists, run the spa every day, and help
+              your hotel earn more.
             </p>
           </div>
           <div className="flex flex-col justify-end gap-3 md:max-w-sm md:ml-auto">
@@ -186,7 +183,7 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               className="flex items-center justify-center gap-2 w-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white rounded-md transition-colors"
               style={{ backgroundColor: "#9b5a3c" }}
             >
-              Request Partnership Dossier
+              Get Partner Details
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -206,7 +203,7 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               href="/contact"
               className="flex items-center justify-center w-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors"
             >
-              Schedule a Hotel Audit Call
+              Book a Call With Us
             </Link>
           </div>
         </div>

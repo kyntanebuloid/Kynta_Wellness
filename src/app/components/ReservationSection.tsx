@@ -15,6 +15,11 @@ interface BookableService {
   duration?: string | null;
 }
 
+interface Location {
+  name: string;
+  slug?: string;
+}
+
 interface ReservationSectionProps {
   data?: {
     eyebrow?: string;
@@ -30,6 +35,7 @@ interface ReservationSectionProps {
     contactAddress?: string;
   };
   services?: BookableService[];
+  locations?: Location[];
 }
 
 declare global {
@@ -81,7 +87,7 @@ function ClockIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <title>Unhurried</title>
+      <title>No rush</title>
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -100,7 +106,7 @@ function ShieldIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <title>Confidential</title>
+      <title>Privacy</title>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       <path d="m9 12 2 2 4-4" />
     </svg>
@@ -119,7 +125,7 @@ function ChatIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <title>Direct concierge</title>
+      <title>Chat</title>
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   );
@@ -148,15 +154,15 @@ function FieldLabel({
 const defaultInfoCards = [
   {
     icon: "clock",
-    title: "Unhurried Reservations",
+    title: "No Rush, No Crowds",
     description:
-      "We limit daily reservations per sanctuary to preserve tranquil acoustics and zero-congestion hydrothermal access.",
+      "We take only a few bookings each day, so the spa always stays quiet and calm.",
   },
   {
     icon: "shield",
-    title: "Confidential Discretion",
+    title: "Your Privacy Matters",
     description:
-      "Special dietary preferences, high-privacy transit, and private hydro-suite arrangements catered with utmost discretion.",
+      "Tell us about food needs, private travel or a private room. We keep it all private.",
   },
 ];
 
@@ -208,12 +214,13 @@ function loadRazorpayScript(): Promise<boolean> {
 export function ReservationSection({
   data,
   services,
+  locations,
 }: ReservationSectionProps) {
-  const eyebrow = data?.eyebrow || "Priority Spa Concierge";
-  const heading = data?.heading || "Request a Curated Experience";
+  const eyebrow = data?.eyebrow || "Book Your Spa Visit";
+  const heading = data?.heading || "Book a Treatment";
   const description =
     data?.description ||
-    "Whether reserving a standalone afternoon somatic session or coordinating a multi-day private sanctuary retreat, our Ayurvedic concierge team personalizes every botanical parameter.";
+    "Book one short session or a stay of many days. Our team will plan every detail for you.";
 
   const infoCards =
     data?.infoCards?.map((c) => ({
@@ -310,7 +317,7 @@ export function ReservationSection({
     ].filter(Boolean);
 
     submittingRef.current = true;
-    setStatus({ kind: "loading", label: "Reserving your experience…" });
+    setStatus({ kind: "loading", label: "Booking…" });
 
     try {
       const bookingResult = await createBooking({
@@ -338,7 +345,7 @@ export function ReservationSection({
 
       const bookingId = bookingResult.data.id;
 
-      setStatus({ kind: "loading", label: "Preparing secure payment…" });
+      setStatus({ kind: "loading", label: "Getting payment ready…" });
 
       const orderResponse = await fetch("/api/create-order", {
         method: "POST",
@@ -360,12 +367,12 @@ export function ReservationSection({
       if (!scriptLoaded || !window.Razorpay) {
         setStatus({
           kind: "error",
-          message: "Could not load Razorpay checkout. Please try again.",
+          message: "Could not open the payment page. Please try again.",
         });
         return;
       }
 
-      setStatus({ kind: "loading", label: "Opening secure checkout…" });
+      setStatus({ kind: "loading", label: "Opening payment…" });
 
       let verified = false;
 
@@ -374,7 +381,7 @@ export function ReservationSection({
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Kynta Wellness",
-        description: orderData.serviceName || "Experience reservation",
+        description: orderData.serviceName || "Spa booking",
         order_id: orderData.orderId,
         prefill: {
           name: guestName,
@@ -391,7 +398,7 @@ export function ReservationSection({
             return;
           }
           verified = true;
-          setStatus({ kind: "loading", label: "Confirming your payment…" });
+          setStatus({ kind: "loading", label: "Checking your payment…" });
 
           try {
             const verifyResponse = await fetch("/api/verify-payment", {
@@ -410,7 +417,7 @@ export function ReservationSection({
               submittingRef.current = false;
               setStatus({
                 kind: "error",
-                message: verifyData.error || "Payment verification failed.",
+                message: verifyData.error || "We could not check your payment.",
               });
               return;
             }
@@ -419,14 +426,14 @@ export function ReservationSection({
             setStatus({
               kind: "success",
               message:
-                "Payment verified. Your booking is confirmed — our concierge will be in touch shortly.",
+                "Payment done. Your booking is confirmed. We will contact you soon.",
             });
             form.reset();
           } catch {
             submittingRef.current = false;
             setStatus({
               kind: "error",
-              message: "Could not confirm payment. Please contact support.",
+              message: "We could not check your payment. Please contact us.",
             });
           }
         },
@@ -439,7 +446,7 @@ export function ReservationSection({
             setStatus({
               kind: "error",
               message:
-                "Checkout was cancelled. Your booking is pending — you can try payment again.",
+                "Payment was cancelled. Your booking is saved. You can try to pay again.",
             });
           },
         },
@@ -449,14 +456,14 @@ export function ReservationSection({
         submittingRef.current = false;
         setStatus({
           kind: "error",
-          message: "Payment failed. Please try again with another method.",
+          message: "Payment failed. Please try another way to pay.",
         });
       });
 
       rzp.open();
       setStatus({
         kind: "loading",
-        label: "Complete payment in the checkout window…",
+        label: "Please finish paying in the payment window…",
       });
     } catch {
       setStatus({
@@ -499,10 +506,10 @@ export function ReservationSection({
                   </div>
                   <div>
                     <h4 className="font-serif text-[15px] text-kynta-charcoal">
-                      Direct Concierge Channel
+                      Talk to Us
                     </h4>
                     <p className="text-[11px] text-kynta-warm-gray">
-                      Instant booking via WhatsApp
+                      Book fast on WhatsApp
                     </p>
                   </div>
                 </div>
@@ -512,7 +519,7 @@ export function ReservationSection({
                   rel="noopener noreferrer"
                   className="px-4 py-2 text-[12px] font-semibold text-white bg-[#25D366] rounded-md hover:bg-[#1fb855] transition-colors"
                 >
-                  WhatsApp Desk
+                  WhatsApp
                 </Link>
               </div>
             </div>
@@ -520,13 +527,13 @@ export function ReservationSection({
 
           <div className="bg-white rounded-lg border border-kynta-border/40 p-6 lg:p-7">
             <h3 className="font-serif text-xl lg:text-[22px] text-kynta-charcoal mb-6">
-              Reservation Particulars
+              Your Booking Details
             </h3>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <FieldLabel htmlFor="guest-name" required>
-                    Guest Full Name
+                    Full Name
                   </FieldLabel>
                   <input
                     id="guest-name"
@@ -534,7 +541,7 @@ export function ReservationSection({
                     type="text"
                     required
                     disabled={isLoading}
-                    placeholder="e.g. Maharani Gayatri Devi"
+                    placeholder="e.g. Priya Sharma"
                     className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
                   />
                 </div>
@@ -566,22 +573,31 @@ export function ReservationSection({
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="destination">
-                    Sanctuary Destination
+                  <FieldLabel htmlFor="destination" required>
+                    Spa Location
                   </FieldLabel>
-                  <input
+                  <select
                     id="destination"
                     name="destination"
-                    type="text"
+                    required
                     disabled={isLoading}
-                    placeholder="The Oberoi Rajvilas, Jaipur"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
+                    defaultValue=""
+                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
+                  >
+                    <option value="" disabled>
+                      Choose a location
+                    </option>
+                    {(locations || []).map((location) => (
+                      <option key={location.name} value={location.name}>
+                        {location.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div>
                 <FieldLabel htmlFor="service-id" required>
-                  Preferred Experience
+                  Treatment
                 </FieldLabel>
                 <select
                   id="service-id"
@@ -593,8 +609,8 @@ export function ReservationSection({
                 >
                   <option value="" disabled>
                     {serviceOptions.length === 0
-                      ? "No experiences available"
-                      : "Select an experience"}
+                      ? "No treatments available"
+                      : "Choose a treatment"}
                   </option>
                   {serviceOptions.map((service) => (
                     <option key={service.id} value={service.id}>
@@ -607,7 +623,7 @@ export function ReservationSection({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <FieldLabel htmlFor="target-date" required>
-                    Target Date
+                    Date
                   </FieldLabel>
                   <input
                     id="target-date"
@@ -620,7 +636,7 @@ export function ReservationSection({
                 </div>
                 <div>
                   <FieldLabel htmlFor="time-slot" required>
-                    Time Slot
+                    Time
                   </FieldLabel>
                   <input
                     id="time-slot"
@@ -632,27 +648,34 @@ export function ReservationSection({
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="party-size">Party Size</FieldLabel>
-                  <input
+                  <FieldLabel htmlFor="party-size">Number of Guests</FieldLabel>
+                  <select
                     id="party-size"
                     name="party-size"
-                    type="text"
                     disabled={isLoading}
-                    placeholder="1 Guest"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
+                    defaultValue="1"
+                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
+                  >
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="6">6 Guests</option>
+                    <option value="other">More Than 6 (Contact Us)</option>
+                  </select>
                 </div>
               </div>
               <div>
                 <FieldLabel htmlFor="special-requests">
-                  Somatic Notes &amp; Special Requests
+                  Anything We Should Know?
                 </FieldLabel>
                 <textarea
                   id="special-requests"
                   name="special-requests"
                   rows={3}
                   disabled={isLoading}
-                  placeholder="Please mention muscle strain points, sensitivities to specific floral essences, or hydro-temperature preferences..."
+                  placeholder="Tell us about body pain, allergies, smells you do not like, or if you like hot or cool water..."
                   className="w-full px-3 py-2.5 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 resize-none focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
                 />
               </div>
@@ -673,7 +696,7 @@ export function ReservationSection({
 
               <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pt-1">
                 <p className="text-[11px] leading-[1.5] text-kynta-warm-gray max-w-[200px]">
-                  Our Vaidya concierge confirms availability within 2 business
+                  We will confirm your booking within 2 working
                   hours.
                 </p>
                 <button
@@ -686,7 +709,7 @@ export function ReservationSection({
                     ? status.kind === "loading"
                       ? status.label
                       : "Processing…"
-                    : "Submit Experience Reservation"}
+                    : "Book Now"}
                 </button>
               </div>
             </form>
