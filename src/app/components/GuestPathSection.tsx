@@ -165,7 +165,7 @@ function GuestPathCard({
   icon: string;
 }) {
   return (
-    <div className="flex flex-col bg-kynta-section-bg rounded-[5px] p-4 lg:p-5 border border-kynta-border/30">
+    <div className="flex flex-col w-[calc((100%-12px)/2)] sm:w-[calc((100%-24px)/3)] lg:w-[calc((100%-48px)/5)] bg-kynta-section-bg rounded-[5px] p-4 lg:p-5 border border-kynta-border/30">
       <span className="text-base font-semibold text-kynta-teal font-serif mb-3">
         {number}
       </span>
@@ -231,7 +231,7 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
             </p>
           </div>
           <div
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+            className="flex flex-wrap justify-center gap-3"
             data-reveal-stagger
           >
             {guestSteps.map((step) => (
@@ -243,9 +243,12 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
 
       <section className="w-full bg-white py-12 md:py-14 border-t border-b border-kynta-border/50">
         <div className="container-site">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 text-center">
+          <div className="flex flex-wrap justify-center gap-6 text-center">
             {stats.map((s) => (
-              <div key={s.label}>
+              <div
+                key={s.label}
+                className="w-[calc((100%-24px)/2)] sm:w-[calc((100%-48px)/3)] lg:w-[calc((100%-96px)/5)]"
+              >
                 <p
                   data-count
                   className={`font-serif text-3xl lg:text-4xl leading-tight mb-1.5 tabular-nums ${

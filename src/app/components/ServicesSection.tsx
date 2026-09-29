@@ -151,7 +151,7 @@ export function ServicesSection({ data }: ServicesSectionProps) {
           {services.map((service) => (
             <div
               key={service.id}
-              className="snap-start flex-shrink-0 w-full md:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] bg-white rounded-lg overflow-hidden border border-kynta-border/40 group"
+              className="snap-start flex-shrink-0 w-full md:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] flex flex-col bg-white rounded-lg overflow-hidden border border-kynta-border/40 group"
             >
               <div className="relative w-full h-48 overflow-hidden">
                 <Image
@@ -162,16 +162,16 @@ export function ServicesSection({ data }: ServicesSectionProps) {
                   sizes="(max-width: 768px) 100vw, 50vw, 33vw"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="font-serif text-xl text-kynta-charcoal mb-3">
+              <div className="flex flex-col flex-1 p-6">
+                <h3 className="font-serif text-xl text-kynta-charcoal mb-3 truncate">
                   {service.name}
                 </h3>
-                <p className="text-sm text-kynta-warm-gray mb-6 leading-relaxed">
+                <p className="flex-1 text-sm text-kynta-warm-gray mb-6 leading-relaxed line-clamp-3">
                   {service.description}
                 </p>
                 <Link
                   href="/book"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-kynta-teal hover:text-kynta-teal-light transition-colors"
+                  className="self-start inline-flex items-center gap-2 text-sm font-semibold text-kynta-teal hover:text-kynta-teal-light transition-colors"
                 >
                   Book Now
                   <svg

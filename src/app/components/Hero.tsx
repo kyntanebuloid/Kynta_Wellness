@@ -103,7 +103,7 @@ export function Hero({ data }: HeroProps) {
                   href="/partner"
                   className="inline-flex items-center px-7 py-3.5 text-sm font-medium tracking-wide text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
                 >
-                  Hospitality Partnerships
+                  Partner With Kynta
                 </Link>
               </div>
             </div>
