@@ -22,47 +22,47 @@ interface GuestPathSectionProps {
 const defaultGuestSteps = [
   {
     number: "01",
-    title: "ARRIVE & UNCLUTTER",
+    title: "ARRIVE & RELAX",
     description:
-      "Warm kansa floral footbath with crushed marigolds and a chilled adaptogenic vetiver-cardamom infusion.",
+      "We wash your feet in warm flower water and give you a cool herbal drink.",
     icon: "footbath",
   },
   {
     number: "02",
-    title: "DIAGNOSTIC",
+    title: "CHECK-UP",
     description:
-      "In-depth consultation covering current dosha state, emotional fatigue, tension maps, and botanical scent preferences.",
+      "We talk with you about your body, your stress, where it hurts, and the smells you like.",
     icon: "clipboard",
   },
   {
     number: "03",
-    title: "THERAPEUTIC TOUCH",
+    title: "MASSAGE",
     description:
-      "Customized organic botanical oils warmed to exact skin temperature, delivered with deliberate marma flow.",
+      "Natural oils, warmed just right, used by gentle and skilled hands.",
     icon: "hands",
   },
   {
     number: "04",
-    title: "STILLNESS LOUNGE",
+    title: "REST",
     description:
-      "Post-treatment quietude in our silent solarium with freshly brewed Kashmiri kahwa and dry figs.",
+      "Rest in a quiet room with hot Kashmiri tea and dry fruits.",
     icon: "cup",
   },
   {
     number: "05",
-    title: "INTEGRATIVE CARE",
+    title: "CARE AT HOME",
     description:
-      "Home wellness prescription, circadian breathwork exercises, and customized botanical oil dispensaries.",
+      "We give you simple tips, breathing exercises, and oils to use at home.",
     icon: "infinity",
   },
 ];
 
 const defaultStats = [
-  { value: "18+", label: "Destination Spas" },
-  { value: "9", label: "Indian Cities & Retreats" },
-  { value: "140+", label: "Certified Therapists" },
-  { value: "85k+", label: "Rituals Delivered" },
-  { value: "98.4%", label: "Guest Satisfaction Index", accent: true },
+  { value: "18+", label: "Spas" },
+  { value: "9", label: "Cities in India" },
+  { value: "140+", label: "Trained Therapists" },
+  { value: "85k+", label: "Treatments Given" },
+  { value: "98.4%", label: "Happy Guests", accent: true },
 ];
 
 const hotelNames = [
@@ -73,19 +73,19 @@ const hotelNames = [
 const testimonials = [
   {
     quote:
-      "\u201CThe Kynta Prana Herbal Compress restored my body after grueling weeks of corporate travel. The precision of the therapist\u2019s touch and the organic cedar oil aroma made it one of the finest spas in Asia.\u201D",
+      "\u201CThe Kynta herbal massage fixed my tired body after weeks of work travel. The therapist was very skilled and the oil smelled lovely. One of the best spas in Asia.\u201D",
     name: "Ananya Singhania",
     affiliation: "Stayed at Glenwood Manor, Shimla",
   },
   {
     quote:
-      "\u201CAs resort owners, outsourcing our spa to Kynta was the most profitable operational move we made in 2024. Revenue per treatment room jumped 38%, and guest mentions of the spa doubled.\u201D",
+      "\u201CLetting Kynta run our spa was our best business decision of 2024. Our spa income went up by 38%, and twice as many guests talked about our spa.\u201D",
     name: "Vikramjit Oberoi-Mehra",
-    affiliation: "Managing Director, Heritage Palace Properties",
+    affiliation: "Owner, Heritage Palace Hotels",
   },
   {
     quote:
-      "\u201CThe Kumkumadi Golden Radiance facial left my complexion luminous for days. It didn\u2019t feel like a transactional hotel appointment, but an ancient restorative intuition.\u201D",
+      "\u201CThe Kumkumadi facial made my skin glow for days. It felt warm and caring, not like a normal hotel spa.\u201D",
     name: "Claire Beauchamp",
     affiliation: "Guest at Kynta Palms Resort, Goa",
   },
@@ -116,7 +116,7 @@ function StepIcon({ type }: { type: string }) {
     case "clipboard":
       return (
         <svg {...common} className={cls}>
-          <title>Diagnostic</title>
+          <title>Check-up</title>
           <rect x="5" y="2" width="14" height="20" rx="2" />
           <line x1="9" y1="10" x2="15" y2="10" />
           <line x1="9" y1="14" x2="15" y2="14" />
@@ -126,14 +126,14 @@ function StepIcon({ type }: { type: string }) {
     case "hands":
       return (
         <svg {...common} className={cls}>
-          <title>Therapeutic touch</title>
+          <title>Massage</title>
           <path d="M12 21c-4-2-8-5-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 5-4 8-8 10z" />
         </svg>
       );
     case "cup":
       return (
         <svg {...common} className={cls}>
-          <title>Stillness lounge</title>
+          <title>Rest</title>
           <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
           <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
           <line x1="6" y1="1" x2="6" y2="4" />
@@ -144,7 +144,7 @@ function StepIcon({ type }: { type: string }) {
     case "infinity":
       return (
         <svg {...common} className={cls}>
-          <title>Integrative care</title>
+          <title>Care at home</title>
           <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
         </svg>
       );
@@ -200,45 +200,11 @@ function RustStars() {
   );
 }
 
-function CircleArrowButton({ direction }: { direction: "left" | "right" }) {
-  return (
-    <button
-      type="button"
-      className="w-8 h-8 rounded-full bg-kynta-section-bg border border-kynta-border text-kynta-warm-gray flex items-center justify-center hover:bg-kynta-teal hover:text-white hover:border-kynta-teal transition-colors"
-      aria-label={`Scroll ${direction}`}
-    >
-      <svg
-        className="w-3.5 h-3.5"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={2}
-        stroke="currentColor"
-      >
-        <title>{direction === "left" ? "Previous" : "Next"}</title>
-        {direction === "left" ? (
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-          />
-        ) : (
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-          />
-        )}
-      </svg>
-    </button>
-  );
-}
-
 const iconTypes = ["footbath", "clipboard", "hands", "cup", "infinity"];
 
 export function GuestPathSection({ data }: GuestPathSectionProps) {
-  const eyebrow = data?.eyebrow || "The Fivefold Guest Path";
-  const heading =
-    data?.heading || "An choreographed immersion in sensory stillness.";
+  const eyebrow = data?.eyebrow || "Your Visit in 5 Steps";
+  const heading = data?.heading || "A calm visit, from start to finish.";
 
   const guestSteps =
     data?.steps?.map((s, i) => ({
@@ -252,11 +218,7 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
     <>
       <section className="w-full bg-kynta-section-bg pt-16 md:pt-20 pb-16 md:pb-20">
         <div className="container-site">
-          <div className="relative text-center mb-10 md:mb-12">
-            <div className="hidden md:flex items-center gap-2 absolute top-0 right-0">
-              <CircleArrowButton direction="left" />
-              <CircleArrowButton direction="right" />
-            </div>
+          <div className="text-center mb-10 md:mb-12">
             <p className="text-sm font-medium text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
@@ -264,11 +226,14 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
               {heading}
             </h2>
             <p className="text-[14px] leading-[1.7] text-kynta-warm-gray mx-auto max-w-lg">
-              From the instant of reception to ongoing post-retreat integration,
-              every micro-moment is deliberately paced.
+              From the moment you arrive until after you go home, we take care
+              of every small detail.
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+            data-reveal-stagger
+          >
             {guestSteps.map((step) => (
               <GuestPathCard key={step.number} {...step} />
             ))}
@@ -282,7 +247,8 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
             {stats.map((s) => (
               <div key={s.label}>
                 <p
-                  className={`font-serif text-3xl lg:text-4xl leading-tight mb-1.5 ${
+                  data-count
+                  className={`font-serif text-3xl lg:text-4xl leading-tight mb-1.5 tabular-nums ${
                     "accent" in s && s.accent
                       ? "text-kynta-rust"
                       : "text-kynta-charcoal"
@@ -301,30 +267,27 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
 
       <section className="w-full bg-kynta-section-bg py-12 md:py-16">
         <div className="container-site text-center">
-          <p className="text-[13px] text-kynta-warm-gray tracking-wide mb-6">
-            Trusted by India&apos;s Foremost Independent Luxury Hoteliers
+          <p className="text-[13px] text-kynta-warm-gray tracking-wide mb-8">
+            Trusted by Top Hotels in India
           </p>
-          {hotelNames.map((row) => (
-            <div
-              key={`row-${row.join("-")}`}
-              className="flex flex-wrap items-center justify-center gap-x-10 gap-y-2 mb-2"
-            >
-              {row.map((name) => (
-                <span
-                  key={name}
-                  className="font-serif text-lg md:text-xl lg:text-2xl tracking-[0.08em] text-kynta-charcoal"
-                >
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+            {hotelNames.flat().map((name, index) => (
+              <div key={name} className="flex items-center gap-6 md:gap-8">
+                <span className="font-serif text-lg md:text-xl lg:text-2xl tracking-[0.08em] text-kynta-charcoal">
                   {name}
                 </span>
-              ))}
-            </div>
-          ))}
+                {index < hotelNames.flat().length - 1 && (
+                  <span className="text-kynta-border">|</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="w-full bg-kynta-section-bg pb-16 md:pb-20">
         <div className="container-site">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-reveal-stagger>
             {testimonials.map((t) => (
               <div
                 key={t.name}

@@ -33,7 +33,7 @@ export default async function AdminLoginPage({ searchParams }: PageProps) {
         <div className="flex justify-center mb-6">
           <Link href="/" aria-label="Kynta Wellness home">
             <Image
-              src="/kynta-logo.jpg"
+              src="/kynta-logo-full.png"
               alt="Kynta Wellness Group"
               width={140}
               height={48}

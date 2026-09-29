@@ -63,8 +63,8 @@ function TreatmentCard({
   sensory: string;
 }) {
   return (
-    <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40">
-      <div className="relative w-full" style={{ aspectRatio: "295 / 172" }}>
+    <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40 group">
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "295 / 172" }}>
         <Image
           src={image}
           alt={title}

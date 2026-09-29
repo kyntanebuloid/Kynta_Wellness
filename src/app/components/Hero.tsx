@@ -14,38 +14,47 @@ interface HeroProps {
 }
 
 export function Hero({ data }: HeroProps) {
-  const eyebrow =
-    data?.eyebrow || "Contemporary Indian Wellness & Spa Hospitality";
-  const headline = data?.headline || "Wellness, Thoughtfully Delivered.";
+  const eyebrow = data?.eyebrow || "Indian Spa & Wellness";
   const subtitle =
     data?.subtitle ||
-    "Premium restorative sanctuaries and turnkey spa operations crafted exclusively for India's most exceptional hotels, heritage palaces, and boutique wilderness retreats.";
-  const ctaText = data?.ctaText || "Explore Our Spas";
-  const ctaUrl = data?.ctaUrl || "/spas";
+    "Relaxing Ayurvedic spa treatments inside the best hotels, palaces and nature resorts in India.";
+  const ctaText = data?.ctaText || "See Our Treatments";
+  const ctaUrl = data?.ctaUrl || "/experiences";
 
   return (
-    <section className="relative w-full overflow-hidden" id="hero">
+    <section className="relative w-full overflow-hidden -mt-[72px]" id="hero">
       <div className="hero-frame relative w-full">
-        <Image
-          src="/hero-bg.jpg"
-          alt="Luxurious Indian heritage spa courtyard with lotus pool"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
+        <div className="absolute inset-x-0 -top-[10%] bottom-0" data-parallax="8">
+          <Image
+            src="/hero-bg.jpg"
+            alt="Luxurious Indian heritage spa courtyard with lotus pool"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
 
         <div
-          className="absolute inset-0"
+          className="hero-wash absolute inset-0"
           style={{
             background:
-              "linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0.1) 55%, transparent 70%)",
+              "linear-gradient(to right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.45) 30%, rgba(255,255,255,0.08) 55%, transparent 70%)",
           }}
         />
 
+        <div className="hero-smoke" aria-hidden="true">
+          <span className="wisp wisp-1" />
+          <span className="wisp wisp-2" />
+          <span className="wisp wisp-3" />
+          <span className="wisp wisp-4" />
+          <span className="wisp wisp-5" />
+          <span className="wisp wisp-6" />
+        </div>
+
         <div className="hero-content absolute inset-0 flex items-center">
           <div className="container-site w-full">
-            <div className="max-w-xl lg:max-w-2xl">
+            <div className="max-w-xl lg:max-w-2xl" data-reveal-stagger>
               <div className="flex items-center gap-2 mb-6">
                 <span
                   className="inline-block w-2 h-2 rounded-full bg-kynta-gold"
@@ -61,7 +70,7 @@ export function Hero({ data }: HeroProps) {
                   Wellness,
                 </span>
                 <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl italic font-normal text-kynta-charcoal">
-                  Thoughtfully <span className="not-italic">Delivered.</span>
+                  Made with <span className="not-italic">Care.</span>
                 </span>
               </h1>
 
@@ -94,7 +103,7 @@ export function Hero({ data }: HeroProps) {
                   href="/partner"
                   className="inline-flex items-center px-7 py-3.5 text-sm font-medium tracking-wide text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
                 >
-                  Partner With Kynta
+                  Hospitality Partnerships
                 </Link>
               </div>
             </div>
@@ -107,10 +116,54 @@ export function Hero({ data }: HeroProps) {
 					aspect-ratio: 16 / 7.5;
 				}
 
-				@media (max-width: 639px) {
+				#hero .hero-smoke {
+					position: absolute;
+					inset: 0;
+					overflow: hidden;
+					pointer-events: none;
+				}
+
+				#hero .wisp {
+					position: absolute;
+					border-radius: 50%;
+					background: radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.45) 40%, rgba(255,255,255,0) 70%);
+					filter: blur(38px);
+					will-change: transform, opacity;
+					animation: hero-smoke-drift var(--dur) ease-in-out var(--delay) infinite alternate;
+				}
+
+				#hero .wisp-1 { --dur: 26s; --delay: 0s;   width: 60%; height: 70%; left: -18%; top: 5%;  opacity: 0.85; }
+				#hero .wisp-2 { --dur: 32s; --delay: -8s;  width: 45%; height: 55%; left: 5%;   top: 40%; opacity: 0.7; }
+				#hero .wisp-3 { --dur: 28s; --delay: -14s; width: 40%; height: 45%; left: 18%;  top: -10%; opacity: 0.55; }
+				#hero .wisp-4 { --dur: 36s; --delay: -4s;  width: 30%; height: 38%; left: 38%;  top: 55%; opacity: 0.35; }
+				#hero .wisp-5 { --dur: 40s; --delay: -20s; width: 26%; height: 30%; left: 55%;  top: 10%; opacity: 0.22; }
+				#hero .wisp-6 { --dur: 30s; --delay: -11s; width: 50%; height: 40%; left: -10%; top: 70%; opacity: 0.6; }
+
+				@keyframes hero-smoke-drift {
+					0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+					50%  { transform: translate3d(6%, -8%, 0) scale(1.12) rotate(6deg); }
+					100% { transform: translate3d(12%, -3%, 0) scale(0.95) rotate(-4deg); }
+				}
+
+				@media (prefers-reduced-motion: reduce) {
+					#hero .wisp { animation: none; }
+				}
+
+				/* 72px = header height; the header overlaps the top of the hero */
+				#hero .hero-content {
+					padding-top: 72px;
+				}
+
+				@media (min-width: 1024px) {
+					#hero .hero-frame {
+						min-height: 640px;
+					}
+				}
+
+				@media (max-width: 1023px) {
 					#hero .hero-frame {
 						aspect-ratio: auto;
-						min-height: 480px;
+						min-height: 600px;
 						display: flex;
 						flex-direction: column;
 						justify-content: center;
@@ -120,8 +173,26 @@ export function Hero({ data }: HeroProps) {
 						position: relative;
 						inset: auto;
 						width: 100%;
-						padding-top: 48px;
-						padding-bottom: 48px;
+						padding-top: 144px;
+						padding-bottom: 80px;
+					}
+				}
+
+				@media (max-width: 767px) {
+					/* Text spans the full width on phones, so wash the whole image for readability */
+					#hero .hero-wash {
+						background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.72) 30%, rgba(255,255,255,0.72) 78%, rgba(255,255,255,0.25) 100%) !important;
+					}
+				}
+
+				@media (max-width: 639px) {
+					#hero .hero-frame {
+						min-height: 540px;
+					}
+
+					#hero .hero-content {
+						padding-top: 120px;
+						padding-bottom: 56px;
 					}
 				}
 			`}</style>

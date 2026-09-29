@@ -87,6 +87,14 @@ export interface Homepage {
       label: string;
     }[];
   };
+  servicesSection?: {
+    services?: {
+      id?: string;
+      name: string;
+      description: string;
+      image?: SanityImage;
+    }[];
+  };
   pillarsSection?: {
     eyebrow?: string;
     heading?: string;

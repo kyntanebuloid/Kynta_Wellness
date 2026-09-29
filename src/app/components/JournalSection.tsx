@@ -21,30 +21,29 @@ interface JournalSectionProps {
 const defaultArticles = [
   {
     image: "/article-herbal-compress.jpg",
-    category: "Therapeutic Science",
-    meta: "6 Min Read • Ayurvedic Biochemistry",
-    title: "The Science of Warm Herbal Compresses in High-Stress Recovery",
+    category: "Health",
+    meta: "6 Min Read • Ayurveda",
+    title: "How Warm Herbal Bags Help You Recover From Stress",
     description:
-      "How thermotherapy combined with lipid-soluble terpene botanicals penetrates deep myofascial barriers to regulate cortisol spikes.",
+      "Warm bags filled with herbs relax deep muscles and help lower stress in your body.",
     href: "/blog/herbal-compresses",
   },
   {
     image: "/article-spa-design.jpg",
-    category: "Design & Space",
-    meta: "8 Min Read • Spatial Architecture",
-    title:
-      "Designing Spa Sanctuaries: The Convergence of Biophilia and Ayurveda",
+    category: "Spa Design",
+    meta: "8 Min Read • Design",
+    title: "How to Build a Calm Spa With Nature and Ayurveda",
     description:
-      "An inquiry into how tactile raw stone, micro-acoustics, and natural light rhythms induce involuntary parasympathetic downregulation.",
+      "How stone, quiet rooms and natural light help your body relax on its own.",
     href: "/blog/spa-sanctuaries",
   },
   {
     image: "/article-revpash.jpg",
-    category: "Hospitality Economics",
-    meta: "5 Min Read • Hotel Asset Management",
-    title: "Optimizing Hotel RevPASH Through Integrated Wellness Programming",
+    category: "Hotel Business",
+    meta: "5 Min Read • Hotels",
+    title: "How a Good Spa Helps a Hotel Earn More",
     description:
-      "Why luxury resort developers are transforming passive spa square footage into high-yield restorative hubs that augment overall property\u2026",
+      "Why smart hotel owners turn empty spa space into busy spas that bring in more money.",
     href: "/blog/revpash-optimization",
   },
 ];
@@ -114,10 +113,9 @@ function ArticleCard({
 }
 
 export function JournalSection({ data }: JournalSectionProps) {
-  const eyebrow = data?.eyebrow || "The Kynta Gazette";
+  const eyebrow = data?.eyebrow || "Kynta Blog";
   const heading =
-    data?.heading ||
-    "Dispatches on botanical science, architecture & hotel yield.";
+    data?.heading || "Read about herbs, spa design and hotel business.";
 
   const articles =
     data?.articles?.map((a) => ({
@@ -145,7 +143,7 @@ export function JournalSection({ data }: JournalSectionProps) {
             href="/blog"
             className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-kynta-charcoal hover:text-kynta-teal transition-colors whitespace-nowrap md:mt-2"
           >
-            Read All Journal Entries
+            Read All Articles
             <svg
               className="w-3.5 h-3.5"
               fill="none"

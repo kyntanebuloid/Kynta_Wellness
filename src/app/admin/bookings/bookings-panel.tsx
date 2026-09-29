@@ -361,7 +361,7 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
           <div className="flex items-center gap-3 min-w-0">
             <Link href="/" aria-label="Kynta Wellness home">
               <Image
-                src="/kynta-logo.jpg"
+                src="/kynta-logo-full.png"
                 alt="Kynta Wellness Group"
                 width={120}
                 height={44}

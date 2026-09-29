@@ -19,13 +19,14 @@ export type ExperienceOption = {
 };
 
 export async function createBooking(booking: BookingInsert) {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (user) {
+    if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("id")
@@ -102,6 +103,10 @@ export async function createBooking(booking: BookingInsert) {
     `[createBooking] stored bookingId=${data.id} experience_id=${data.experience_id}`,
   );
   return { data };
+  } catch (error) {
+    console.error("[createBooking] Error:", error);
+    return { error: error instanceof Error ? error.message : "Booking failed" };
+  }
 }
 
 export async function getBookableExperienceOptions() {

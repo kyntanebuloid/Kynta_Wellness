@@ -48,6 +48,51 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  overflow-x: clip;
+}
+
+/* Ensure text stays readable at all sizes */
+html {
+  font-size: clamp(14px, 2vw, 16px);
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: clamp(13px, 1.8vw, 15px);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* The design is built for ~1920px. Scale it up on wider viewports (1920 screens zoomed
+   out to 90%, 1440p, 4K at 100%) so it fills the screen instead of looking small. */
+@media (min-width: 2000px) {
+  html {
+    zoom: 1.1;
+  }
+}
+
+@media (min-width: 2200px) {
+  html {
+    zoom: 1.2;
+  }
+}
+
+@media (min-width: 2800px) {
+  html {
+    zoom: 1.5;
+  }
+}
+
+@media (min-width: 3400px) {
+  html {
+    zoom: 2;
+  }
 }
 
 /* Shared container */
@@ -71,5 +116,11 @@ body {
   .container-site {
     padding-left: 48px;
     padding-right: 48px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .container-site {
+    max-width: 1440px;
   }
 }
