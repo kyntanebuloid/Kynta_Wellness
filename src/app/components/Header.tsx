@@ -171,7 +171,7 @@ export function Header({ navigation, logo }: HeaderProps) {
 
       {/* Mobile dropdown overlays the page instead of pushing sections down */}
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-kynta-border bg-white px-6 py-4 space-y-3 shadow-[0_12px_24px_rgba(0,0,0,0.08)]">
+        <div className="lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-72px)] overflow-y-auto thin-scrollbar border-t border-kynta-border bg-white px-6 py-4 space-y-3 shadow-[0_12px_24px_rgba(0,0,0,0.08)]">
           <nav
             className="flex flex-col space-y-3"
             aria-label="Mobile navigation"

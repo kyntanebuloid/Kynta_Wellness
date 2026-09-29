@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${playfairDisplay.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${playfairDisplay.variable} h-full antialiased thin-scrollbar`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <ScrollEffects />

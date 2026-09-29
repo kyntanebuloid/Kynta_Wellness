@@ -145,7 +145,7 @@ function BookingDetailModal({
   return (
     <div className="fixed inset-0 z-40 bg-kynta-charcoal/40 flex items-end sm:items-center justify-center sm:p-6">
       <div
-        className="w-full sm:max-w-2xl max-h-[88vh] overflow-y-auto bg-white rounded-t-lg sm:rounded-lg border border-kynta-border"
+        className="w-full sm:max-w-2xl max-h-[88vh] overflow-y-auto thin-scrollbar bg-white rounded-t-lg sm:rounded-lg border border-kynta-border"
         role="dialog"
         aria-modal="true"
         aria-label={

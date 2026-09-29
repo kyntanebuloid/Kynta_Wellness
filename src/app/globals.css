@@ -69,27 +69,59 @@ html {
   display: none;
 }
 
-/* The design is built for ~1920px. Scale it up on wider viewports (1920 screens zoomed
-   out to 90%, 1440p, 4K at 100%) so it fills the screen instead of looking small. */
-@media (min-width: 2000px) {
+/* Chrome 121+ ignores ::-webkit-scrollbar once scrollbar-width is set, so the standard
+   properties are only given to browsers without webkit scrollbar support (Firefox). */
+@supports not selector(::-webkit-scrollbar) {
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+}
+.thin-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* 8px track with a 4px transparent border leaves a 4px thumb and a 4px gap from the content. */
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-left: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 9999px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.fade-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+}
+
+/* Scale the design up on large monitors so it fills the screen. device-width is the
+   monitor size and ignores browser zoom, so zooming out still makes the page smaller
+   (a min-width query would enlarge the page when the user zooms out). */
+@media (min-device-width: 1800px) {
   html {
     zoom: 1.1;
   }
 }
 
-@media (min-width: 2200px) {
+@media (min-device-width: 2200px) {
   html {
-    zoom: 1.2;
+    zoom: 1.25;
   }
 }
 
-@media (min-width: 2800px) {
+@media (min-device-width: 2800px) {
   html {
     zoom: 1.5;
   }
 }
 
-@media (min-width: 3400px) {
+@media (min-device-width: 3400px) {
   html {
     zoom: 2;
   }
@@ -121,6 +153,6 @@ html {
 
 @media (min-width: 1600px) {
   .container-site {
-    max-width: 1440px;
+    max-width: 1560px;
   }
 }
