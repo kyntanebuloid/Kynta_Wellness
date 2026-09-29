@@ -1,24 +1,23 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
 import type { SanityImage } from "@/types/sanity";
 
 interface DestinationsSectionProps {
-  locations?: {
-    name: string;
-    address?: string;
-    hours?: string;
-    phone?: string;
-    email?: string;
-    image?: SanityImage;
-    imagePath?: string;
-    detailsUrl?: string;
-    tags?: string[];
-    services?: string[];
-    slug?: string;
-  }[];
+  data?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    destinations?: {
+      name: string;
+      address?: string;
+      hours?: string;
+      phone?: string;
+      email?: string;
+      image?: SanityImage;
+      tags?: string[];
+      services?: string[];
+    }[];
+  };
 }
 
 const defaultDestinations = [
@@ -29,8 +28,13 @@ const defaultDestinations = [
     title: "Kynta at The Heritage Retreat",
     address: "Amer Palace Road, Kukas Valley, Jaipur 302028",
     description:
-      "A spa inside an old stepwell courtyard, around 300 years old. Enjoy royal Rajasthani treatments and private rooms next to fruit gardens.",
-    tags: ["Cold Water Pool", "Herbal Steam Room", "Couples Room", "Foot Massage Path"],
+      "Housed in a reconstructed 18th-century stepwell courtyard. Features royal Rajputana brass therapies, continuous desert cooling ventilation, and private treatment pavilions flanked by pomegranate orchards.",
+    tags: [
+      "Hydrotherapy Plunge",
+      "Herbal Steam Cavern",
+      "Couples Royal Pavilion",
+      "Acupressure Walk",
+    ],
     detailsHref: "/locations/heritage-retreat",
   },
   {
@@ -40,8 +44,13 @@ const defaultDestinations = [
     title: "Kynta at Glenwood Manor & Spa",
     address: "Mashobra Ridge Forest Reserve, Shimla 171007",
     description:
-      "A spa high up in the mountains, inside a pine forest. Try hot water baths, warm stone massages and natural flower oils.",
-    tags: ["Hot Tub With Forest View", "Pine Wood Sauna", "Breathing Deck", "Warm Stone Beds"],
+      "Perched at 7,200 feet amidst virgin deodar forest. Specializes in alpine hydro-thermal therapies, heated river stone massages, and organic rhododendron bio-infusions.",
+    tags: [
+      "Forest View Hot Tub",
+      "Pine Sauna",
+      "Pranayama Deck",
+      "Heated Stone Beds",
+    ],
     detailsHref: "/locations/glenwood-manor",
   },
 ];
@@ -66,8 +75,8 @@ function DestinationCard({
   detailsHref: string;
 }) {
   return (
-    <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40 group">
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "310 / 165" }}>
+    <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40">
+      <div className="relative w-full" style={{ aspectRatio: "310 / 165" }}>
         <Image
           src={image}
           alt={title}
@@ -83,9 +92,10 @@ function DestinationCard({
         </span>
       </div>
       <div className="flex flex-col flex-1 p-5 md:p-6">
-        <h3 className="font-serif text-xl lg:text-[22px] text-kynta-charcoal leading-snug mb-3">
+        <h3 className="font-serif text-xl lg:text-[22px] text-kynta-charcoal leading-snug mb-1.5">
           {title}
         </h3>
+        <p className="text-[12px] text-kynta-warm-gray mb-4">{address}</p>
         <p className="text-[13px] leading-[1.7] text-kynta-warm-gray mb-5">
           {description}
         </p>
@@ -116,7 +126,7 @@ function DestinationCard({
               <title>WhatsApp</title>
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
             </svg>
-            Chat on WhatsApp
+            WhatsApp Sanctuary Desk
           </Link>
           <Link
             href={detailsHref}
@@ -177,37 +187,25 @@ function CircleArrowButton({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-export function DestinationsSection({ locations }: DestinationsSectionProps) {
-  const scrollContainer = useRef<HTMLDivElement>(null);
-  const eyebrow = "Our Spa Locations";
-  const heading = "Our spas across India.";
+export function DestinationsSection({ data }: DestinationsSectionProps) {
+  const eyebrow = data?.eyebrow || "Verified Hospitality Partnerships";
+  const heading =
+    data?.heading || "Destinations of restorative distinction across India.";
 
   const destinations =
-    locations?.map((d) => ({
-      image: d.imagePath || "/destination-heritage.jpg",
+    data?.destinations?.map((d) => ({
+      image: "/destination-heritage.jpg",
       locationPill: d.address || "",
       hours: d.hours || "08:00 – 21:00 Daily",
       title: d.name,
       address: d.address || "",
-      description: d.address || "A calm and relaxing spa",
-      tags: d.tags || d.services || [],
-      detailsHref:
-        d.detailsUrl || (d.slug ? `/locations/${d.slug}` : "/locations"),
+      description: "",
+      tags: d.tags || [],
+      detailsHref: "/locations",
     })) || defaultDestinations;
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainer.current) {
-      const card = scrollContainer.current.firstElementChild as HTMLElement | null;
-      const scrollAmount = card ? card.offsetWidth + 18 : 500;
-      scrollContainer.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
-    <section className="w-full bg-kynta-section-bg pt-10 pb-16 md:pt-12 md:pb-24">
+    <section className="w-full bg-kynta-section-bg py-16 md:pt-[70px] md:pb-24">
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-10 md:mb-12">
           <div>
@@ -218,67 +216,21 @@ export function DestinationsSection({ locations }: DestinationsSectionProps) {
               {heading}
             </h2>
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
-              Find us in the hills of Rajasthan, the mountains of Himachal,
-              and other beautiful places in India.
+              Immersive sanctuaries integrated into Rajasthan&apos;s ancient
+              hills, Himalayan pine valleys, Goa&apos;s coastal canopy, and
+              high-tempo urban metropolises.
             </p>
           </div>
           <div className="flex items-end justify-start md:justify-end">
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => scroll("left")}
-                className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
-                aria-label="Scroll left"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                  stroke="currentColor"
-                >
-                  <title>Previous</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => scroll("right")}
-                className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
-                aria-label="Scroll right"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                  stroke="currentColor"
-                >
-                  <title>Next</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </button>
+              <CircleArrowButton direction="left" />
+              <CircleArrowButton direction="right" />
             </div>
           </div>
         </div>
-
-        {/* Carousel - 2 items visible */}
-        <div
-          ref={scrollContainer}
-          data-reveal-stagger
-          className="no-scrollbar flex gap-[18px] overflow-x-auto snap-x snap-mandatory scroll-smooth"
-          style={{ scrollBehavior: "smooth" }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px]">
           {destinations.map((d) => (
-            <div key={d.title} className="snap-start flex-shrink-0 w-full md:w-[calc((100%-18px)/2)]">
-              <DestinationCard {...d} />
-            </div>
+            <DestinationCard key={d.title} {...d} />
           ))}
         </div>
       </div>
