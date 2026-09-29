@@ -15,7 +15,7 @@ import type {
   Testimonial,
   Treatment,
 } from "@/types/sanity";
-import { sanityClient, sanityNoCdnClient } from "./client";
+import { sanityNoCdnClient } from "./client";
 import {
   aboutPageQuery,
   allBlogPostsQuery,
@@ -77,8 +77,10 @@ async function fetchFromSanity<T>(
     throw new Error("Sanity temporarily skipped after repeated failures");
   }
   try {
+    // Bypass Sanity's CDN: it can briefly serve the pre-publish version, which
+    // would then be cached here. Our own cache keeps request volume low.
     const result = await withTimeout(
-      sanityClient().fetch<T>(query, params),
+      sanityNoCdnClient().fetch<T>(query, params),
       SANITY_TIMEOUT_MS,
     );
     consecutiveFailures = 0;
