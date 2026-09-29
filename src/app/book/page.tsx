@@ -16,12 +16,12 @@ export default async function BookPage(){
 
     return(
         <>
-            <TopBar data={siteSettings?.topBar}/>
-            <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo}/>
+            <TopBar settings={siteSettings} />
+            <Header settings={siteSettings} />
             <main>
                 <ReservationSection/>
             </main>
-            <Footer data={siteSettings?.footer}/>
+            <Footer settings={siteSettings} />
         </>
     )
 }

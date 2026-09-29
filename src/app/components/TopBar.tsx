@@ -1,19 +1,16 @@
 import Link from "next/link";
+import type { SiteSettings } from "@/types/sanity";
+import { resolveSocialLinks } from "./social-links";
 
 interface TopBarProps {
-  data?: {
-    partnerText?: string;
-    phone?: string;
-    b2bLabel?: string;
-    b2bUrl?: string;
-  };
+  settings?: SiteSettings | null;
 }
 
-export function TopBar({ data }: TopBarProps) {
+export function TopBar({ settings }: TopBarProps) {
   const partnerText =
-    data?.partnerText ||
-    "Trusted Spa Partner for 5-Star Hotels";
-  const phone = data?.phone || "+91 7250333494";
+    settings?.topBar?.partnerText || "Trusted Spa Partner for 5-Star Hotels";
+  const phone = settings?.topBar?.phone || "+91 7250333494";
+  const social = resolveSocialLinks(settings?.socialLinks);
 
   return (
     <div className="hidden md:block w-full bg-kynta-topbar-bg border-b border-kynta-border">
@@ -32,7 +29,7 @@ export function TopBar({ data }: TopBarProps) {
           {/* Social Media Links */}
           <div className="flex items-center gap-3">
             <Link
-              href="https://www.instagram.com/kyntawellnessgroup"
+              href={social.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-kynta-teal transition-colors"
@@ -46,7 +43,7 @@ export function TopBar({ data }: TopBarProps) {
               </svg>
             </Link>
             <Link
-              href="https://www.facebook.com/netlafeadsmarketing"
+              href={social.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-kynta-teal transition-colors"
@@ -58,7 +55,7 @@ export function TopBar({ data }: TopBarProps) {
               </svg>
             </Link>
             <Link
-              href="https://www.linkedin.com/company/kyntawellness/"
+              href={social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-kynta-teal transition-colors"
@@ -70,7 +67,7 @@ export function TopBar({ data }: TopBarProps) {
               </svg>
             </Link>
             <Link
-              href="https://whatsapp.com/channel/0029VbCmXZFGZNCwHs3hTf21"
+              href={social.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-kynta-teal transition-colors"

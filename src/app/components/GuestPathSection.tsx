@@ -1,22 +1,7 @@
+import type { Homepage } from "@/types/sanity";
+
 interface GuestPathSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    steps?: {
-      number: string;
-      title: string;
-      description: string;
-    }[];
-    faq?: {
-      question: string;
-      answer: string;
-    }[];
-    stats?: {
-      value: string;
-      label: string;
-    }[];
-  };
+  data?: Homepage["guestPathSection"];
 }
 
 const defaultGuestSteps = [
@@ -62,15 +47,17 @@ const defaultStats = [
   { value: "9", label: "Cities in India" },
   { value: "140+", label: "Trained Therapists" },
   { value: "85k+", label: "Treatments Given" },
-  { value: "98.4%", label: "Happy Guests", accent: true },
+  { value: "98.4%", label: "Happy Guests", highlight: true },
 ];
 
-const hotelNames = [
-  ["THE GLENWOOD MANOR", "HERITAGE RETREATS", "PALMS MORJIM"],
-  ["METROPOLITAN HOTELS"],
+const defaultHotelNames = [
+  "THE GLENWOOD MANOR",
+  "HERITAGE RETREATS",
+  "PALMS MORJIM",
+  "METROPOLITAN HOTELS",
 ];
 
-const testimonials = [
+const defaultTestimonials = [
   {
     quote:
       "\u201CThe Kynta herbal massage fixed my tired body after weeks of work travel. The therapist was very skilled and the oil smelled lovely. One of the best spas in Asia.\u201D",
@@ -205,14 +192,28 @@ const iconTypes = ["footbath", "clipboard", "hands", "cup", "infinity"];
 export function GuestPathSection({ data }: GuestPathSectionProps) {
   const eyebrow = data?.eyebrow || "Your Visit in 5 Steps";
   const heading = data?.heading || "A calm visit, from start to finish.";
+  const description =
+    data?.description ||
+    "From the moment you arrive until after you go home, we take care of every small detail.";
 
-  const guestSteps =
-    data?.steps?.map((s, i) => ({
-      ...s,
-      icon: iconTypes[i] || "footbath",
-    })) || defaultGuestSteps;
+  const guestSteps = data?.steps?.length
+    ? data.steps.map((s, i) => ({
+        number: s.number,
+        title: s.title,
+        description: s.description,
+        icon: s.icon || iconTypes[i % iconTypes.length],
+      }))
+    : defaultGuestSteps;
 
-  const stats = data?.stats || defaultStats;
+  const stats = data?.stats?.length ? data.stats : defaultStats;
+  const trustedByHeading =
+    data?.trustedByHeading || "Trusted by Top Hotels in India";
+  const hotelNames = data?.hotelNames?.length
+    ? data.hotelNames
+    : defaultHotelNames;
+  const testimonials = data?.testimonials?.length
+    ? data.testimonials
+    : defaultTestimonials;
 
   return (
     <>
@@ -226,8 +227,7 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
               {heading}
             </h2>
             <p className="text-[14px] leading-[1.7] text-kynta-warm-gray mx-auto max-w-lg">
-              From the moment you arrive until after you go home, we take care
-              of every small detail.
+              {description}
             </p>
           </div>
           <div
@@ -252,9 +252,7 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
                 <p
                   data-count
                   className={`font-serif text-3xl lg:text-4xl leading-tight mb-1.5 tabular-nums ${
-                    "accent" in s && s.accent
-                      ? "text-kynta-rust"
-                      : "text-kynta-charcoal"
+                    s.highlight ? "text-kynta-rust" : "text-kynta-charcoal"
                   }`}
                 >
                   {s.value}
@@ -271,15 +269,15 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
       <section className="w-full bg-kynta-section-bg py-12 md:py-16">
         <div className="container-site text-center">
           <p className="text-[13px] text-kynta-warm-gray tracking-wide mb-8">
-            Trusted by Top Hotels in India
+            {trustedByHeading}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
-            {hotelNames.flat().map((name, index) => (
+            {hotelNames.map((name, index) => (
               <div key={name} className="flex items-center gap-6 md:gap-8">
                 <span className="font-serif text-lg md:text-xl lg:text-2xl tracking-[0.08em] text-kynta-charcoal">
                   {name}
                 </span>
-                {index < hotelNames.flat().length - 1 && (
+                {index < hotelNames.length - 1 && (
                   <span className="text-kynta-border">|</span>
                 )}
               </div>

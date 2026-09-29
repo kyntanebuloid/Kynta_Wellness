@@ -24,8 +24,8 @@ export default async function AboutPage() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <AboutHeroSection data={about?.hero} />
         <AboutTriadSection data={about?.triadSection} />
@@ -34,7 +34,7 @@ export default async function AboutPage() {
         <AboutStewardshipSection data={about?.stewardshipSection} />
         <AboutAccreditationsSection data={about?.accreditationsSection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

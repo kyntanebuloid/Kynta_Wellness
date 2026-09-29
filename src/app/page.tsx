@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getBookableExperienceOptions } from "@/lib/actions/bookings";
 import { getHomepage, getSiteSettings, getLocationsPage } from "@/lib/sanity/data";
 import { DestinationsSection } from "./components/DestinationsSection";
@@ -7,12 +8,19 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { JournalSection } from "./components/JournalSection";
 import { PartnershipSection } from "./components/PartnershipSection";
-import { PillarsSection } from "./components/PillarsSection";
 import { ReservationSection } from "./components/ReservationSection";
 import { TopBar } from "./components/TopBar";
-import { TreatmentsSection } from "./components/TreatmentsSection";
 import { ServicesSection } from "./components/ServicesSection";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const homepage = await getHomepage();
+  return {
+    ...(homepage?.seo?.title ? { title: homepage.seo.title } : {}),
+    ...(homepage?.seo?.description
+      ? { description: homepage.seo.description }
+      : {}),
+  };
+}
 
 export default async function Home() {
   const [siteSettings, homepage, experiencesResult, locationsPage] = await Promise.all([
@@ -25,15 +33,15 @@ export default async function Home() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <Hero data={homepage?.hero} />
         <ServicesSection data={homepage?.servicesSection} />
-
-
-        {/* <TreatmentsSection data={homepage?.treatmentsSection} /> */}
-        <DestinationsSection locations={locationsPage?.locations} />
+        <DestinationsSection
+          data={homepage?.destinationsSection}
+          locations={locationsPage?.locations}
+        />
         <GuestPathSection data={homepage?.guestPathSection} />
         <PartnershipSection data={homepage?.partnershipSection} />
         <JournalSection data={homepage?.journalSection} />
@@ -43,7 +51,7 @@ export default async function Home() {
           locations={locationsPage?.locations}
         />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

@@ -1,21 +1,67 @@
 import { defineField, defineType } from "sanity";
 
+// Field order mirrors the homepage from top to bottom. Every field here is
+// rendered on the page; the site falls back to built-in text when one is empty.
+
+const imageField = (name: string, title: string, description?: string) =>
+  defineField({
+    name,
+    title,
+    type: "image",
+    description,
+    options: { hotspot: true },
+    fields: [defineField({ name: "alt", title: "Alt Text", type: "string" })],
+  });
+
+const linkField = (name: string, title: string) =>
+  defineField({
+    name,
+    title,
+    type: "object",
+    fields: [
+      defineField({ name: "label", title: "Label", type: "string" }),
+      defineField({ name: "url", title: "Link", type: "string" }),
+    ],
+  });
+
 export default defineType({
   name: "homepage",
   title: "Homepage",
   type: "document",
+  groups: [
+    { name: "hero", title: "1. Hero", default: true },
+    { name: "services", title: "2. What We Offer" },
+    { name: "locations", title: "3. Spa Locations" },
+    { name: "visit", title: "4. Your Visit" },
+    { name: "hotels", title: "5. For Hotel Owners" },
+    { name: "blog", title: "6. Blog" },
+    { name: "booking", title: "7. Booking" },
+    { name: "seo", title: "SEO" },
+  ],
   fields: [
     defineField({
       name: "hero",
-      title: "Hero Section",
+      title: "Hero (top banner)",
       type: "object",
+      group: "hero",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({
+          name: "eyebrow",
+          title: "Small Label",
+          type: "string",
+          description: "Pill above the heading, e.g. Indian Spa & Wellness",
+        }),
         defineField({
           name: "headline",
-          title: "Headline",
+          title: "Heading – Line 1",
           type: "string",
-          validation: (rule) => rule.required(),
+          description: "e.g. Wellness,",
+        }),
+        defineField({
+          name: "headlineItalic",
+          title: "Heading – Line 2 (italic)",
+          type: "string",
+          description: "e.g. Made with Care. — the last word is shown upright",
         }),
         defineField({
           name: "subtitle",
@@ -23,153 +69,51 @@ export default defineType({
           type: "text",
           rows: 2,
         }),
-        defineField({
-          name: "ctaText",
-          title: "CTA Button Text",
-          type: "string",
-        }),
-        defineField({
-          name: "ctaUrl",
-          title: "CTA Button URL",
-          type: "string",
-        }),
-        defineField({
-          name: "image",
-          title: "Hero Image",
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            defineField({ name: "alt", title: "Alt Text", type: "string" }),
-          ],
-        }),
+        linkField("primaryCta", "Main Button"),
+        linkField("secondaryCta", "Second Button"),
+        imageField("image", "Background Image"),
       ],
     }),
     defineField({
-      name: "introSection",
-      title: "Intro Section",
+      name: "servicesSection",
+      title: "What We Offer",
       type: "object",
+      group: "services",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "stats",
-          title: "Stats",
+          name: "services",
+          title: "Service Cards",
           type: "array",
           of: [
             defineField({
-              name: "stat",
-              title: "Stat",
+              name: "serviceCard",
+              title: "Service",
               type: "object",
               fields: [
-                defineField({ name: "value", title: "Value", type: "string" }),
-                defineField({ name: "label", title: "Label", type: "string" }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "pillarsSection",
-      title: "Pillars Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "pillars",
-          title: "Pillar Cards",
-          type: "array",
-          of: [
-            defineField({
-              name: "pillar",
-              title: "Pillar",
-              type: "object",
-              fields: [
-                defineField({
-                  name: "icon",
-                  title: "Icon Name",
-                  type: "string",
-                }),
-                defineField({ name: "title", title: "Title", type: "string" }),
+                defineField({ name: "name", title: "Name", type: "string" }),
                 defineField({
                   name: "description",
                   title: "Description",
                   type: "text",
-                  rows: 3,
+                  rows: 2,
+                }),
+                imageField("image", "Image"),
+                defineField({
+                  name: "buttonLabel",
+                  title: "Button Label",
+                  type: "string",
+                  description: "Defaults to Book Now",
+                }),
+                defineField({
+                  name: "buttonUrl",
+                  title: "Button Link",
+                  type: "string",
+                  description: "Defaults to /book",
                 }),
               ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "treatmentsSection",
-      title: "Treatments Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "treatments",
-          title: "Treatment Cards",
-          type: "array",
-          of: [
-            defineField({
-              name: "homepageTreatmentItem",
-              title: "Treatment",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "duration",
-                  title: "Duration",
-                  type: "string",
-                }),
-                defineField({
-                  name: "sensoryNote",
-                  title: "Sensory Note",
-                  type: "string",
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
+              preview: { select: { title: "name", media: "image" } },
             }),
           ],
         }),
@@ -177,83 +121,39 @@ export default defineType({
     }),
     defineField({
       name: "destinationsSection",
-      title: "Destinations Section",
+      title: "Spa Locations",
       type: "object",
+      group: "locations",
+      description:
+        "The location cards come from the Locations page (Pages → Locations). Edit names, photos and details there.",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
           name: "description",
           title: "Description",
           type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "destinations",
-          title: "Destination Cards",
-          type: "array",
-          of: [
-            defineField({
-              name: "destination",
-              title: "Destination",
-              type: "object",
-              fields: [
-                defineField({ name: "name", title: "Name", type: "string" }),
-                defineField({
-                  name: "address",
-                  title: "Address",
-                  type: "string",
-                }),
-                defineField({ name: "hours", title: "Hours", type: "string" }),
-                defineField({ name: "phone", title: "Phone", type: "string" }),
-                defineField({ name: "email", title: "Email", type: "string" }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-                defineField({
-                  name: "tags",
-                  title: "Tags",
-                  type: "array",
-                  of: [{ type: "string" }],
-                }),
-                defineField({
-                  name: "services",
-                  title: "Services",
-                  type: "array",
-                  of: [{ type: "string" }],
-                }),
-              ],
-            }),
-          ],
+          rows: 2,
         }),
       ],
     }),
     defineField({
       name: "guestPathSection",
-      title: "Guest Path Section",
+      title: "Your Visit",
       type: "object",
+      group: "visit",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
           name: "description",
           title: "Description",
           type: "text",
-          rows: 3,
+          rows: 2,
         }),
         defineField({
           name: "steps",
-          title: "Journey Steps",
+          title: "Steps",
           type: "array",
           of: [
             defineField({
@@ -271,50 +171,84 @@ export default defineType({
                   name: "description",
                   title: "Description",
                   type: "text",
-                  rows: 3,
+                  rows: 2,
                 }),
-              ],
-            }),
-          ],
-        }),
-        defineField({
-          name: "faq",
-          title: "FAQ",
-          type: "array",
-          of: [
-            defineField({
-              name: "faqItem",
-              title: "FAQ Item",
-              type: "object",
-              fields: [
                 defineField({
-                  name: "question",
-                  title: "Question",
+                  name: "icon",
+                  title: "Icon",
                   type: "string",
-                }),
-                defineField({
-                  name: "answer",
-                  title: "Answer",
-                  type: "text",
-                  rows: 3,
+                  options: {
+                    list: [
+                      { title: "Foot bath", value: "footbath" },
+                      { title: "Clipboard", value: "clipboard" },
+                      { title: "Hands", value: "hands" },
+                      { title: "Tea cup", value: "cup" },
+                      { title: "Infinity", value: "infinity" },
+                    ],
+                  },
                 }),
               ],
+              preview: { select: { title: "title", subtitle: "number" } },
             }),
           ],
         }),
         defineField({
           name: "stats",
-          title: "Stats",
+          title: "Numbers Strip",
           type: "array",
           of: [
             defineField({
               name: "stat",
-              title: "Stat",
+              title: "Number",
               type: "object",
               fields: [
                 defineField({ name: "value", title: "Value", type: "string" }),
                 defineField({ name: "label", title: "Label", type: "string" }),
+                defineField({
+                  name: "highlight",
+                  title: "Show in accent colour",
+                  type: "boolean",
+                }),
               ],
+              preview: { select: { title: "value", subtitle: "label" } },
+            }),
+          ],
+        }),
+        defineField({
+          name: "trustedByHeading",
+          title: "Hotel Names – Heading",
+          type: "string",
+        }),
+        defineField({
+          name: "hotelNames",
+          title: "Hotel Names",
+          type: "array",
+          of: [{ type: "string" }],
+        }),
+        defineField({
+          name: "testimonials",
+          title: "Guest Reviews",
+          type: "array",
+          of: [
+            defineField({
+              name: "review",
+              title: "Review",
+              type: "object",
+              fields: [
+                defineField({
+                  name: "quote",
+                  title: "Quote",
+                  type: "text",
+                  rows: 3,
+                }),
+                defineField({ name: "name", title: "Name", type: "string" }),
+                defineField({
+                  name: "affiliation",
+                  title: "Where they stayed / role",
+                  type: "string",
+                }),
+              ],
+              preview: { select: { title: "name", subtitle: "affiliation" } },
             }),
           ],
         }),
@@ -322,10 +256,11 @@ export default defineType({
     }),
     defineField({
       name: "partnershipSection",
-      title: "Partnership Section",
+      title: "For Hotel Owners",
       type: "object",
+      group: "hotels",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
           name: "description",
@@ -333,6 +268,8 @@ export default defineType({
           type: "text",
           rows: 3,
         }),
+        linkField("primaryCta", "Main Button"),
+        linkField("secondaryCta", "Second Button"),
         defineField({
           name: "services",
           title: "Service Cards",
@@ -345,8 +282,18 @@ export default defineType({
               fields: [
                 defineField({
                   name: "icon",
-                  title: "Icon Name",
+                  title: "Icon",
                   type: "string",
+                  options: {
+                    list: [
+                      { title: "Building", value: "spatial" },
+                      { title: "Shield", value: "management" },
+                      { title: "People", value: "sourcing" },
+                      { title: "Bottle", value: "formulation" },
+                      { title: "Bar chart", value: "revpash" },
+                      { title: "Trend up", value: "brand" },
+                    ],
+                  },
                 }),
                 defineField({ name: "title", title: "Title", type: "string" }),
                 defineField({
@@ -356,6 +303,7 @@ export default defineType({
                   rows: 3,
                 }),
               ],
+              preview: { select: { title: "title" } },
             }),
           ],
         }),
@@ -363,17 +311,13 @@ export default defineType({
     }),
     defineField({
       name: "journalSection",
-      title: "Journal Section",
+      title: "Blog",
       type: "object",
+      group: "blog",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
+        linkField("allArticlesLink", "All Articles Link"),
         defineField({
           name: "articles",
           title: "Article Cards",
@@ -384,42 +328,39 @@ export default defineType({
               title: "Article",
               type: "object",
               fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "excerpt",
-                  title: "Excerpt",
-                  type: "text",
-                  rows: 3,
-                }),
+                imageField("image", "Image"),
                 defineField({
                   name: "category",
-                  title: "Category",
+                  title: "Category Tag",
                   type: "string",
                 }),
                 defineField({
                   name: "readTime",
                   title: "Read Time",
                   type: "string",
+                  description: "e.g. 6 Min Read",
                 }),
                 defineField({
-                  name: "author",
-                  title: "Author",
+                  name: "topic",
+                  title: "Topic",
                   type: "string",
+                  description: "Shown after the read time, e.g. Ayurveda",
+                }),
+                defineField({ name: "title", title: "Title", type: "string" }),
+                defineField({
+                  name: "excerpt",
+                  title: "Short Description",
+                  type: "text",
+                  rows: 2,
                 }),
                 defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
+                  name: "url",
+                  title: "Link",
+                  type: "string",
+                  description: "Defaults to /blog",
                 }),
               ],
+              preview: { select: { title: "title", media: "image" } },
             }),
           ],
         }),
@@ -427,16 +368,17 @@ export default defineType({
     }),
     defineField({
       name: "reservationSection",
-      title: "Reservation Section",
+      title: "Booking",
       type: "object",
+      group: "booking",
       fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+        defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
           name: "description",
           title: "Description",
           type: "text",
-          rows: 3,
+          rows: 2,
         }),
         defineField({
           name: "infoCards",
@@ -450,33 +392,54 @@ export default defineType({
               fields: [
                 defineField({
                   name: "icon",
-                  title: "Icon Name",
+                  title: "Icon",
                   type: "string",
+                  options: {
+                    list: [
+                      { title: "Clock", value: "clock" },
+                      { title: "Shield", value: "shield" },
+                    ],
+                  },
                 }),
                 defineField({ name: "title", title: "Title", type: "string" }),
                 defineField({
                   name: "description",
                   title: "Description",
                   type: "text",
-                  rows: 3,
+                  rows: 2,
                 }),
               ],
+              preview: { select: { title: "title" } },
             }),
           ],
         }),
         defineField({
-          name: "contactPhone",
-          title: "Contact Phone",
-          type: "string",
+          name: "whatsapp",
+          title: "WhatsApp Card",
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string" }),
+            defineField({
+              name: "subtitle",
+              title: "Subtitle",
+              type: "string",
+            }),
+            defineField({
+              name: "buttonLabel",
+              title: "Button Label",
+              type: "string",
+            }),
+            defineField({
+              name: "url",
+              title: "WhatsApp Link",
+              type: "string",
+              description: "e.g. https://wa.me/917250333494",
+            }),
+          ],
         }),
         defineField({
-          name: "contactEmail",
-          title: "Contact Email",
-          type: "string",
-        }),
-        defineField({
-          name: "contactAddress",
-          title: "Contact Address",
+          name: "formHeading",
+          title: "Form Heading",
           type: "string",
         }),
       ],
@@ -485,6 +448,8 @@ export default defineType({
       name: "seo",
       title: "SEO",
       type: "object",
+      group: "seo",
+      description: "Browser tab title and search-engine description.",
       fields: [
         defineField({ name: "title", title: "SEO Title", type: "string" }),
         defineField({
@@ -493,16 +458,10 @@ export default defineType({
           type: "text",
           rows: 2,
         }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
       ],
     }),
   ],
   preview: {
-    select: { title: "hero.headline" },
+    prepare: () => ({ title: "Homepage" }),
   },
 });

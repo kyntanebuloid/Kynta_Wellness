@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { createBooking } from "@/lib/actions/bookings";
+import type { Homepage } from "@/types/sanity";
 
 interface BookableService {
   id: string;
@@ -21,19 +22,7 @@ interface Location {
 }
 
 interface ReservationSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    infoCards?: {
-      icon?: string;
-      title: string;
-      description: string;
-    }[];
-    contactPhone?: string;
-    contactEmail?: string;
-    contactAddress?: string;
-  };
+  data?: Homepage["reservationSection"];
   services?: BookableService[];
   locations?: Location[];
 }
@@ -151,6 +140,9 @@ function FieldLabel({
   );
 }
 
+const DEFAULT_WHATSAPP_URL =
+  "https://wa.me/917250333494?text=Hello%20Kynta%20Wellness%20%F0%9F%8C%B8%0A%0AI%E2%80%99d%20love%20to%20explore%20your%20wellness%20and%20spa%20experiences.%20Could%20you%20please%20share%20the%20available%20treatments%2C%20pricing%2C%20and%20appointment%20availability%3F";
+
 const defaultInfoCards = [
   {
     icon: "clock",
@@ -222,12 +214,18 @@ export function ReservationSection({
     data?.description ||
     "Book one short session or a stay of many days. Our team will plan every detail for you.";
 
-  const infoCards =
-    data?.infoCards?.map((c) => ({
-      icon: c.icon === "shield" ? "shield" : "clock",
-      title: c.title,
-      description: c.description,
-    })) || defaultInfoCards;
+  const infoCards = data?.infoCards?.length
+    ? data.infoCards.map((c) => ({
+        icon: c.icon === "shield" ? "shield" : "clock",
+        title: c.title,
+        description: c.description,
+      }))
+    : defaultInfoCards;
+  const whatsappTitle = data?.whatsapp?.title || "Talk to Us";
+  const whatsappSubtitle = data?.whatsapp?.subtitle || "Book fast on WhatsApp";
+  const whatsappButton = data?.whatsapp?.buttonLabel || "WhatsApp";
+  const whatsappUrl = data?.whatsapp?.url || DEFAULT_WHATSAPP_URL;
+  const formHeading = data?.formHeading || "Your Booking Details";
 
   const [status, setStatus] = useState<
     | { kind: "idle" }
@@ -506,20 +504,20 @@ export function ReservationSection({
                   </div>
                   <div>
                     <h4 className="font-serif text-[15px] text-kynta-charcoal">
-                      Talk to Us
+                      {whatsappTitle}
                     </h4>
                     <p className="text-[11px] text-kynta-warm-gray">
-                      Book fast on WhatsApp
+                      {whatsappSubtitle}
                     </p>
                   </div>
                 </div>
                 <Link
-                  href="https://wa.me/917250333494?text=Hello%20Kynta%20Wellness%20%F0%9F%8C%B8%0A%0AI%E2%80%99d%20love%20to%20explore%20your%20wellness%20and%20spa%20experiences.%20Could%20you%20please%20share%20the%20available%20treatments%2C%20pricing%2C%20and%20appointment%20availability%3F"
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 text-[12px] font-semibold text-white bg-[#25D366] rounded-md hover:bg-[#1fb855] transition-colors"
                 >
-                  WhatsApp
+                  {whatsappButton}
                 </Link>
               </div>
             </div>
@@ -527,7 +525,7 @@ export function ReservationSection({
 
           <div className="bg-white rounded-lg border border-kynta-border/40 p-6 lg:p-7">
             <h3 className="font-serif text-xl lg:text-[22px] text-kynta-charcoal mb-6">
-              Your Booking Details
+              {formHeading}
             </h3>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

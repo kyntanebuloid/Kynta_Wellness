@@ -8,6 +8,7 @@ import { Footer } from "@/app/components/Footer";
 import {
   getAllExperienceSlugs,
   getExperienceBySlug,
+  getSiteSettings,
 } from "@/lib/sanity/data";
 
 interface PageProps {
@@ -39,7 +40,10 @@ export async function generateMetadata({
 
 export default async function ExperienceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const experience = await getExperienceBySlug(slug);
+  const [experience, siteSettings] = await Promise.all([
+    getExperienceBySlug(slug),
+    getSiteSettings(),
+  ]);
 
   if (!experience) {
     notFound();
@@ -47,12 +51,12 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <TopBar />
-      <Header />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <ExperienceDetailHero experience={experience} />
       </main>
-      <Footer />
+      <Footer settings={siteSettings} />
     </>
   );
 }

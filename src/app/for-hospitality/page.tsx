@@ -24,8 +24,8 @@ export default async function ForHospitalityPage() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <HospitalityHeroSection data={hospitality?.hero} />
         <HospitalityStatsSection data={hospitality?.statsSection} />
@@ -36,7 +36,7 @@ export default async function ForHospitalityPage() {
         />
         <HospitalityAssuranceSection data={hospitality?.assuranceSection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

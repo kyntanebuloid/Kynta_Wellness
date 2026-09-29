@@ -22,15 +22,15 @@ export default async function BlogPage() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <BlogHeroSection data={blog?.hero} filters={blog?.filters} />
         <BlogInquiriesSection data={blog?.inquiriesSection} />
         <BlogCompendiumSection data={blog?.compendiumSection} />
         <BlogPhilosophySoundSection data={blog?.philosophySection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

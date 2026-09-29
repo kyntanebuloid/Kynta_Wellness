@@ -20,8 +20,8 @@ export default async function LocationsPage() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <LocationsSection
           data={locations?.hero}
@@ -29,7 +29,7 @@ export default async function LocationsPage() {
         />
         <SanctuaryCTASection data={locations?.ctaSection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

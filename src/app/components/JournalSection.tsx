@@ -1,21 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { SanityImage } from "@/types/sanity";
+import type { Homepage } from "@/types/sanity";
 
 interface JournalSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    articles?: {
-      title: string;
-      excerpt: string;
-      category?: string;
-      readTime?: string;
-      author?: string;
-      image?: SanityImage;
-    }[];
-  };
+  data?: Homepage["journalSection"];
 }
 
 const defaultArticles = [
@@ -116,16 +104,20 @@ export function JournalSection({ data }: JournalSectionProps) {
   const eyebrow = data?.eyebrow || "Kynta Blog";
   const heading =
     data?.heading || "Read about herbs, spa design and hotel business.";
+  const allArticlesLabel = data?.allArticlesLink?.label || "Read All Articles";
+  const allArticlesUrl = data?.allArticlesLink?.url || "/blog";
 
-  const articles =
-    data?.articles?.map((a) => ({
-      image: "/article-herbal-compress.jpg",
-      category: a.category || "Wellness",
-      meta: `${a.readTime || "5 Min Read"} • ${a.author || "Kynta Wellness"}`,
-      title: a.title,
-      description: a.excerpt,
-      href: "/blog",
-    })) || defaultArticles;
+  const articles = data?.articles?.length
+    ? data.articles.map((a, i) => ({
+        image:
+          a.image?.url || defaultArticles[i % defaultArticles.length].image,
+        category: a.category || "Wellness",
+        meta: [a.readTime || "5 Min Read", a.topic].filter(Boolean).join(" • "),
+        title: a.title,
+        description: a.excerpt,
+        href: a.url || "/blog",
+      }))
+    : defaultArticles;
 
   return (
     <section className="w-full bg-kynta-section-bg py-16 md:py-20 lg:py-24">
@@ -140,10 +132,10 @@ export function JournalSection({ data }: JournalSectionProps) {
             </h2>
           </div>
           <Link
-            href="/blog"
+            href={allArticlesUrl}
             className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-kynta-charcoal hover:text-kynta-teal transition-colors whitespace-nowrap md:mt-2"
           >
-            Read All Articles
+            {allArticlesLabel}
             <svg
               className="w-3.5 h-3.5"
               fill="none"
@@ -161,8 +153,8 @@ export function JournalSection({ data }: JournalSectionProps) {
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {articles.map((a) => (
-            <ArticleCard key={a.title} {...a} />
+          {articles.map((a, index) => (
+            <ArticleCard key={`${a.title}-${index}`} {...a} />
           ))}
         </div>
       </div>

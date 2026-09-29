@@ -24,113 +24,73 @@ export interface SanityBlock {
   }[];
 }
 
+/** An image projected in GROQ as `image{ "url": asset->url, alt }`. */
+export interface ResolvedImage {
+  url?: string | null;
+  alt?: string | null;
+}
+
+export interface CmsLink {
+  label?: string;
+  url?: string;
+}
+
 export interface SiteSettings {
-  _id: string;
-  _type: "siteSettings";
-  title: string;
-  description?: string;
-  logo?: SanityImage;
-  ogImage?: SanityImage;
-  contactEmail?: string;
-  contactPhone?: string;
-  address?: string;
-  socialLinks?: {
-    instagram?: string;
-    facebook?: string;
-    youtube?: string;
-  };
   topBar?: {
     partnerText?: string;
     phone?: string;
-    b2bLabel?: string;
-    b2bUrl?: string;
   };
+  logo?: ResolvedImage | null;
   navigation?: {
     label: string;
     url: string;
-    isButton?: boolean;
   }[];
+  headerButton?: CmsLink;
   footer?: {
-    brandName?: string;
     brandDescription?: string;
+    certificationText?: string;
     newsletterHeading?: string;
     newsletterDescription?: string;
     newsletterPlaceholder?: string;
     newsletterButtonLabel?: string;
-    footerNav?: {
-      heading: string;
-      links: {
-        label: string;
-        url: string;
-      }[];
-    }[];
+    legalLinks?: { label: string; url: string }[];
+    copyright?: string;
   };
+  socialLinks?: SocialLinks;
+}
+
+export interface SocialLinks {
+  instagram?: string;
+  facebook?: string;
+  linkedin?: string;
+  whatsapp?: string;
 }
 
 export interface Homepage {
-  _id: string;
-  _type: "homepage";
   hero?: {
     eyebrow?: string;
     headline?: string;
+    headlineItalic?: string;
     subtitle?: string;
-    ctaText?: string;
-    ctaUrl?: string;
-    image?: SanityImage;
-  };
-  introSection?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    stats?: {
-      value: string;
-      label: string;
-    }[];
+    primaryCta?: CmsLink;
+    secondaryCta?: CmsLink;
+    image?: ResolvedImage | null;
   };
   servicesSection?: {
+    eyebrow?: string;
+    heading?: string;
     services?: {
-      id?: string;
       name: string;
       description: string;
-      image?: SanityImage;
-    }[];
-  };
-  pillarsSection?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    pillars?: {
-      icon?: string;
-      title: string;
-      description: string;
-    }[];
-  };
-  treatmentsSection?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    treatments?: {
-      title: string;
-      description: string;
-      duration?: string;
-      sensoryNote?: string;
-      image?: SanityImage;
+      image?: ResolvedImage | null;
+      buttonLabel?: string;
+      buttonUrl?: string;
     }[];
   };
   destinationsSection?: {
     eyebrow?: string;
     heading?: string;
     description?: string;
-    destinations?: {
-      name: string;
-      address?: string;
-      hours?: string;
-      phone?: string;
-      email?: string;
-      image?: SanityImage;
-      tags?: string[];
-      services?: string[];
-    }[];
   };
   guestPathSection?: {
     eyebrow?: string;
@@ -140,20 +100,27 @@ export interface Homepage {
       number: string;
       title: string;
       description: string;
-    }[];
-    faq?: {
-      question: string;
-      answer: string;
+      icon?: string;
     }[];
     stats?: {
       value: string;
       label: string;
+      highlight?: boolean;
+    }[];
+    trustedByHeading?: string;
+    hotelNames?: string[];
+    testimonials?: {
+      quote: string;
+      name: string;
+      affiliation?: string;
     }[];
   };
   partnershipSection?: {
     eyebrow?: string;
     heading?: string;
     description?: string;
+    primaryCta?: CmsLink;
+    secondaryCta?: CmsLink;
     services?: {
       icon?: string;
       title: string;
@@ -163,14 +130,15 @@ export interface Homepage {
   journalSection?: {
     eyebrow?: string;
     heading?: string;
-    description?: string;
+    allArticlesLink?: CmsLink;
     articles?: {
-      title: string;
-      excerpt: string;
+      image?: ResolvedImage | null;
       category?: string;
       readTime?: string;
-      author?: string;
-      image?: SanityImage;
+      topic?: string;
+      title: string;
+      excerpt: string;
+      url?: string;
     }[];
   };
   reservationSection?: {
@@ -182,14 +150,17 @@ export interface Homepage {
       title: string;
       description: string;
     }[];
-    contactPhone?: string;
-    contactEmail?: string;
-    contactAddress?: string;
+    whatsapp?: {
+      title?: string;
+      subtitle?: string;
+      buttonLabel?: string;
+      url?: string;
+    };
+    formHeading?: string;
   };
   seo?: {
     title?: string;
     description?: string;
-    ogImage?: SanityImage;
   };
 }
 
@@ -264,6 +235,7 @@ export interface LocationsPage {
   locations?: {
     name: string;
     address: string;
+    description?: string;
     region: string;
     price?: string;
     slug?: string;
@@ -272,7 +244,7 @@ export interface LocationsPage {
     hours?: string;
     phone?: string;
     email?: string;
-    image?: SanityImage;
+    image?: ResolvedImage | null;
     services?: string[];
   }[];
   ctaSection?: {

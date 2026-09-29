@@ -269,11 +269,7 @@ interface LocationsSectionProps {
     hours?: string;
     phone?: string;
     email?: string;
-    image?: {
-      _type: "image";
-      asset: { _ref: string; _type: "reference" };
-      alt?: string;
-    };
+    image?: { url?: string | null; alt?: string | null } | null;
     services?: string[];
   }[];
 }
@@ -290,7 +286,7 @@ export function LocationsSection({
         const isRajasthan = loc.region?.toLowerCase().includes("rajasthan");
         return {
           id: loc.slug || fallback.id || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          image: loc.imagePath || fallback.image,
+          image: loc.image?.url || loc.imagePath || fallback.image,
           price: loc.price || fallback.price,
           title: loc.name || fallback.title,
           region: isRajasthan ? "rajasthan" : "himalayan",

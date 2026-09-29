@@ -3,74 +3,61 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
-import type { SanityImage } from "@/types/sanity";
+import type { Homepage } from "@/types/sanity";
 
 interface ServicesSectionProps {
-  data?: {
-    services?: {
-      id?: string;
-      name: string;
-      description: string;
-      image?: SanityImage;
-    }[];
-  };
+  data?: Homepage["servicesSection"];
 }
 
 const defaultServices = [
   {
-    id: "1",
     name: "Massages",
     description: "Healing massages that relax your body and take away pain.",
     image: "/treatment-massage.jpg",
   },
   {
-    id: "2",
     name: "Beauty Care",
     description: "Face and skin care made with natural plants and herbs.",
     image: "/treatment-glamour-glow.jpg",
   },
   {
-    id: "3",
     name: "Couple Massage",
     description: "A relaxing massage for two people, side by side.",
     image: "/treatment-spa-sojourns.jpg",
   },
   {
-    id: "4",
     name: "Quick Treatments",
     description: "Short treatments for when you do not have much time.",
     image: "/treatment-massage.jpg",
   },
   {
-    id: "5",
     name: "Full Spa Day",
-    description: "Long spa sessions that mix old Indian healing with modern comfort.",
+    description:
+      "Long spa sessions that mix old Indian healing with modern comfort.",
     image: "/treatment-spa-sojourns.jpg",
   },
 ];
 
-// Convert Sanity image reference to URL
-function getSanityImageUrl(image?: SanityImage): string {
-  if (!image) return "/treatment-spa-sojourns.jpg";
-  if (typeof image === "string") return image;
-  
-  const ref = image.asset?._ref;
-  if (!ref) return "/treatment-spa-sojourns.jpg";
-  
-  // Convert Sanity asset ref to image URL
-  // Format: image-abc123-800x600-jpg -> https://cdn.sanity.io/images/[projectId]/[dataset]/abc123-800x600.jpg
-  const [, id, ...rest] = ref.split("-");
-  const dimensions = rest.slice(0, -1).join("-");
-  const format = rest[rest.length - 1];
-  
-  return `https://cdn.sanity.io/images/projectId/dataset/${id}-${dimensions}.${format}`;
-}
-
 export function ServicesSection({ data }: ServicesSectionProps) {
   const scrollContainer = useRef<HTMLDivElement>(null);
 
-  // Use Sanity data if available, otherwise use defaults
-  const services = data?.services || defaultServices;
+  const eyebrow = data?.eyebrow || "OUR SERVICES";
+  const heading = data?.heading || "What We Offer";
+  const services = data?.services?.length
+    ? data.services.map((s, i) => ({
+        name: s.name,
+        description: s.description,
+        image: s.image?.url || defaultServices[i % defaultServices.length].image,
+        alt: s.image?.alt || s.name,
+        buttonLabel: s.buttonLabel || "Book Now",
+        buttonUrl: s.buttonUrl || "/book",
+      }))
+    : defaultServices.map((s) => ({
+        ...s,
+        alt: s.name,
+        buttonLabel: "Book Now",
+        buttonUrl: "/book",
+      }));
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainer.current) {
@@ -89,10 +76,10 @@ export function ServicesSection({ data }: ServicesSectionProps) {
         <div className="flex items-center justify-between mb-12">
           <div>
             <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
-              OUR SERVICES
+              {eyebrow}
             </p>
             <h2 className="font-serif text-3xl md:text-4xl text-kynta-charcoal">
-              What We Offer
+              {heading}
             </h2>
           </div>
 
@@ -148,15 +135,15 @@ export function ServicesSection({ data }: ServicesSectionProps) {
           className="no-scrollbar flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth"
           style={{ scrollBehavior: "smooth" }}
         >
-          {services.map((service) => (
+          {services.map((service, index) => (
             <div
-              key={service.id}
+              key={`${service.name}-${index}`}
               className="snap-start flex-shrink-0 w-full md:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] flex flex-col bg-white rounded-lg overflow-hidden border border-kynta-border/40 group"
             >
               <div className="relative w-full h-48 overflow-hidden">
                 <Image
-                  src={typeof service.image === "string" ? service.image : getSanityImageUrl(service.image as SanityImage)}
-                  alt={service.name}
+                  src={service.image}
+                  alt={service.alt}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw, 33vw"
@@ -170,10 +157,10 @@ export function ServicesSection({ data }: ServicesSectionProps) {
                   {service.description}
                 </p>
                 <Link
-                  href="/book"
+                  href={service.buttonUrl}
                   className="self-start inline-flex items-center gap-2 text-sm font-semibold text-kynta-teal hover:text-kynta-teal-light transition-colors"
                 >
-                  Book Now
+                  {service.buttonLabel}
                   <svg
                     className="w-4 h-4"
                     fill="none"

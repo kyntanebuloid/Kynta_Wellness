@@ -3,23 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import type { SiteSettings } from "@/types/sanity";
+import { resolveSocialLinks } from "./social-links";
 
 interface FooterProps {
-  data?: {
-    brandName?: string;
-    brandDescription?: string;
-    newsletterHeading?: string;
-    newsletterDescription?: string;
-    newsletterPlaceholder?: string;
-    newsletterButtonLabel?: string;
-    footerNav?: {
-      heading: string;
-      links: {
-        label: string;
-        url: string;
-      }[];
-    }[];
-  };
+  settings?: SiteSettings | null;
 }
 
 const defaultLegalLinks = [
@@ -50,7 +38,7 @@ function SocialIcon({
   );
 }
 
-export function Footer({ data }: FooterProps) {
+export function Footer({ settings }: FooterProps) {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -58,16 +46,28 @@ export function Footer({ data }: FooterProps) {
     setEmail("");
   };
 
+  const data = settings?.footer;
+  const social = resolveSocialLinks(settings?.socialLinks);
+  const logoSrc = settings?.logo?.url || "/kynta-logo-full.png";
+  const logoAlt = settings?.logo?.alt || "Kynta Wellness Group";
   const brandDescription =
     data?.brandDescription ||
     "Old Indian healing in calm, modern spas. Made for top hotels and for anyone who wants to relax and feel better.";
+  const certificationText =
+    data?.certificationText || "Certified Ayurveda & Water Therapy Spas";
   const newsletterHeading = data?.newsletterHeading || "Our Newsletter";
   const newsletterDescription =
     data?.newsletterDescription ||
     "Get news about our spas, special offers and health tips.";
   const newsletterPlaceholder =
     data?.newsletterPlaceholder || "Your email address";
-  const newsletterButtonLabel = "Subscribe";
+  const newsletterButtonLabel = data?.newsletterButtonLabel || "Subscribe";
+  const legalLinks = data?.legalLinks?.length
+    ? data.legalLinks
+    : defaultLegalLinks;
+  const copyright =
+    data?.copyright ||
+    "© 2025 Kynta Wellness Private Limited. All rights reserved.";
 
   return (
     <footer className="w-full bg-gradient-to-b from-[#f2f5f3] to-[#eff2f0] pt-16 pb-10 border-t border-[#e2e8e4]">
@@ -79,8 +79,8 @@ export function Footer({ data }: FooterProps) {
             <div className="mb-6">
               <Link href="/">
                 <Image
-                  src="/kynta-logo-full.png"
-                  alt="Kynta Wellness Group"
+                  src={logoSrc}
+                  alt={logoAlt}
                   width={200}
                   height={60}
                   className="h-12 w-auto object-contain"
@@ -95,7 +95,7 @@ export function Footer({ data }: FooterProps) {
 
             <div className="flex items-center gap-2.5 text-[11px] font-medium tracking-wide text-[#3d4d46]">
               <span className="w-2 h-2 rounded-full bg-[#274f46] flex-shrink-0" />
-              <span>Certified Ayurveda &amp; Water Therapy Spas</span>
+              <span>{certificationText}</span>
             </div>
           </div>
 
@@ -137,7 +137,7 @@ export function Footer({ data }: FooterProps) {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           {/* Legal Links */}
           <div className="flex items-center gap-8 text-[11.5px]">
-            {defaultLegalLinks.map((link, idx) => (
+            {legalLinks.map((link, idx) => (
               <div key={link.url} className="flex items-center gap-8">
                 <Link
                   href={link.url}
@@ -145,7 +145,7 @@ export function Footer({ data }: FooterProps) {
                 >
                   {link.label}
                 </Link>
-                {idx < defaultLegalLinks.length - 1 && (
+                {idx < legalLinks.length - 1 && (
                   <span className="text-[#d8e0db]">·</span>
                 )}
               </div>
@@ -154,7 +154,7 @@ export function Footer({ data }: FooterProps) {
 
           {/* Social Media Icons */}
           <div className="flex items-center gap-4">
-            <SocialIcon href="https://www.instagram.com/kyntawellnessgroup" label="Instagram">
+            <SocialIcon href={social.instagram} label="Instagram">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <title>Instagram</title>
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -163,14 +163,14 @@ export function Footer({ data }: FooterProps) {
               </svg>
             </SocialIcon>
 
-            <SocialIcon href="https://www.facebook.com/netlafeadsmarketing" label="Facebook">
+            <SocialIcon href={social.facebook} label="Facebook">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <title>Facebook</title>
                 <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a2 2 0 0 1 2-2h1z" />
               </svg>
             </SocialIcon>
 
-            <SocialIcon href="https://www.linkedin.com/company/kyntawellness/" label="LinkedIn">
+            <SocialIcon href={social.linkedin} label="LinkedIn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <title>LinkedIn</title>
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -179,7 +179,7 @@ export function Footer({ data }: FooterProps) {
               </svg>
             </SocialIcon>
 
-            <SocialIcon href="https://whatsapp.com/channel/0029VbCmXZFGZNCwHs3hTf21" label="WhatsApp">
+            <SocialIcon href={social.whatsapp} label="WhatsApp">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <title>WhatsApp</title>
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -191,7 +191,7 @@ export function Footer({ data }: FooterProps) {
         {/* Footer Bottom */}
         <div className="mt-10 pt-8 border-t border-[#e2e8e4] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-[#606d67] tracking-wide">
-            © 2025 Kynta Wellness Private Limited. All rights reserved.
+            {copyright}
           </p>
           <p className="text-[11px] text-[#8a9690] tracking-wide">
             Designed, developed &amp; maintained by{" "}

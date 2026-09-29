@@ -1,33 +1,38 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { SanityImage } from "@/types/sanity";
+import type { Homepage } from "@/types/sanity";
 
 interface HeroProps {
-  data?: {
-    eyebrow?: string;
-    headline?: string;
-    subtitle?: string;
-    ctaText?: string;
-    ctaUrl?: string;
-    image?: SanityImage;
-  };
+  data?: Homepage["hero"];
 }
 
 export function Hero({ data }: HeroProps) {
   const eyebrow = data?.eyebrow || "Indian Spa & Wellness";
+  const headline = data?.headline || "Wellness,";
+  const headlineItalic = data?.headlineItalic || "Made with Care.";
   const subtitle =
     data?.subtitle ||
     "Relaxing Ayurvedic spa treatments inside the best hotels, palaces and nature resorts in India.";
-  const ctaText = data?.ctaText || "See Our Treatments";
-  const ctaUrl = data?.ctaUrl || "/experiences";
+  const ctaText = data?.primaryCta?.label || "See Our Treatments";
+  const ctaUrl = data?.primaryCta?.url || "/experiences";
+  const secondaryText = data?.secondaryCta?.label || "Partner With Kynta";
+  const secondaryUrl = data?.secondaryCta?.url || "/partner";
+  const imageSrc = data?.image?.url || "/hero-bg.jpg";
+  const imageAlt =
+    data?.image?.alt || "Luxurious Indian heritage spa courtyard with lotus pool";
+
+  // The last word of the italic line is set upright, e.g. "Made with *Care.*"
+  const italicWords = headlineItalic.trim().split(/\s+/);
+  const uprightWord = italicWords.length > 1 ? italicWords.pop() : undefined;
+  const italicLead = italicWords.join(" ");
 
   return (
     <section className="relative w-full overflow-hidden -mt-[72px]" id="hero">
       <div className="hero-frame relative w-full">
         <div className="absolute inset-x-0 -top-[10%] bottom-0" data-parallax="8">
           <Image
-            src="/hero-bg.jpg"
-            alt="Luxurious Indian heritage spa courtyard with lotus pool"
+            src={imageSrc}
+            alt={imageAlt}
             fill
             priority
             className="object-cover object-center"
@@ -67,10 +72,16 @@ export function Hero({ data }: HeroProps) {
 
               <h1 className="font-serif leading-[1.1] mb-6">
                 <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-kynta-charcoal">
-                  Wellness,
+                  {headline}
                 </span>
                 <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl italic font-normal text-kynta-charcoal">
-                  Made with <span className="not-italic">Care.</span>
+                  {italicLead}
+                  {uprightWord && (
+                    <>
+                      {" "}
+                      <span className="not-italic">{uprightWord}</span>
+                    </>
+                  )}
                 </span>
               </h1>
 
@@ -100,10 +111,10 @@ export function Hero({ data }: HeroProps) {
                   </svg>
                 </Link>
                 <Link
-                  href="/partner"
+                  href={secondaryUrl}
                   className="inline-flex items-center px-7 py-3.5 text-sm font-medium tracking-wide text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
                 >
-                  Partner With Kynta
+                  {secondaryText}
                 </Link>
               </div>
             </div>

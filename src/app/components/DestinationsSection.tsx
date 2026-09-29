@@ -3,22 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import type { SanityImage } from "@/types/sanity";
+import type { Homepage, LocationsPage } from "@/types/sanity";
 
 interface DestinationsSectionProps {
-  locations?: {
-    name: string;
-    address?: string;
-    hours?: string;
-    phone?: string;
-    email?: string;
-    image?: SanityImage;
-    imagePath?: string;
-    detailsUrl?: string;
-    tags?: string[];
-    services?: string[];
-    slug?: string;
-  }[];
+  data?: Homepage["destinationsSection"];
+  locations?: LocationsPage["locations"];
 }
 
 const defaultDestinations = [
@@ -177,20 +166,26 @@ function CircleArrowButton({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-export function DestinationsSection({ locations }: DestinationsSectionProps) {
+export function DestinationsSection({
+  data,
+  locations,
+}: DestinationsSectionProps) {
   const scrollContainer = useRef<HTMLDivElement>(null);
-  const eyebrow = "Our Spa Locations";
-  const heading = "Our spas across India.";
+  const eyebrow = data?.eyebrow || "Our Spa Locations";
+  const heading = data?.heading || "Our spas across India.";
+  const description =
+    data?.description ||
+    "Find us in the hills of Rajasthan, the mountains of Himachal, and other beautiful places in India.";
 
   const destinations =
     locations?.map((d) => ({
-      image: d.imagePath || "/destination-heritage.jpg",
+      image: d.image?.url || d.imagePath || "/destination-heritage.jpg",
       locationPill: d.address || "",
       hours: d.hours || "08:00 – 21:00 Daily",
       title: d.name,
       address: d.address || "",
-      description: d.address || "A calm and relaxing spa",
-      tags: d.tags || d.services || [],
+      description: d.description || d.address || "A calm and relaxing spa",
+      tags: d.services || [],
       detailsHref:
         d.detailsUrl || (d.slug ? `/locations/${d.slug}` : "/locations"),
     })) || defaultDestinations;
@@ -218,8 +213,7 @@ export function DestinationsSection({ locations }: DestinationsSectionProps) {
               {heading}
             </h2>
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
-              Find us in the hills of Rajasthan, the mountains of Himachal,
-              and other beautiful places in India.
+              {description}
             </p>
           </div>
           <div className="flex items-end justify-start md:justify-end">

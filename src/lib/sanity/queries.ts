@@ -1,147 +1,88 @@
 import { defineQuery } from "next-sanity";
 
+// Images are resolved to plain CDN URLs here so components never need the
+// Sanity image builder.
 export const siteSettingsQuery = defineQuery(`*[_type == "siteSettings"][0]{
-  title,
-  description,
-  logo,
-  ogImage,
-  contactEmail,
-  contactPhone,
-  address,
-  socialLinks,
-  topBar,
-  navigation[]{
-    label,
-    url,
-    isButton
-  },
+  topBar{ partnerText, phone },
+  logo{ "url": asset->url, alt },
+  navigation[]{ label, url },
+  headerButton{ label, url },
   footer{
-    brandName,
     brandDescription,
+    certificationText,
     newsletterHeading,
     newsletterDescription,
     newsletterPlaceholder,
     newsletterButtonLabel,
-    footerNav[]{
-      heading,
-      links[]{
-        label,
-        url
-      }
-    }
-  }
+    legalLinks[]{ label, url },
+    copyright
+  },
+  socialLinks{ instagram, facebook, linkedin, whatsapp }
 }`);
 
 export const homepageQuery = defineQuery(`*[_type == "homepage"][0]{
   hero{
     eyebrow,
     headline,
+    headlineItalic,
     subtitle,
-    ctaText,
-    ctaUrl,
-    image
+    primaryCta{ label, url },
+    secondaryCta{ label, url },
+    image{ "url": asset->url, alt }
   },
-  introSection{
+  servicesSection{
     eyebrow,
     heading,
-    description,
-    stats[]{
-      value,
-      label
-    }
-  },
-  pillarsSection{
-    eyebrow,
-    heading,
-    description,
-    pillars[]{
-      icon,
-      title,
-      description
-    }
-  },
-  treatmentsSection{
-    eyebrow,
-    heading,
-    description,
-    treatments[]{
-      title,
-      description,
-      duration,
-      sensoryNote,
-      image
-    }
-  },
-  destinationsSection{
-    eyebrow,
-    heading,
-    description,
-    destinations[]{
+    services[]{
       name,
-      address,
-      hours,
-      phone,
-      email,
-      image,
-      tags,
-      services
+      description,
+      image{ "url": asset->url, alt },
+      buttonLabel,
+      buttonUrl
     }
   },
+  destinationsSection{ eyebrow, heading, description },
   guestPathSection{
     eyebrow,
     heading,
     description,
-    steps[]{
-      number,
-      title,
-      description
-    },
-    faq[]{
-      question,
-      answer
-    },
-    stats[]{
-      value,
-      label
-    }
+    steps[]{ number, title, description, icon },
+    stats[]{ value, label, highlight },
+    trustedByHeading,
+    hotelNames,
+    testimonials[]{ quote, name, affiliation }
   },
   partnershipSection{
     eyebrow,
     heading,
     description,
-    services[]{
-      icon,
-      title,
-      description
-    }
+    primaryCta{ label, url },
+    secondaryCta{ label, url },
+    services[]{ icon, title, description }
   },
   journalSection{
     eyebrow,
     heading,
-    description,
+    allArticlesLink{ label, url },
     articles[]{
-      title,
-      excerpt,
+      image{ "url": asset->url, alt },
       category,
       readTime,
-      author,
-      image
+      topic,
+      title,
+      excerpt,
+      url
     }
   },
   reservationSection{
     eyebrow,
     heading,
     description,
-    infoCards[]{
-      icon,
-      title,
-      description
-    },
-    contactPhone,
-    contactEmail,
-    contactAddress
+    infoCards[]{ icon, title, description },
+    whatsapp{ title, subtitle, buttonLabel, url },
+    formHeading
   },
-  seo
+  seo{ title, description }
 }`);
 
 export const experiencesPageQuery =
@@ -208,6 +149,7 @@ export const locationsPageQuery = defineQuery(`*[_type == "locationsPage"][0]{
   locations[]{
     name,
     address,
+    description,
     region,
     price,
     slug,
@@ -216,7 +158,7 @@ export const locationsPageQuery = defineQuery(`*[_type == "locationsPage"][0]{
     hours,
     phone,
     email,
-    image,
+    image{ "url": asset->url, alt },
     services
   },
   ctaSection{

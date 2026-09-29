@@ -3,16 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { SanityImage } from "@/types/sanity";
+import type { SiteSettings } from "@/types/sanity";
 import { Logo } from "./Logo";
 
 interface HeaderProps {
-  navigation?: {
-    label: string;
-    url: string;
-    isButton?: boolean;
-  }[];
-  logo?: SanityImage;
+  settings?: SiteSettings | null;
 }
 
 const defaultNavLinks = [
@@ -44,7 +39,7 @@ function isLinkActive(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Header({ navigation, logo }: HeaderProps) {
+export function Header({ settings }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -59,9 +54,11 @@ export function Header({ navigation, logo }: HeaderProps) {
   // Only the homepage has a hero image behind the header; elsewhere white text would vanish.
   const solid = scrolled || mobileMenuOpen || pathname !== "/";
 
-  const navLinks =
-    navigation?.map((n) => ({ label: n.label, href: n.url })) ||
-    defaultNavLinks;
+  const navLinks = settings?.navigation?.length
+    ? settings.navigation.map((n) => ({ label: n.label, href: n.url }))
+    : defaultNavLinks;
+  const buttonLabel = settings?.headerButton?.label || "BOOK NOW";
+  const buttonUrl = settings?.headerButton?.url || "/book";
 
   return (
     <header
@@ -93,7 +90,11 @@ export function Header({ navigation, logo }: HeaderProps) {
             solid ? "brightness-100 invert-0" : "brightness-0 invert"
           }`}
         >
-          <Logo href="/" />
+          <Logo
+            href="/"
+            src={settings?.logo?.url ?? undefined}
+            alt={settings?.logo?.alt ?? undefined}
+          />
         </div>
 
         {/* Desktop Navigation */}
@@ -125,10 +126,10 @@ export function Header({ navigation, logo }: HeaderProps) {
 
         <div className="flex items-center gap-3">
         <Link
-          href="/book"
+          href={buttonUrl}
           className="hidden md:inline-flex px-5 py-2.5 text-xs font-medium tracking-wider text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200 whitespace-nowrap"
         >
-          BOOK NOW
+          {buttonLabel}
         </Link>
 
         {/* Mobile menu button */}
@@ -196,11 +197,11 @@ export function Header({ navigation, logo }: HeaderProps) {
           </nav>
           <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-kynta-border/50">
             <Link
-              href="/book"
+              href={buttonUrl}
               onClick={() => setMobileMenuOpen(false)}
               className="px-4 py-2 text-xs text-center font-medium tracking-wider text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
             >
-              BOOK NOW
+              {buttonLabel}
             </Link>
           </div>
         </div>

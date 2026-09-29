@@ -22,15 +22,15 @@ export default async function ExperiencesPage() {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <ExperiencesSection data={experiences?.hero} />
         <ExperiencePillarsSection data={experiences?.pillars} />
         <ExperienceTreatmentsSection data={experiences?.treatmentsSection} />
         <ExperienceProtocolSection data={experiences?.protocolSection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

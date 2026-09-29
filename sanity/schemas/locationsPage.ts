@@ -31,10 +31,22 @@ export default defineType({
           fields: [
             defineField({ name: "name", title: "Name", type: "string" }),
             defineField({ name: "address", title: "Address", type: "string" }),
+            defineField({
+              name: "description",
+              title: "Card Description",
+              type: "text",
+              rows: 2,
+              description: "Short text on the homepage card. Defaults to the address.",
+            }),
             defineField({ name: "region", title: "Region", type: "string" }),
             defineField({ name: "price", title: "Price", type: "string" }),
             defineField({ name: "slug", title: "Slug / Identifier", type: "string" }),
-            defineField({ name: "imagePath", title: "Local Image Path", type: "string" }),
+            defineField({
+              name: "imagePath",
+              title: "Local Image Path",
+              type: "string",
+              description: "Used only when no image is uploaded below.",
+            }),
             defineField({ name: "detailsUrl", title: "Details URL", type: "string" }),
             defineField({ name: "hours", title: "Hours", type: "string" }),
             defineField({ name: "phone", title: "Phone", type: "string" }),

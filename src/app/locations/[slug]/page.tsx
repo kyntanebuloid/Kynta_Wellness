@@ -54,13 +54,13 @@ export default async function LocationDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <TopBar data={siteSettings?.topBar} />
-      <Header navigation={siteSettings?.navigation} logo={siteSettings?.logo} />
+      <TopBar settings={siteSettings} />
+      <Header settings={siteSettings} />
       <main>
         <LocationDetailHero location={location} />
         <SanctuaryCTASection data={locationsPage?.ctaSection} />
       </main>
-      <Footer data={siteSettings?.footer} />
+      <Footer settings={siteSettings} />
     </>
   );
 }

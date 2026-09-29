@@ -3,13 +3,19 @@ import Image from "next/image";
 
 interface LogoProps {
   href?: string;
+  src?: string;
+  alt?: string;
 }
 
-export function Logo({ href = "/" }: LogoProps) {
+export function Logo({
+  href = "/",
+  src = "/kynta-logo-full.png",
+  alt = "Kynta Wellness Group",
+}: LogoProps) {
   const content = (
     <Image
-      src="/kynta-logo-full.png"
-      alt="Kynta Wellness Group"
+      src={src}
+      alt={alt}
       width={200}
       height={60}
       className="h-10 w-auto object-contain"

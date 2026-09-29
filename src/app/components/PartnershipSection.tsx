@@ -1,16 +1,8 @@
 import Link from "next/link";
+import type { Homepage } from "@/types/sanity";
 
 interface PartnershipSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    services?: {
-      icon?: string;
-      title: string;
-      description: string;
-    }[];
-  };
+  data?: Homepage["partnershipSection"];
 }
 
 const defaultServices = [
@@ -149,13 +141,21 @@ function ServiceCard({
 export function PartnershipSection({ data }: PartnershipSectionProps) {
   const eyebrow = data?.eyebrow || "For Hotel Owners";
   const heading = data?.heading || "We run your hotel spa for you.";
+  const description =
+    data?.description ||
+    "Running a spa is hard work. We do it all for you. We plan the space, hire trained therapists, run the spa every day, and help your hotel earn more.";
+  const primaryLabel = data?.primaryCta?.label || "Get Partner Details";
+  const primaryUrl = data?.primaryCta?.url || "/partner";
+  const secondaryLabel = data?.secondaryCta?.label || "Book a Call With Us";
+  const secondaryUrl = data?.secondaryCta?.url || "/contact";
 
-  const services =
-    data?.services?.map((s) => ({
-      icon: s.icon || "spatial",
-      title: s.title,
-      description: s.description,
-    })) || defaultServices;
+  const services = data?.services?.length
+    ? data.services.map((s) => ({
+        icon: s.icon || "spatial",
+        title: s.title,
+        description: s.description,
+      }))
+    : defaultServices;
 
   return (
     <section
@@ -172,18 +172,16 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               {heading}
             </h2>
             <p className="text-[14px] leading-[1.7] text-white/55 max-w-md">
-              Running a spa is hard work. We do it all for you. We plan the
-              space, hire trained therapists, run the spa every day, and help
-              your hotel earn more.
+              {description}
             </p>
           </div>
           <div className="flex flex-col justify-end gap-3 md:max-w-sm md:ml-auto">
             <Link
-              href="/partner"
+              href={primaryUrl}
               className="flex items-center justify-center gap-2 w-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white rounded-md transition-colors"
               style={{ backgroundColor: "#9b5a3c" }}
             >
-              Get Partner Details
+              {primaryLabel}
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -200,10 +198,10 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               </svg>
             </Link>
             <Link
-              href="/contact"
+              href={secondaryUrl}
               className="flex items-center justify-center w-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors"
             >
-              Book a Call With Us
+              {secondaryLabel}
             </Link>
           </div>
         </div>
