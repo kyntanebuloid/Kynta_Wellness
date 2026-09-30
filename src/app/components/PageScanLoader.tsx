@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 // A blueprint-style "scan" shown while a page change is slow. It covers the
 // page below the navbar, which stays put. Fast navigations never show it.
 
-const SHOW_AFTER_MS = 200;
+const SHOW_AFTER_MS = 120;
 const MIN_VISIBLE_MS = 450;
 const GIVE_UP_MS = 12_000;
 const EXCLUDED_ROUTES = /^\/(studio|admin)(\/|$)/;
@@ -31,7 +31,11 @@ function isInternalNavigation(event: MouseEvent): string | null {
     return null;
   }
   const anchor = (event.target as Element | null)?.closest("a");
-  if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) {
+  if (
+    !anchor ||
+    anchor.target === "_blank" ||
+    anchor.hasAttribute("download")
+  ) {
     return null;
   }
   const url = new URL(anchor.href, window.location.href);
@@ -64,9 +68,11 @@ export function PageScanLoader() {
         setTimeout(() => setPhase("idle"), GIVE_UP_MS),
       );
     };
-    document.addEventListener("click", onClick);
+    // Capture phase: next/link calls preventDefault() on its own click, which
+    // runs before a bubbling document listener would see the event.
+    document.addEventListener("click", onClick, true);
     return () => {
-      document.removeEventListener("click", onClick);
+      document.removeEventListener("click", onClick, true);
       clearTimers(timers);
     };
   }, []);

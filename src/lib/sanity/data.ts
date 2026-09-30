@@ -208,7 +208,28 @@ export async function getHospitalityPage(): Promise<HospitalityPageContent | nul
 }
 
 export async function getBlogPage(): Promise<BlogPageContent | null> {
-  return fetchPage<BlogPageContent>("blogPage");
+  const [page, posts] = await Promise.all([
+    fetchPage<BlogPageContent>("blogPage"),
+    getBlogPosts(),
+  ]);
+  const categories = page?.hero?.categories;
+  if (!page || !Array.isArray(categories)) return page;
+
+  // Swap each category's picked-post reference for the post itself; hidden or
+  // deleted posts become null so the card falls back to its own fields.
+  const byId = new Map(posts.map((post) => [post._id, post]));
+  return {
+    ...page,
+    hero: {
+      ...page.hero,
+      categories: categories.map((category) => {
+        if (!category || typeof category !== "object") return category;
+        const ref = (category.post as { _ref?: string } | null | undefined)
+          ?._ref;
+        return { ...category, post: ref ? (byId.get(ref) ?? null) : null };
+      }),
+    },
+  };
 }
 
 export async function getContactPage(): Promise<ContactPageContent | null> {

@@ -1,20 +1,35 @@
 import type { ContentImage } from "./types";
 
+export interface ContactPhone {
+  kind?: "phone" | "whatsapp";
+  label?: string;
+  number?: string;
+  /** Hours for a phone line, a badge such as INSTANT for WhatsApp. */
+  note?: string;
+}
+
+/**
+ * The single phone and WhatsApp fields Sanity held before the Phone Numbers
+ * list; still read until the Contact page is re-synced or edited.
+ */
+export interface LegacyContactPhones {
+  phoneLabel?: string;
+  phone?: string;
+  phoneHours?: string;
+  whatsappLabel?: string;
+  whatsappNumber?: string;
+  whatsappBadge?: string;
+}
+
 export interface ContactPageContent {
   hero?: { eyebrow?: string; heading?: string; subheading?: string };
   desks?: {
     eyebrow?: string;
     heading?: string;
     description?: string;
-    phoneLabel?: string;
-    phone?: string;
-    phoneHours?: string;
-    whatsappLabel?: string;
-    whatsappNumber?: string;
-    whatsappUrl?: string;
-    whatsappBadge?: string;
+    phones?: ContactPhone[];
     emailHeading?: string;
-    emails?: { label: string; email: string }[];
+    emails?: { label?: string; email?: string }[];
     image?: ContentImage;
     imageLabel?: string;
     imageCaption?: string;
@@ -59,13 +74,20 @@ export const contactPageDefaults = {
     heading: "Sanctuary Desks",
     description:
       "Our stewards oversee limited correspondence streams to preserve the sanctity and deep attention owed to every guest and institutional patron.",
-    phoneLabel: "PRIVATE GUEST CONCIERGE",
-    phone: "+91 7250333494",
-    phoneHours: "07:00 – 22:00 IST",
-    whatsappLabel: "ENCRYPTED SANCTUARY WHATSAPP",
-    whatsappNumber: "+91 98200 48300",
-    whatsappUrl: "https://wa.me/919820048300",
-    whatsappBadge: "INSTANT",
+    phones: [
+      {
+        kind: "phone",
+        label: "PRIVATE GUEST CONCIERGE",
+        number: "+91 7250333494",
+        note: "07:00 – 22:00 IST",
+      },
+      {
+        kind: "whatsapp",
+        label: "ENCRYPTED SANCTUARY WHATSAPP",
+        number: "+91 98200 48300",
+        note: "INSTANT",
+      },
+    ] satisfies ContactPhone[],
     emailHeading: "SPECIALIZED EMAIL DESKS",
     emails: [
       { label: "Official email address", email: "info@kyntawellness.com" },

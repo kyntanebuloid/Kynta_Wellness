@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -9,6 +10,51 @@ import {
   blogPageDefaults,
 } from "@/content/blog";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
+
+function initials(name: string): string {
+  return name
+    .replace(/^(dr|mr|mrs|ms).?s+/i, "")
+    .split(/s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+}
+
+/** Internal pages open in place; PDFs and other sites in a new tab. */
+function HeroLink({
+  href,
+  className,
+  style,
+  label,
+  children,
+}: {
+  href: string;
+  className?: string;
+  style?: React.CSSProperties;
+  label?: string;
+  children?: React.ReactNode;
+}) {
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href} className={className} style={style} aria-label={label}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      style={style}
+      aria-label={label}
+    >
+      {children}
+    </a>
+  );
+}
 
 interface BlogHeroSectionProps {
   data?: BlogPageContent["hero"];
@@ -29,21 +75,35 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
   );
   const categories = list(stored, d.categories).map((c, i) => {
     const fallback = d.categories[i % d.categories.length];
+    // A picked Blog Post fills the card and is what it opens.
+    const post = c.post;
+    const authorName = post?.author || c.authorName || "";
+    const title = post?.title || c.title || c.label;
     return {
       label: c.label,
-      image: imageUrl(c.image, fallback.image),
-      imageAlt: imageAlt(c.image, { alt: c.title || c.label }),
+      image: post?.featuredImage?.url || imageUrl(c.image, fallback.image),
+      imageAlt:
+        post?.featuredImage?.alt ||
+        (post ? post.title : imageAlt(c.image, { alt: title })),
       badge: c.badge ?? "",
-      meta: [c.category, c.issue, c.readTime].filter(Boolean).join("  •  "),
-      title: c.title ?? c.label,
-      description: c.description ?? "",
+      meta: [
+        post?.category || c.category,
+        c.issue,
+        post?.readTime || c.readTime,
+      ]
+        .filter(Boolean)
+        .join("  •  "),
+      title,
+      description: post?.excerpt || c.description || "",
       author: {
-        initials: c.authorInitials ?? "",
-        name: c.authorName ?? "",
-        role: c.authorRole ?? "",
+        initials: post?.author
+          ? initials(post.author)
+          : (c.authorInitials ?? ""),
+        name: authorName,
+        role: post ? (post.authorRole ?? "") : (c.authorRole ?? ""),
       },
-      // PDF first, then a link; nothing means no read link at all.
-      href: c.pdf?.url || c.url?.trim() || null,
+      // Picked post first, then a PDF, then a link; none means no read link.
+      href: post ? `/blog/${post.slug}` : c.pdf?.url || c.url?.trim() || null,
       linkLabel: text(c.linkLabel, "READ ARTICLE"),
     };
   });
@@ -120,6 +180,14 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
               />
             ))}
 
+            {article.href && (
+              <HeroLink
+                href={article.href}
+                label={article.title}
+                className="absolute inset-0 z-[5]"
+              />
+            )}
+
             {article.badge && (
               <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md rounded-[6px] px-3 py-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-white/80">
                 <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
@@ -139,14 +207,12 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
 
               <h2 className="font-serif text-[21px] sm:text-[23px] md:text-[25px] lg:text-[27px] leading-[1.22] font-normal text-kynta-charcoal mb-3.5">
                 {article.href ? (
-                  <a
+                  <HeroLink
                     href={article.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="hover:text-kynta-teal-dark transition-colors"
                   >
                     {article.title}
-                  </a>
+                  </HeroLink>
                 ) : (
                   article.title
                 )}
@@ -178,10 +244,8 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
               </div>
 
               {article.href && (
-                <a
+                <HeroLink
                   href={article.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 flex-shrink-0 group"
                   style={{ color: "var(--kynta-teal-dark)" }}
                 >
@@ -189,7 +253,7 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
                   <span className="transition-transform duration-200 group-hover:translate-x-0.5">
                     →
                   </span>
-                </a>
+                </HeroLink>
               )}
             </div>
           </div>

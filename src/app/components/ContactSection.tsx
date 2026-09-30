@@ -2,11 +2,64 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { type ContactPageContent, contactPageDefaults } from "@/content/contact";
+import {
+  type ContactPageContent,
+  type ContactPhone,
+  contactPageDefaults,
+  type LegacyContactPhones,
+} from "@/content/contact";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface ContactSectionProps {
   data?: ContactPageContent;
+}
+
+/**
+ * Phone rows to show. Uses Sanity's Phone Numbers list; before that list
+ * exists, the older single phone/WhatsApp fields; built-in numbers only when
+ * Sanity has no Contact page at all. Rows without a number are skipped.
+ */
+function contactPhones(data?: ContactPageContent | null) {
+  const d = contactPageDefaults.desks;
+  const stored = data?.desks as
+    | (NonNullable<ContactPageContent["desks"]> & LegacyContactPhones)
+    | undefined;
+  let rows: ContactPhone[];
+  if (!data) {
+    rows = d.phones;
+  } else if (stored?.phones) {
+    rows = stored.phones;
+  } else {
+    rows = [
+      {
+        kind: "phone",
+        label: stored?.phoneLabel,
+        number: stored?.phone,
+        note: stored?.phoneHours,
+      },
+      {
+        kind: "whatsapp",
+        label: stored?.whatsappLabel,
+        number: stored?.whatsappNumber,
+        note: stored?.whatsappBadge,
+      },
+    ];
+  }
+  return rows
+    .filter((row) => row.number?.trim())
+    .map((row) => {
+      const digits = (row.number ?? "").replace(/[^\d+]/g, "");
+      const whatsapp = row.kind === "whatsapp";
+      return {
+        whatsapp,
+        label: row.label ?? "",
+        number: row.number ?? "",
+        note: row.note ?? "",
+        href: whatsapp
+          ? `https://wa.me/${digits.replace(/^\+/, "")}`
+          : `tel:${digits}`,
+      };
+    });
 }
 
 const inputClass =
@@ -29,15 +82,12 @@ export function ContactSection({ data }: ContactSectionProps) {
     eyebrow: text(dk?.eyebrow, d.desks.eyebrow),
     heading: text(dk?.heading, d.desks.heading),
     description: text(dk?.description, d.desks.description),
-    phoneLabel: text(dk?.phoneLabel, d.desks.phoneLabel),
-    phone: text(dk?.phone, d.desks.phone),
-    phoneHours: text(dk?.phoneHours, d.desks.phoneHours),
-    whatsappLabel: text(dk?.whatsappLabel, d.desks.whatsappLabel),
-    whatsappNumber: text(dk?.whatsappNumber, d.desks.whatsappNumber),
-    whatsappUrl: text(dk?.whatsappUrl, d.desks.whatsappUrl),
-    whatsappBadge: text(dk?.whatsappBadge, d.desks.whatsappBadge),
+    phones: contactPhones(data),
     emailHeading: text(dk?.emailHeading, d.desks.emailHeading),
-    emails: list(dk?.emails, d.desks.emails),
+    // Once Sanity has the page, an empty list there hides the email box.
+    emails: (data ? (dk?.emails ?? []) : d.desks.emails).filter(
+      (row): row is { label?: string; email: string } => !!row.email?.trim(),
+    ),
     image: imageUrl(dk?.image, d.desks.image),
     imageAlt: imageAlt(dk?.image, d.desks.image),
     imageLabel: text(dk?.imageLabel, d.desks.imageLabel),
@@ -115,97 +165,102 @@ export function ContactSection({ data }: ContactSectionProps) {
               </p>
             </div>
 
-            <div className="bg-white rounded-[12px] p-4 sm:p-4.5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between gap-3 mb-3.5 transition-all duration-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-[8px] bg-[#eef4f1] text-kynta-teal-dark flex items-center justify-center flex-shrink-0">
-                  <svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-0.5">
-                    {desks.phoneLabel}
-                  </span>
-                  <a
-                    href={`tel:${desks.phone.replace(/[^+\d]/g, "")}`}
-                    className="text-[13.5px] sm:text-[14px] font-semibold text-kynta-charcoal block hover:text-kynta-teal-dark transition-colors"
-                  >
-                    {desks.phone}
-                  </a>
-                </div>
-              </div>
-              <span className="text-[10px] sm:text-[11px] text-kynta-warm-gray font-normal whitespace-nowrap pl-2">
-                {desks.phoneHours}
-              </span>
-            </div>
-
-            <div className="bg-white rounded-[12px] p-4 sm:p-4.5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between gap-3 mb-3.5 transition-all duration-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-[8px] bg-[#eef4f1] text-[#2d7a5b] flex items-center justify-center flex-shrink-0">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                  </svg>
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-0.5">
-                    {desks.whatsappLabel}
-                  </span>
-                  <a
-                    href={desks.whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[13.5px] sm:text-[14px] font-semibold text-kynta-charcoal block hover:text-kynta-teal-dark transition-colors"
-                  >
-                    {desks.whatsappNumber}
-                  </a>
-                </div>
-              </div>
-              <span className="text-[9px] font-semibold tracking-[0.14em] uppercase px-2 py-0.5 rounded-[4px] bg-[#fdf0ec] text-kynta-rust whitespace-nowrap">
-                {desks.whatsappBadge}
-              </span>
-            </div>
-
-            <div className="bg-white rounded-[12px] p-5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] mb-4">
-              <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-3">
-                {desks.emailHeading}
-              </span>
-              <div className="space-y-2.5">
-                {desks.emails.map((row, index) => (
+            {desks.phones.map((row, index) => (
+              <div
+                key={`${row.number}-${index}`}
+                className="bg-white rounded-[12px] p-4 sm:p-4.5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between gap-3 mb-3.5 transition-all duration-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]"
+              >
+                <div className="flex items-center gap-3.5 min-w-0">
                   <div
-                    key={`${row.email}-${index}`}
-                    className={`flex items-center justify-between text-[11.5px] sm:text-[12px] gap-2${
-                      index > 0 ? " pt-2 border-t border-kynta-border/20" : ""
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-[8px] bg-[#eef4f1] flex items-center justify-center flex-shrink-0 ${
+                      row.whatsapp ? "text-[#2d7a5b]" : "text-kynta-teal-dark"
                     }`}
                   >
-                    <span className="text-kynta-warm-gray">{row.label}</span>
+                    {row.whatsapp ? (
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    {row.label && (
+                      <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-0.5">
+                        {row.label}
+                      </span>
+                    )}
                     <a
-                      href={`mailto:${row.email}`}
-                      className="text-kynta-teal-dark hover:underline font-medium"
+                      href={row.href}
+                      {...(row.whatsapp
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                      className="text-[13.5px] sm:text-[14px] font-semibold text-kynta-charcoal block hover:text-kynta-teal-dark transition-colors"
                     >
-                      {row.email}
+                      {row.number}
                     </a>
                   </div>
-                ))}
+                </div>
+                {row.note &&
+                  (row.whatsapp ? (
+                    <span className="text-[9px] font-semibold tracking-[0.14em] uppercase px-2 py-0.5 rounded-[4px] bg-[#fdf0ec] text-kynta-rust whitespace-nowrap">
+                      {row.note}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] sm:text-[11px] text-kynta-warm-gray font-normal whitespace-nowrap pl-2">
+                      {row.note}
+                    </span>
+                  ))}
               </div>
-            </div>
+            ))}
+
+            {desks.emails.length > 0 && (
+              <div className="bg-white rounded-[12px] p-5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] mb-4">
+                <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-3">
+                  {desks.emailHeading}
+                </span>
+                <div className="space-y-2.5">
+                  {desks.emails.map((row, index) => (
+                    <div
+                      key={`${row.email}-${index}`}
+                      className={`flex items-center justify-between text-[11.5px] sm:text-[12px] gap-2${
+                        index > 0 ? " pt-2 border-t border-kynta-border/20" : ""
+                      }`}
+                    >
+                      <span className="text-kynta-warm-gray">{row.label}</span>
+                      <a
+                        href={`mailto:${row.email.trim()}`}
+                        className="text-kynta-teal-dark hover:underline font-medium break-all"
+                      >
+                        {row.email}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="relative rounded-[14px] overflow-hidden border border-kynta-border/40 shadow-sm mb-4 bg-kynta-charcoal aspect-[16/9.5] group">
               <Image

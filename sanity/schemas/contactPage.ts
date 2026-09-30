@@ -1,5 +1,5 @@
 import { defineType } from "sanity";
-import { img, obj, objList, seo, str, strList, txt } from "./helpers";
+import { choice, img, obj, objList, seo, str, strList, txt } from "./helpers";
 
 // Mirrors src/content/contact.ts, top to bottom of the Contact page.
 export default defineType({
@@ -16,13 +16,33 @@ export default defineType({
       str("eyebrow", "Small Label"),
       str("heading", "Heading"),
       txt("description", "Description", 2),
-      str("phoneLabel", "Phone – Label"),
-      str("phone", "Phone – Number"),
-      str("phoneHours", "Phone – Hours"),
-      str("whatsappLabel", "WhatsApp – Label"),
-      str("whatsappNumber", "WhatsApp – Number Shown"),
-      str("whatsappUrl", "WhatsApp – Link", { description: "e.g. https://wa.me/919820048300" }),
-      str("whatsappBadge", "WhatsApp – Badge"),
+      objList(
+        "phones",
+        "Phone Numbers",
+        "phoneRow",
+        "Phone Number",
+        [
+          choice("kind", "Type", [
+            ["phone", "Phone call"],
+            ["whatsapp", "WhatsApp"],
+          ]),
+          str("label", "Label", {
+            description: "e.g. PRIVATE GUEST CONCIERGE",
+          }),
+          str("number", "Number", {
+            description: "With country code, e.g. +91 72503 33494",
+          }),
+          str("note", "Note on the right", {
+            description:
+              "e.g. hours for a phone, INSTANT for WhatsApp. Optional.",
+          }),
+        ],
+        "number",
+        {
+          description:
+            "Add as many as needed. Rows without a number are skipped; with none, this part is hidden.",
+        },
+      ),
       str("emailHeading", "Emails – Heading"),
       objList(
         "emails",
@@ -31,6 +51,10 @@ export default defineType({
         "Email",
         [str("label", "Label"), str("email", "Email Address")],
         "email",
+        {
+          description:
+            "Add as many as needed. Rows without an address are skipped; with none, the email box is hidden.",
+        },
       ),
       img("image", "Photo"),
       str("imageLabel", "Photo – Small Label"),

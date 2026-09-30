@@ -10,6 +10,8 @@ export type ChapterIcon = "microbiome" | "thermal" | "architecture";
 /** A category button and the featured article it shows. */
 export interface BlogCategory {
   label: string;
+  /** Picked Blog Post; when set (and visible) the card shows and opens it. */
+  post?: BlogPostSummary | null;
   image?: ContentImage;
   badge?: string;
   category?: string;
@@ -106,6 +108,7 @@ export interface BlogPostSummary {
   category?: string | null;
   readTime?: string | null;
   author?: string | null;
+  authorRole?: string | null;
   publishedAt?: string | null;
 }
 
@@ -117,7 +120,6 @@ export interface BlogBodyImage extends ContentImage {
 }
 
 export interface BlogPostDetail extends BlogPostSummary {
-  authorRole?: string | null;
   /** Portable Text blocks and inline images. */
   content?: ({ _type: string; _key: string } & Record<string, unknown>)[];
   /** The download button only shows once a PDF is uploaded. */

@@ -498,6 +498,7 @@ export const blogPostListQuery = defineQuery(
     category,
     readTime,
     author,
+    authorRole,
     publishedAt
   }`,
 );

@@ -35,6 +35,14 @@ export default defineType({
             type: "object",
             fields: [
               str("label", "Button Label", { description: "e.g. ALL ESSAYS" }),
+              defineField({
+                name: "post",
+                title: "Featured Post",
+                description:
+                  "Pick a Blog Post and the card shows it and opens it when clicked. The fields below are only used when no post is picked (or the post is hidden).",
+                type: "reference",
+                to: [{ type: "blogPost" }],
+              }),
               img("image", "Photo"),
               str("badge", "Photo Badge"),
               str("category", "Category"),
@@ -56,7 +64,17 @@ export default defineType({
               str("linkLabel", "Link Label"),
             ],
             preview: {
-              select: { title: "label", subtitle: "title", media: "image" },
+              select: {
+                title: "label",
+                subtitle: "post.title",
+                fallbackTitle: "title",
+                media: "image",
+              },
+              prepare: ({ title, subtitle, fallbackTitle, media }) => ({
+                title,
+                subtitle: subtitle ? `→ ${subtitle}` : fallbackTitle,
+                media,
+              }),
             },
           }),
         ],
