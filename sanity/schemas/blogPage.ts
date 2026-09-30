@@ -42,6 +42,9 @@ export default defineType({
                   "Pick a Blog Post and the card shows it and opens it when clicked. The fields below are only used when no post is picked (or the post is hidden).",
                 type: "reference",
                 to: [{ type: "blogPost" }],
+                // Weak, so a picked post can still be deleted; the card then
+                // falls back to its own fields.
+                weak: true,
               }),
               img("image", "Photo"),
               str("badge", "Photo Badge"),
