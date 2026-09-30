@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import {
+  type LocationsPageContent,
+  locationsPageDefaults,
+} from "@/content/locations";
+import { imageUrl, list, text } from "@/content/types";
+
 type Destination = {
   id: string;
   image: string;
@@ -12,64 +18,8 @@ type Destination = {
   region: "himalayan" | "rajasthan";
   facilities: string[];
   detailsHref: string;
+  detailsLabel: string;
 };
-
-const destinations: Destination[] = [
-  {
-    id: "indraprastha-dharamshala",
-    image: "/location-indraprastha.jpg",
-    price: "$220 / NIGHT",
-    title: "Indraprastha Resort Dharamshala",
-    region: "himalayan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/indraprastha-dharamshala",
-  },
-  {
-    id: "asia-spa-dharamshala",
-    image: "/location-asia-spa.jpg",
-    price: "$200 / NIGHT",
-    title: "Asia Spa & Resort- Dharamshala",
-    region: "himalayan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/asia-spa-dharamshala",
-  },
-  {
-    id: "indraprastha-dalhousie",
-    image: "/location-dalhousie.jpg",
-    price: "$250 / NIGHT",
-    title: "Indraprastha spa Resorts - Dalhousie",
-    region: "himalayan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/indraprastha-dalhousie",
-  },
-  {
-    id: "bhanjwar-palace",
-    image: "/location-bhanjwar.jpg",
-    price: "$300 / NIGHT",
-    title: "Bhanwar Singh Palace Rajasthan",
-    region: "rajasthan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/bhanjwar-palace",
-  },
-  {
-    id: "rawai-tents-pushkar",
-    image: "/location-rawai-tents.jpg",
-    price: "$190 / NIGHT",
-    title: "Rawai Luxury Tents - Pushkar",
-    region: "rajasthan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/rawai-tents",
-  },
-  {
-    id: "infinitea-palampur",
-    image: "/location-infinitea.jpg",
-    price: "$300 / NIGHT",
-    title: "Infinte Sports Club & Tea Garden Resort, Palampur",
-    region: "himalayan",
-    facilities: ["spa", "dining", "pool", "wifi", "suite"],
-    detailsHref: "/locations/infinitea-palampur",
-  },
-];
 
 const facilityIcons: Record<string, React.ReactNode> = {
   spa: (
@@ -183,6 +133,7 @@ function LocationCard({
   title,
   facilities,
   detailsHref,
+  detailsLabel,
   aspectRatio = "1 / 0.85",
 }: Destination & { aspectRatio?: string }) {
   return (
@@ -231,7 +182,7 @@ function LocationCard({
             href={detailsHref}
             className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] uppercase text-white/90 hover:text-white transition-colors"
           >
-            Details
+            {detailsLabel}
             <svg
               width="10"
               height="10"
@@ -253,48 +204,35 @@ function LocationCard({
 }
 
 interface LocationsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    subheading?: string;
-  };
-  locations?: {
-    name: string;
-    address: string;
-    region: string;
-    price?: string;
-    slug?: string;
-    imagePath?: string;
-    detailsUrl?: string;
-    hours?: string;
-    phone?: string;
-    email?: string;
-    image?: { url?: string | null; alt?: string | null } | null;
-    services?: string[];
-  }[];
+  page?: LocationsPageContent | null;
 }
 
-export function LocationsSection({
-  data,
-  locations: sanityLocations,
-}: LocationsSectionProps) {
+export function LocationsSection({ page }: LocationsSectionProps) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const d = locationsPageDefaults;
+  const detailsLabel = text(page?.detailsLabel, d.detailsLabel);
 
-  const mappedDestinations: Destination[] = sanityLocations
-    ? sanityLocations.map((loc, i) => {
-        const fallback = destinations[i % destinations.length];
-        const isRajasthan = loc.region?.toLowerCase().includes("rajasthan");
-        return {
-          id: loc.slug || fallback.id || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          image: loc.image?.url || loc.imagePath || fallback.image,
-          price: loc.price || fallback.price,
-          title: loc.name || fallback.title,
-          region: isRajasthan ? "rajasthan" : "himalayan",
-          facilities: loc.services?.length ? loc.services : fallback.facilities,
-          detailsHref: loc.detailsUrl || (loc.slug ? `/locations/${loc.slug}` : fallback.detailsHref),
-        };
-      })
-    : destinations;
+  const mappedDestinations: Destination[] = list(
+    page?.locations,
+    d.locations,
+  ).map((loc, i) => {
+    const fallback =
+      d.locations.find((l) => l.slug === loc.slug) ??
+      d.locations[i % d.locations.length];
+    const slug =
+      loc.slug || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    return {
+      id: slug,
+      image:
+        loc.image?.url || loc.imagePath || imageUrl(fallback.image, {}),
+      price: loc.price ?? "",
+      title: loc.name,
+      region: loc.region === "rajasthan" ? "rajasthan" : "himalayan",
+      facilities: list(loc.services, fallback.services ?? []),
+      detailsHref: loc.detailsUrl || `/locations/${slug}`,
+      detailsLabel,
+    };
+  });
 
   const totalCount = mappedDestinations.length;
   const himachalCount = mappedDestinations.filter(
@@ -304,11 +242,24 @@ export function LocationsSection({
     (d) => d.region === "rajasthan"
   ).length;
 
+  const labels = page?.filterLabels;
   const filters = [
-    { key: "all", label: `All Enclaves (${totalCount})` },
-    { key: "himalayan", label: `Himachal Pradesh (${himachalCount})` },
-    { key: "rajasthan", label: `Rajasthan (${rajasthanCount})` },
-    { key: "facilities", label: "Filter Facilities" },
+    {
+      key: "all",
+      label: `${text(labels?.all, d.filterLabels.all)} (${totalCount})`,
+    },
+    {
+      key: "himalayan",
+      label: `${text(labels?.himalayan, d.filterLabels.himalayan)} (${himachalCount})`,
+    },
+    {
+      key: "rajasthan",
+      label: `${text(labels?.rajasthan, d.filterLabels.rajasthan)} (${rajasthanCount})`,
+    },
+    {
+      key: "facilities",
+      label: text(labels?.facilities, d.filterLabels.facilities),
+    },
   ] as const;
 
   const filtered =
@@ -320,11 +271,9 @@ export function LocationsSection({
   const row2 = filtered.slice(3, 5);
   const row3 = filtered.slice(5, 6);
 
-  const eyebrow = data?.eyebrow || "Sanctuary Enclaves & Destinations";
-  const headingHeading = data?.heading || "Spas & Sanctuary Locations";
-  const description =
-    data?.subheading ||
-    "Five sacred havens engineered across tranquil Himalayan cedar valleys, royal heritage courtyards, and silent desert dunes — each offering NABH-certified classical Ayurvedic rejuvenation.";
+  const eyebrow = text(page?.hero?.eyebrow, d.hero.eyebrow);
+  const headingHeading = text(page?.hero?.heading, d.hero.heading);
+  const description = text(page?.hero?.subheading, d.hero.subheading);
 
   return (
     <section

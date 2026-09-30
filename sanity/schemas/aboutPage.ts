@@ -1,316 +1,132 @@
-import { defineField, defineType } from "sanity";
+import { defineType } from "sanity";
+import {
+  accentColor,
+  choice,
+  img,
+  imgList,
+  linkObj,
+  obj,
+  objList,
+  seo,
+  str,
+  txt,
+} from "./helpers";
 
+// Mirrors src/content/about.ts, top to bottom of the About page.
 export default defineType({
   name: "aboutPage",
   title: "About Page",
   type: "document",
   fields: [
-    defineField({
-      name: "hero",
-      title: "Hero Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "image",
-          title: "Image",
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            defineField({ name: "alt", title: "Alt Text", type: "string" }),
-          ],
-        }),
-        defineField({
-          name: "stats",
-          title: "Stats",
-          type: "array",
-          of: [
-            defineField({
-              name: "stat",
-              title: "Stat",
-              type: "object",
-              fields: [
-                defineField({ name: "value", title: "Value", type: "string" }),
-                defineField({ name: "label", title: "Label", type: "string" }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "triadSection",
-      title: "Triad Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "cards",
-          title: "Triad Cards",
-          type: "array",
-          of: [
-            defineField({
-              name: "triadCard",
-              title: "Triad Card",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "timelineSection",
-      title: "Timeline Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "milestones",
-          title: "Milestones",
-          type: "array",
-          of: [
-            defineField({
-              name: "milestone",
-              title: "Milestone",
-              type: "object",
-              fields: [
-                defineField({ name: "year", title: "Year", type: "string" }),
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "leadershipSection",
-      title: "Leadership Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "members",
-          title: "Team Members",
-          type: "array",
-          of: [
-            defineField({
-              name: "member",
-              title: "Team Member",
-              type: "object",
-              fields: [
-                defineField({ name: "name", title: "Name", type: "string" }),
-                defineField({ name: "role", title: "Role", type: "string" }),
-                defineField({
-                  name: "bio",
-                  title: "Bio",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "stewardshipSection",
-      title: "Stewardship Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "features",
-          title: "Features",
-          type: "array",
-          of: [
-            defineField({
-              name: "feature",
-              title: "Feature",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-              ],
-            }),
-          ],
-        }),
-        defineField({
-          name: "images",
-          title: "Images",
-          type: "array",
-          of: [
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-              fields: [
-                defineField({ name: "alt", title: "Alt Text", type: "string" }),
-              ],
-            }),
-          ],
-          options: { layout: "grid" },
-        }),
-      ],
-    }),
-    defineField({
-      name: "accreditationsSection",
-      title: "Accreditations Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "awards",
-          title: "Awards",
-          type: "array",
-          of: [
-            defineField({
-              name: "award",
-              title: "Award",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "organization",
-                  title: "Organization",
-                  type: "string",
-                }),
-                defineField({ name: "year", title: "Year", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 2,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        defineField({ name: "title", title: "SEO Title", type: "string" }),
-        defineField({
-          name: "description",
-          title: "SEO Description",
-          type: "text",
-          rows: 2,
-        }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
-      ],
-    }),
+    obj("hero", "1. Hero", [
+      str("eyebrow", "Small Label"),
+      txt("heading", "Heading", 2, {
+        description: "Press Enter to start a new line.",
+      }),
+      txt("description", "Description", 4),
+      linkObj("primaryCta", "Main Button"),
+      linkObj("secondaryCta", "Second Button"),
+      img("image", "Photo"),
+      str("imageCaption", "Photo Caption"),
+      str("badgeLabel", "Badge – Small Label"),
+      txt("badgeText", "Badge – Text", 2),
+      objList(
+        "stats",
+        "Numbers",
+        "stat",
+        "Number",
+        [str("value", "Value"), str("label", "Label"), txt("description", "Description", 2)],
+        "label",
+      ),
+    ]),
+    obj("triadSection", "2. Three Pillars", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description"),
+      objList("cards", "Cards", "triadCard", "Card", [
+        str("number", "Number", { description: "e.g. 01" }),
+        str("title", "Title"),
+        txt("description", "Description", 4),
+        img("image", "Photo"),
+        accentColor("iconColor", "Icon Colour"),
+        str("footerLabel", "Footer Label"),
+        str("footerValue", "Footer Value"),
+        accentColor("footerValueColor", "Footer Value Colour"),
+      ]),
+    ]),
+    obj("timelineSection", "3. Timeline", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description"),
+      objList("milestones", "Milestones", "milestone", "Milestone", [
+        str("year", "Year"),
+        str("title", "Title"),
+        txt("description", "Description"),
+        str("category", "Category"),
+        accentColor("categoryColor", "Category Colour"),
+        accentColor("dotColor", "Timeline Dot Colour"),
+        choice("icon", "Icon", [
+          ["botanical", "Botanical"],
+          ["blueprint", "Blueprint"],
+          ["hospitality", "Hospitality"],
+          ["alpine", "Mountain"],
+          ["standard", "Compass"],
+        ]),
+        img("image", "Photo"),
+      ]),
+    ]),
+    obj("leadershipSection", "4. Leadership", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description"),
+      objList(
+        "members",
+        "Team Members",
+        "member",
+        "Team Member",
+        [
+          str("name", "Name"),
+          str("role", "Role"),
+          txt("bio", "Bio"),
+          choice("credentialIcon", "Credential Icon", [
+            ["hospitality", "Shield"],
+            ["protocol", "Briefcase"],
+            ["architecture", "Pencil"],
+          ]),
+          str("credentialText", "Credential"),
+          img("image", "Photo"),
+        ],
+        "name",
+      ),
+    ]),
+    obj("stewardshipSection", "5. Stewardship", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 4),
+      objList("features", "Checklist", "feature", "Item", [
+        str("title", "Title"),
+        txt("description", "Description", 2),
+      ]),
+      imgList("images", "Photos", {
+        description: "Four photos: top-left, bottom-left, top-right, bottom-right.",
+      }),
+    ]),
+    obj("accreditationsSection", "6. Accreditations", [
+      str("heading", "Heading"),
+      objList("awards", "Awards", "award", "Award", [
+        str("title", "Title"),
+        str("subtitle", "Subtitle"),
+        choice("icon", "Icon", [
+          ["medal", "Medal"],
+          ["shield", "Shield"],
+          ["star", "Star"],
+          ["eco", "Recycle"],
+        ]),
+      ]),
+    ]),
+    seo(),
   ],
   preview: {
-    select: { title: "hero.heading" },
+    prepare: () => ({ title: "About Page" }),
   },
 });

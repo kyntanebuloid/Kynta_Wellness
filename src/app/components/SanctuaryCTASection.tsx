@@ -1,22 +1,23 @@
 import Link from "next/link";
+import {
+  type LocationsPageContent,
+  locationsPageDefaults,
+} from "@/content/locations";
+import { text } from "@/content/types";
 
 interface SanctuaryCTASectionProps {
-  data?: {
-    heading?: string;
-    description?: string;
-    ctaText?: string;
-    ctaUrl?: string;
-  };
+  data?: LocationsPageContent["ctaSection"];
 }
 
 export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
-  const heading =
-    data?.heading || "Planning a Multi-Sanctuary Ayurvedic Pilgrimage?";
-  const description =
-    data?.description ||
-    "Our Senior Vaidyas and private sanctuary concierge coordinate seamless inter-resort journeys — from private Dharamshala helicopter transfers to camel-backed Pushkar sunsets — with harmonized treatment dossiers.";
-  const ctaText = data?.ctaText || "Consult Sanctuary Desk";
-  const ctaUrl = data?.ctaUrl || "/contact";
+  const d = locationsPageDefaults.ctaSection;
+  const badge = text(data?.badge, d.badge);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const ctaText = text(data?.ctaText, d.ctaText);
+  const ctaUrl = text(data?.ctaUrl, d.ctaUrl);
+  const whatsappLabel = text(data?.whatsappLabel, d.whatsappLabel);
+  const whatsappUrl = text(data?.whatsappUrl, d.whatsappUrl);
 
   return (
     <section
@@ -45,7 +46,7 @@ export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
                 style={{ backgroundColor: "var(--kynta-rust)" }}
                 aria-hidden="true"
               />
-              Sanctuary Concierge &amp; Transfers
+              {badge}
             </span>
 
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] leading-[1.22] text-white mb-4">
@@ -85,7 +86,7 @@ export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
             </Link>
 
             <Link
-              href="https://wa.me/917250333494"
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2.5 w-full text-[11px] font-semibold tracking-[0.12em] uppercase border transition-opacity hover:opacity-90"
@@ -110,7 +111,7 @@ export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
                 <title>Chat</title>
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
-              WhatsApp Concierge
+              {whatsappLabel}
             </Link>
           </div>
         </div>

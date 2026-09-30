@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getSiteSettings } from "@/lib/sanity/data";
+import { getBookableExperienceOptions } from "@/lib/actions/bookings";
+import { getHomepage, getLocationsPage, getSiteSettings } from "@/lib/sanity/data";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { TopBar } from "../components/TopBar";
@@ -12,14 +13,24 @@ export const metadata: Metadata = {
 };
 
 export default async function BookPage(){
-    const siteSettings = await getSiteSettings();
+    const [siteSettings, homepage, experiencesResult, locationsPage] =
+        await Promise.all([
+            getSiteSettings(),
+            getHomepage(),
+            getBookableExperienceOptions(),
+            getLocationsPage(),
+        ]);
 
     return(
         <>
             <TopBar settings={siteSettings} />
             <Header settings={siteSettings} />
             <main>
-                <ReservationSection/>
+                <ReservationSection
+                    data={homepage?.reservationSection}
+                    services={experiencesResult.data ?? []}
+                    locations={locationsPage?.locations}
+                />
             </main>
             <Footer settings={siteSettings} />
         </>

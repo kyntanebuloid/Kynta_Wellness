@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSiteSettings } from "@/lib/sanity/data";
+import { getHomepage, getSiteSettings } from "@/lib/sanity/data";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { TopBar } from "../components/TopBar";
@@ -11,14 +11,17 @@ export const metadata: Metadata = {
 };
 
 export default async function PartnerPage() {
-  const siteSettings = await getSiteSettings();
+  const [siteSettings, homepage] = await Promise.all([
+    getSiteSettings(),
+    getHomepage(),
+  ]);
 
   return (
     <>
       <TopBar settings={siteSettings} />
       <Header settings={siteSettings} />
       <main>
-        <PartnershipSection />
+        <PartnershipSection data={homepage?.partnershipSection} />
       </main>
       <Footer settings={siteSettings} />
     </>

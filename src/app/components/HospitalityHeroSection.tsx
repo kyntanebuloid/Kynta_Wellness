@@ -1,32 +1,52 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import {
+  type HospitalityPageContent,
+  hospitalityPageDefaults,
+} from "@/content/hospitality";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
+
 interface HospitalityHeroSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    image?: {
-      _type: "image";
-      asset: { _ref: string; _type: "reference" };
-      alt?: string;
-    };
-    stats?: {
-      value: string;
-      label: string;
-    }[];
-  };
+  data?: HospitalityPageContent["hero"];
 }
 
 export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
-  const eyebrow =
-    data?.eyebrow || "INSTITUTIONAL HOSPITALITY & SANCTUARY PARTNERSHIPS";
-  const heading =
-    data?.heading ||
-    "Elevating Luxury Hospitality Through Restorative Architecture.";
-  const description =
-    data?.description ||
-    "We convert underutilized hotel square footage into high-yield, brand-defining sanctuaries of unhurried restorative stillness and clinical Ayurvedic excellence.";
+  const d = hospitalityPageDefaults.hero;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const primaryLabel = text(data?.primaryCta?.label, d.primaryCta.label);
+  const primaryUrl = text(data?.primaryCta?.url, d.primaryCta.url);
+  const secondaryLabel = text(data?.secondaryCta?.label, d.secondaryCta.label);
+  const secondaryUrl = data?.secondaryCta?.url?.trim() || d.secondaryCta.url;
+  const [badgeOne, badgeTwo] = list(data?.badges, d.badges);
+  const photo = imageUrl(data?.image, d.image);
+  const photoAlt = imageAlt(data?.image, d.image);
+  const imageCaption = text(data?.imageCaption, d.imageCaption);
+
+  const secondaryClassName =
+    "px-6 py-3 rounded-full bg-white/80 hover:bg-white text-kynta-charcoal border border-kynta-border/80 text-[11px] font-medium tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2";
+  const secondaryContent = (
+    <>
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      <span>{secondaryLabel}</span>
+    </>
+  );
 
   return (
     <section
@@ -56,10 +76,10 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
 
             <div className="flex flex-wrap items-center gap-4 mb-8 md:mb-10">
               <Link
-                href="/contact"
+                href={primaryUrl}
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
               >
-                <span>REQUEST FEASIBILITY STUDY</span>
+                <span>{primaryLabel}</span>
                 <svg
                   width="12"
                   height="12"
@@ -76,27 +96,15 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                 </svg>
               </Link>
 
-              <button
-                type="button"
-                className="px-6 py-3 rounded-full bg-white/80 hover:bg-white text-kynta-charcoal border border-kynta-border/80 text-[11px] font-medium tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
-              >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>DOWNLOAD PROSPECTUS</span>
-              </button>
+              {secondaryUrl ? (
+                <Link href={secondaryUrl} className={secondaryClassName}>
+                  {secondaryContent}
+                </Link>
+              ) : (
+                <button type="button" className={secondaryClassName}>
+                  {secondaryContent}
+                </button>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-5 text-kynta-warm-gray text-[10.5px] md:text-[11px] tracking-[0.08em] uppercase font-medium">
@@ -117,7 +125,7 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                   <path d="M12 8v8" />
                   <path d="M8 12h8" />
                 </svg>
-                <span>ACCREDITED CLINICAL VAIDYA STAFFING</span>
+                <span>{badgeOne}</span>
               </div>
 
               <span
@@ -141,7 +149,7 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <path d="m9 12 2 2 4-4" />
                 </svg>
-                <span>TURNKEY FORBES LQA PROTOCOLS</span>
+                <span>{badgeTwo}</span>
               </div>
             </div>
           </div>
@@ -149,8 +157,8 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
             <div className="relative w-full max-w-[430px] aspect-[405/278] rounded-[22px] sm:rounded-[26px] overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.09)]">
               <Image
-                src="/hospitality-pool.jpg"
-                alt="Luxury hotel wellness indoor pool sanctuary with water wall and lounge seating"
+                src={photo}
+                alt={photoAlt}
                 fill
                 sizes="(max-width: 768px) 100vw, 430px"
                 priority
@@ -163,7 +171,7 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                   aria-hidden="true"
                 />
                 <span className="text-[9px] sm:text-[10px] md:text-[10.5px] font-semibold tracking-[0.08em] uppercase text-kynta-charcoal whitespace-nowrap">
-                  TURNKEY GOVERNANCE · 100% OPERATIONAL INTEGRATION
+                  {imageCaption}
                 </span>
               </div>
             </div>

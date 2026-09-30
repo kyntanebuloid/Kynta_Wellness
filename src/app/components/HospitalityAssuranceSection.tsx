@@ -1,42 +1,11 @@
-export interface AssurancePillar {
-  id: string;
-  title: string;
-  description: string;
-  iconType: "certified" | "housing" | "closed-loop" | "pms";
-}
+import {
+  type HospitalityPageContent,
+  hospitalityPageDefaults,
+  type AssuranceIcon as AssuranceIconType,
+} from "@/content/hospitality";
+import { list, text } from "@/content/types";
 
-export const assurancePillars: AssurancePillar[] = [
-  {
-    id: "certified",
-    title: "NABH & Ayush Certified",
-    description:
-      "100% adherence to statutory clinical benchmarks and wild-harvested botanicals with zero synthetics.",
-    iconType: "certified",
-  },
-  {
-    id: "housing",
-    title: "Fair-Wage & Housing",
-    description:
-      "Dedicated staff accommodation, ethical remuneration, and continuous career mastery ensuring 94% retention.",
-    iconType: "housing",
-  },
-  {
-    id: "closed-loop",
-    title: "Zero-Plastic Closed-Loop",
-    description:
-      "Closed-loop graywater botanical regeneration and zero single-use plastics throughout all treatment grottos.",
-    iconType: "closed-loop",
-  },
-  {
-    id: "pms",
-    title: "Seamless PMS Integration",
-    description:
-      "Native synchronization with Oracle Opera Cloud, Infor HMS, Protel, and enterprise CRS ledgers.",
-    iconType: "pms",
-  },
-];
-
-function AssuranceIcon({ type }: { type: AssurancePillar["iconType"] }) {
+function AssuranceIcon({ type }: { type: AssuranceIconType }) {
   switch (type) {
     case "certified":
       return (
@@ -119,36 +88,21 @@ function AssuranceIcon({ type }: { type: AssurancePillar["iconType"] }) {
 }
 
 interface HospitalityAssuranceSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    pillars?: {
-      icon?: string;
-      title: string;
-      description: string;
-    }[];
-  };
+  data?: HospitalityPageContent["assuranceSection"];
 }
 
 export function HospitalityAssuranceSection({
   data,
 }: HospitalityAssuranceSectionProps) {
-  const eyebrow = data?.eyebrow || "INSTITUTIONAL ASSURANCE";
-  const heading = data?.heading || "Uncompromising Operational Rigor";
-  const description =
-    data?.description ||
-    "Statutory clinical compliance, ecological safeguards, and seamless technical integration to protect your property's brand equity.";
-
-  const pillars: AssurancePillar[] = data?.pillars?.length
-    ? data.pillars.map((p, i) => ({
-        ...assurancePillars[i % assurancePillars.length],
-        title: p.title || assurancePillars[i % assurancePillars.length].title,
-        description:
-          p.description ||
-          assurancePillars[i % assurancePillars.length].description,
-      }))
-    : assurancePillars;
+  const d = hospitalityPageDefaults.assuranceSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const pillars = list(data?.pillars, d.pillars).map((p, i) => ({
+    title: p.title,
+    description: p.description,
+    iconType: p.icon ?? d.pillars[i % d.pillars.length].icon,
+  }));
 
   return (
     <section
@@ -169,9 +123,9 @@ export function HospitalityAssuranceSection({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {pillars.map((item) => (
+          {pillars.map((item, index) => (
             <div
-              key={item.id}
+              key={`${item.title}-${index}`}
               className="rounded-[16px] p-6 sm:p-7 border border-[#176a71]/60 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex flex-col justify-start h-full transition-all duration-300 hover:border-[#228b94]/80 hover:-translate-y-0.5"
               style={{ backgroundColor: "#085258" }}
             >

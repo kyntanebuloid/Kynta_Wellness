@@ -1,75 +1,21 @@
 import Link from "next/link";
 
-export interface PartnershipModel {
-  id: string;
+import {
+  type HospitalityPageContent,
+  hospitalityPageDefaults,
+} from "@/content/hospitality";
+import { list, text } from "@/content/types";
+
+interface PartnershipModel {
   number: string;
   pillLabel: string;
-  pillType: "neutral" | "highlight";
+  isHighlighted: boolean;
   title: string;
   description: string;
   bullets: string[];
-  bulletDotColor: "rust" | "teal";
   ctaLabel: string;
   ctaHref: string;
-  isHighlighted?: boolean;
 }
-
-export const partnershipModels: PartnershipModel[] = [
-  {
-    id: "model-turnkey",
-    number: "01",
-    pillLabel: "TIER A",
-    pillType: "neutral",
-    title: "Full Turnkey Management",
-    description:
-      "Autonomous operational stewardship spanning certified talent, botanical provisioning, and full P&L governance.",
-    bullets: [
-      "Full P&L custodianship & transparent ledger reporting",
-      "Proprietary Vaidya somatic staffing pipeline",
-      "Forbes 5–Star spa readiness protocols",
-    ],
-    bulletDotColor: "rust",
-    ctaLabel: "EXPLORE TURNKEY TERMS",
-    ctaHref: "/contact?tier=turnkey",
-    isHighlighted: false,
-  },
-  {
-    id: "model-masterplanning",
-    number: "02",
-    pillLabel: "ARCHITECT PICK",
-    pillType: "highlight",
-    title: "Spatial & Acoustic Masterplanning",
-    description:
-      "Architectural co-creation, hydrothermal circuit engineering, circadian lighting, and sub-24dB sound isolation.",
-    bullets: [
-      "Sub-24dB acoustic decoupling blueprints",
-      "Circadian photobiology & hydrothermal zoning",
-      "Biophilic local stone & timber integration",
-    ],
-    bulletDotColor: "teal",
-    ctaLabel: "INQUIRE DESIGN ADVISORY",
-    ctaHref: "/contact?tier=advisory",
-    isHighlighted: true,
-  },
-  {
-    id: "model-licensing",
-    number: "03",
-    pillLabel: "TIER C",
-    pillType: "neutral",
-    title: "White-Label Sanctuary Licensing",
-    description:
-      "Wild-harvested herbal formulation lines under your resort's banner, backed by Kynta curative standards.",
-    bullets: [
-      "Co-branded organic apothecary formulations",
-      "Certified 28-day restorative ritual menus",
-      "Quarterly somatic audits & masterclasses",
-    ],
-    bulletDotColor: "rust",
-    ctaLabel: "REQUEST LICENSING KIT",
-    ctaHref: "/contact?tier=licensing",
-    isHighlighted: false,
-  },
-];
 
 function ModelCard({ model }: { model: PartnershipModel }) {
   const isHighlighted = model.isHighlighted;
@@ -88,7 +34,7 @@ function ModelCard({ model }: { model: PartnershipModel }) {
             {model.number}
           </span>
 
-          {model.pillType === "highlight" ? (
+          {isHighlighted ? (
             <span
               className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.08em] px-2.5 py-1 rounded-full text-white"
               style={{ backgroundColor: "#004349" }}
@@ -111,14 +57,14 @@ function ModelCard({ model }: { model: PartnershipModel }) {
         </p>
 
         <ul className="space-y-2.5 mb-8">
-          {model.bullets.map((bullet) => (
+          {model.bullets.map((bullet, index) => (
             <li
-              key={bullet}
+              key={`${bullet}-${index}`}
               className="flex items-start gap-2.5 text-[13px] leading-[1.6] text-kynta-charcoal/85"
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${
-                  model.bulletDotColor === "teal"
+                  isHighlighted
                     ? "bg-kynta-teal-dark"
                     : "bg-kynta-rust"
                 }`}
@@ -146,39 +92,29 @@ function ModelCard({ model }: { model: PartnershipModel }) {
 }
 
 interface HospitalityModelsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    models?: {
-      title: string;
-      description: string;
-      features?: string[];
-    }[];
-  };
+  data?: HospitalityPageContent["modelsSection"];
 }
 
 export function HospitalityModelsSection({
   data,
 }: HospitalityModelsSectionProps) {
-  const eyebrow = data?.eyebrow || "FLEXIBLE INTEGRATION";
-  const heading = data?.heading || "Three Bespoke Partnership Models";
-  const description =
-    data?.description ||
-    "Calibrated to ownership governance, development stage, and target capital efficiency.";
+  const d = hospitalityPageDefaults.modelsSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
 
-  const models: PartnershipModel[] = data?.models?.length
-    ? data.models.map((m, i) => ({
-        ...partnershipModels[i % partnershipModels.length],
-        title: m.title || partnershipModels[i % partnershipModels.length].title,
-        description:
-          m.description ||
-          partnershipModels[i % partnershipModels.length].description,
-        bullets: m.features?.length
-          ? m.features
-          : partnershipModels[i % partnershipModels.length].bullets,
-      }))
-    : partnershipModels;
+  const models: PartnershipModel[] = list(data?.models, d.models).map(
+    (m, i) => ({
+      number: text(m.number, String(i + 1).padStart(2, "0")),
+      pillLabel: m.pillLabel ?? "",
+      isHighlighted: m.highlighted ?? false,
+      title: m.title,
+      description: m.description,
+      bullets: m.features ?? [],
+      ctaLabel: m.ctaLabel ?? "",
+      ctaHref: text(m.ctaUrl, "/contact"),
+    }),
+  );
 
   return (
     <section
@@ -204,8 +140,8 @@ export function HospitalityModelsSection({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {models.map((model) => (
-            <ModelCard key={model.id} model={model} />
+          {models.map((model, index) => (
+            <ModelCard key={`${model.title}-${index}`} model={model} />
           ))}
         </div>
       </div>

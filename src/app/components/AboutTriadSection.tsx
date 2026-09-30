@@ -1,39 +1,8 @@
 import Image from "next/image";
+import { type AboutPageContent, aboutDefaults } from "@/content/about";
+import { type AccentColor, imageAlt, imageUrl, list, text } from "@/content/types";
 
-const triads = [
-  {
-    number: "01",
-    iconColor: "teal" as const,
-    title: "Vedic Authenticity & Pure Formulations",
-    body: "We reject synthetic binders, parabens, and diluted carrier bases. Our oils are simmered for 72 consecutive hours over slow red-sand furnaces in Kerala using ancient taila-paka methods, aligning formulations with regional doshic seasons.",
-    image: "/triad-vedic.jpg",
-    footerLabel: "Botanical Integrity",
-    footerValue: "100% Raw Lineage",
-    footerValueColor: "rust" as const,
-  },
-  {
-    number: "02",
-    iconColor: "rust" as const,
-    title: "Sensory & Spatial Architecture",
-    body: "A restorative experience is governed by spatial biology. Our treatment suites feature low reverberation acoustics (<24dB), natural lime-wash walls that breathe, hand-turned teakwood joinery, and circadian warmth illumination that restores melatonin rhythm.",
-    image: "/triad-spatial.jpg",
-    footerLabel: "Acoustic & Thermal",
-    footerValue: "Decibel Calibrated",
-    footerValueColor: "rust" as const,
-  },
-  {
-    number: "03",
-    iconColor: "teal" as const,
-    title: "Masterful Human Touch",
-    body: "Touch is an energetic transmission, not a mechanical routine. Kynta therapists undergo over 1,200 hours of somatic alignment, breath synchronization, and nadi pressure point training. We enforce deliberate, unhurried 90 to 120-minute therapeutic cadences.",
-    image: "/triad-touch.jpg",
-    footerLabel: "Clinical Standards",
-    footerValue: "1,200+ Training Hours",
-    footerValueColor: "teal" as const,
-  },
-];
-
-function CardIcon({ color }: { color: "teal" | "rust" }) {
+function CardIcon({ color }: { color: AccentColor }) {
   const bgClass = color === "rust" ? "bg-kynta-rust/10" : "bg-kynta-teal/10";
   const textClass = color === "rust" ? "text-kynta-rust" : "text-kynta-teal";
 
@@ -78,16 +47,29 @@ function CardIcon({ color }: { color: "teal" | "rust" }) {
   );
 }
 
+interface TriadCardProps {
+  number: string;
+  iconColor: AccentColor;
+  title: string;
+  body: string;
+  image: string;
+  alt: string;
+  footerLabel: string;
+  footerValue: string;
+  footerValueColor: AccentColor;
+}
+
 function TriadCard({
   number,
   iconColor,
   title,
   body,
   image,
+  alt,
   footerLabel,
   footerValue,
   footerValueColor,
-}: (typeof triads)[number]) {
+}: TriadCardProps) {
   const valueColor =
     footerValueColor === "rust" ? "var(--kynta-rust)" : "var(--kynta-teal)";
 
@@ -117,7 +99,7 @@ function TriadCard({
       >
         <Image
           src={image}
-          alt={title}
+          alt={alt}
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
@@ -140,39 +122,29 @@ function TriadCard({
 }
 
 interface AboutTriadSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    cards?: {
-      title: string;
-      description: string;
-      image?: {
-        _type: "image";
-        asset: { _ref: string; _type: "reference" };
-        alt?: string;
-      };
-    }[];
-  };
+  data?: AboutPageContent["triadSection"];
 }
 
 export function AboutTriadSection({ data }: AboutTriadSectionProps) {
-  const eyebrow = data?.eyebrow || "The Triad of Intent";
-  const heading = data?.heading || "The Three Pillars of Sanctuary Design";
-  const description =
-    data?.description ||
-    "Every spatial footprint, herb infusion, and human interaction is calibrated against an immutable sacred framework.";
+  const d = aboutDefaults.triadSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
 
-  const displayTriads = data?.cards?.length
-    ? data.cards.map((card, i) => ({
-        ...triads[i % triads.length],
-        title: card.title || triads[i % triads.length].title,
-        body: card.description || triads[i % triads.length].body,
-        image: card.image?.asset?._ref
-          ? `/triad-${String(i + 1).padStart(2, "0")}.jpg`
-          : triads[i % triads.length].image,
-      }))
-    : triads;
+  const cards: TriadCardProps[] = list(data?.cards, d.cards).map((card, i) => {
+    const fallback = d.cards[i % d.cards.length];
+    return {
+      number: text(card.number, String(i + 1).padStart(2, "0")),
+      iconColor: card.iconColor ?? fallback.iconColor,
+      title: card.title,
+      body: card.description,
+      image: imageUrl(card.image, fallback.image),
+      alt: imageAlt(card.image, { alt: card.title }),
+      footerLabel: card.footerLabel ?? "",
+      footerValue: card.footerValue ?? "",
+      footerValueColor: card.footerValueColor ?? fallback.footerValueColor,
+    };
+  });
 
   return (
     <section
@@ -209,8 +181,8 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {displayTriads.map((t) => (
-            <TriadCard key={t.number} {...t} />
+          {cards.map((card, i) => (
+            <TriadCard key={`${card.number}-${i}`} {...card} />
           ))}
         </div>
       </div>

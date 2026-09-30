@@ -1,286 +1,114 @@
 import { defineField, defineType } from "sanity";
+import {
+  choice,
+  img,
+  linkObj,
+  obj,
+  objList,
+  seo,
+  str,
+  strList,
+  txt,
+} from "./helpers";
 
+// Mirrors src/content/hospitality.ts, top to bottom of the For Hotels page.
 export default defineType({
   name: "hospitalityPage",
-  title: "Hospitality Page",
+  title: "For Hotels Page",
   type: "document",
   fields: [
-    defineField({
-      name: "hero",
-      title: "Hero Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
+    obj("hero", "1. Hero", [
+      str("eyebrow", "Small Label"),
+      txt("heading", "Heading", 2),
+      txt("description", "Description", 3),
+      linkObj("primaryCta", "Main Button"),
+      linkObj("secondaryCta", "Second Button", {
+        description: "Leave the link empty to show it without a link.",
+      }),
+      strList("badges", "Trust Badges", { description: "Up to two." }),
+      img("image", "Photo"),
+      str("imageCaption", "Photo Caption"),
+    ]),
+    obj("statsSection", "2. Numbers Strip", [
+      objList(
+        "metrics",
+        "Numbers",
+        "metric",
+        "Number",
+        [str("value", "Value"), str("label", "Label"), str("description", "Description")],
+        "label",
+      ),
+    ]),
+    obj("modelsSection", "3. Partnership Models", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      objList("models", "Models", "model", "Model", [
+        str("number", "Number"),
+        str("pillLabel", "Tag"),
         defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
+          name: "highlighted",
+          title: "Highlight this card",
+          type: "boolean",
         }),
+        str("title", "Title"),
+        txt("description", "Description"),
+        strList("features", "Bullet Points"),
+        str("ctaLabel", "Link Label"),
+        str("ctaUrl", "Link"),
+      ]),
+    ]),
+    obj("viabilitySection", "4. Commercial Viability", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      img("image", "Photo"),
+      str("imageCaption", "Photo Caption"),
+      objList(
+        "stats",
+        "Stat Cards",
+        "stat",
+        "Stat",
+        [str("value", "Value"), str("label", "Label"), txt("description", "Description", 2)],
+        "label",
+      ),
+    ]),
+    obj("transformationsSection", "5. Transformations", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      img("image", "Banner Photo"),
+      objList("transformations", "Cards", "transformation", "Card", [
+        str("location", "Location"),
+        str("metric", "Result Tag"),
         defineField({
-          name: "image",
-          title: "Image",
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            defineField({ name: "alt", title: "Alt Text", type: "string" }),
-          ],
+          name: "metricHighlighted",
+          title: "Teal result tag",
+          type: "boolean",
         }),
-        defineField({
-          name: "stats",
-          title: "Stats",
-          type: "array",
-          of: [
-            defineField({
-              name: "stat",
-              title: "Stat",
-              type: "object",
-              fields: [
-                defineField({ name: "value", title: "Value", type: "string" }),
-                defineField({ name: "label", title: "Label", type: "string" }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "statsSection",
-      title: "Stats Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "metrics",
-          title: "Metrics",
-          type: "array",
-          of: [
-            defineField({
-              name: "metric",
-              title: "Metric",
-              type: "object",
-              fields: [
-                defineField({ name: "value", title: "Value", type: "string" }),
-                defineField({ name: "label", title: "Label", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 2,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "modelsSection",
-      title: "Partnership Models Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "models",
-          title: "Partnership Models",
-          type: "array",
-          of: [
-            defineField({
-              name: "model",
-              title: "Partnership Model",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "features",
-                  title: "Features",
-                  type: "array",
-                  of: [{ type: "string" }],
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "viabilitySection",
-      title: "Viability Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "stats",
-          title: "Viability Stats",
-          type: "array",
-          of: [
-            defineField({
-              name: "stat",
-              title: "Stat",
-              type: "object",
-              fields: [
-                defineField({ name: "value", title: "Value", type: "string" }),
-                defineField({ name: "label", title: "Label", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 2,
-                }),
-              ],
-            }),
-          ],
-        }),
-        defineField({
-          name: "image",
-          title: "Image",
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            defineField({ name: "alt", title: "Alt Text", type: "string" }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "transformationsSection",
-      title: "Transformations Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "transformations",
-          title: "Transformation Cards",
-          type: "array",
-          of: [
-            defineField({
-              name: "transformation",
-              title: "Transformation",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "before",
-                  title: "Before",
-                  type: "text",
-                  rows: 2,
-                }),
-                defineField({
-                  name: "after",
-                  title: "After",
-                  type: "text",
-                  rows: 2,
-                }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "assuranceSection",
-      title: "Assurance Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "pillars",
-          title: "Assurance Pillars",
-          type: "array",
-          of: [
-            defineField({
-              name: "pillar",
-              title: "Pillar",
-              type: "object",
-              fields: [
-                defineField({
-                  name: "icon",
-                  title: "Icon Name",
-                  type: "string",
-                }),
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        defineField({ name: "title", title: "SEO Title", type: "string" }),
-        defineField({
-          name: "description",
-          title: "SEO Description",
-          type: "text",
-          rows: 2,
-        }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
-      ],
-    }),
+        str("title", "Title"),
+        txt("description", "Description"),
+        str("footerLabel", "Footer Label"),
+      ]),
+    ]),
+    obj("assuranceSection", "6. Assurance", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      objList("pillars", "Cards", "assurancePillar", "Card", [
+        choice("icon", "Icon", [
+          ["certified", "Badge"],
+          ["housing", "House"],
+          ["closed-loop", "Recycle"],
+          ["pms", "Arrows"],
+        ]),
+        str("title", "Title"),
+        txt("description", "Description"),
+      ]),
+    ]),
+    seo(),
   ],
   preview: {
-    select: { title: "hero.heading" },
+    prepare: () => ({ title: "For Hotels Page" }),
   },
 });

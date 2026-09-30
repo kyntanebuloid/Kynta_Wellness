@@ -1,54 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const stats = [
-  {
-    value: "14+",
-    label: "Sanctuaries Curated",
-    description: "Across premier heritage palaces and coastal hideaways",
-  },
-  {
-    value: "100%",
-    label: "Wild & Organic Harvest",
-    description: "Cold-pressed botanicals from Kerala & Western Ghats",
-  },
-  {
-    value: "120+",
-    label: "Master Vaidyas & Healers",
-    description: "Marma therapy adepts and licensed somatic clinicians",
-  },
-  {
-    value: "5.0",
-    label: "Guest Excellence Rating",
-    description: "Sustained across five-star global hospitality audits",
-  },
-];
+import { type AboutPageContent, aboutDefaults } from "@/content/about";
+import { imageAlt, imageUrl, link, list, text } from "@/content/types";
 
 interface AboutHeroSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    image?: {
-      _type: "image";
-      asset: { _ref: string; _type: "reference" };
-      alt?: string;
-    };
-    stats?: {
-      value: string;
-      label: string;
-      description?: string;
-    }[];
-  };
+  data?: AboutPageContent["hero"];
 }
 
 export function AboutHeroSection({ data }: AboutHeroSectionProps) {
-  const eyebrow = data?.eyebrow || "A Monograph on Heritage & Equilibrium";
-  const heading = data?.heading || "Ancient Wisdom.\nArchitectural Stillness.";
-  const description =
-    data?.description ||
-    "Kynta was conceived at the quiet crossroads where classical Ayurvedic therapeutics intersect with modern architectural composure. We construct sensory sanctuaries where the nervous system unwinds, breathing life into unhurried restorative traditions within the world&apos;s most discerning luxury hospitality environments.";
-  const displayStats = data?.stats?.length ? data.stats : stats;
+  const d = aboutDefaults.hero;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const primaryCta = link(data?.primaryCta, d.primaryCta);
+  const secondaryCta = link(data?.secondaryCta, d.secondaryCta);
+  const photo = imageUrl(data?.image, d.image);
+  const photoAlt = imageAlt(data?.image, d.image);
+  const imageCaption = text(data?.imageCaption, d.imageCaption);
+  const badgeLabel = text(data?.badgeLabel, d.badgeLabel);
+  const badgeText = text(data?.badgeText, d.badgeText);
+  const displayStats = list(data?.stats, d.stats);
 
   return (
     <section
@@ -75,7 +46,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
 
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading.split("\n").map((line, i) => (
-                <span key={line}>
+                <span key={`${i}-${line}`}>
                   {i > 0 && <br />}
                   {line}
                 </span>
@@ -88,10 +59,10 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
 
             <div className="flex flex-wrap items-center gap-4">
               <Link
-                href="#philosophy"
+                href={primaryCta.url}
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
               >
-                Explore Our Philosophy
+                {primaryCta.label}
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -109,10 +80,10 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
               </Link>
 
               <Link
-                href="/contact"
+                href={secondaryCta.url}
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
               >
-                Inquire With Concierge
+                {secondaryCta.label}
               </Link>
             </div>
           </div>
@@ -128,8 +99,8 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
               }}
             >
               <Image
-                src="/about-hero.jpg"
-                alt="Kynta sanctuary interior with heritage architecture and turquoise plunge pool"
+                src={photo}
+                alt={photoAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 520px"
@@ -144,7 +115,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
                 }}
               >
                 <p className="text-[10px] font-semibold tracking-[0.14em] uppercase text-white/70">
-                  Spatial Concept · Sanctum 01
+                  {imageCaption}
                 </p>
               </div>
             </div>
@@ -180,12 +151,10 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
 
               <div>
                 <p className="text-[10px] font-semibold tracking-[0.12em] uppercase text-kynta-rust mb-0.5">
-                  Lineage Assured
+                  {badgeLabel}
                 </p>
-                <p className="text-[13px] font-medium text-kynta-charcoal leading-snug">
-                  8th-Generation Herbal
-                  <br />
-                  Apothecary Traditions
+                <p className="text-[13px] font-medium text-kynta-charcoal leading-snug whitespace-pre-line">
+                  {badgeText}
                 </p>
               </div>
             </div>

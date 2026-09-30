@@ -1,113 +1,26 @@
-export interface FieldNote {
-  id: string;
-  author: string;
-  location: string;
-  title: string;
-  quote: string;
-}
-
-export interface AudioTrack {
-  id: string;
-  title: string;
-  subtitle: string;
-  duration: string;
-  accent: "teal" | "rust";
-}
-
-export const fieldNotes: FieldNote[] = [
-  {
-    id: "bramha-muhurta",
-    author: "VAIDYA SURESH NAIR",
-    location: "Kumarakom Retreat",
-    title: "On the Sacred Stillness of Bramha Muhurta",
-    quote:
-      "“The ninety minutes prior to sunrise possess a rarefied electromagnetic rhythm. When meditating before ambient light saturates the courtyard, cellular metabolic tension settles into genuine rest.”",
-  },
-  {
-    id: "sesame-oils",
-    author: "MASTER HEALER MIRA PATEL",
-    location: "Himalayan High Sanctuaries",
-    title: "The Micro-Dosing of Warm Sesame Vata Oils",
-    quote:
-      "“It is not the quantity of oil poured, but the continuous cadence of friction on key marma points that gently disarms chronic muscular resistance.”",
-  },
-  {
-    id: "water-temperature",
-    author: "ACHARYA DEVRAJ",
-    location: "Udaipur Lake Sanctuary",
-    title: "Water Temperature as Emotional Architecture",
-    quote:
-      "“Immersing the spine in 34–degree spring water mirrors uterine thermal equilibrium, instantly softening the sympathetic nervous flight response.”",
-  },
-];
-
-export const audioTracks: AudioTrack[] = [
-  {
-    id: "rudra-veena",
-    title: "Rudra Veena Harmonics & Rainfall in Coorg",
-    subtitle: "Acoustic Chamber Vol. 3",
-    duration: "18 Min Duration",
-    accent: "teal",
-  },
-  {
-    id: "nadi-shodhana",
-    title: "Guided Nadi Shodhana for Circadian Sunset Transition",
-    subtitle: "Voiced by Dr. Ananya Varma",
-    duration: "24 Min Duration",
-    accent: "rust",
-  },
-  {
-    id: "subterranean-water",
-    title: "Subterranean Water Flow & Tibetan Bell Resonances",
-    subtitle: "Hydrothermal Room Binaural",
-    duration: "45 Min Immersion",
-    accent: "teal",
-  },
-];
+import { type BlogPageContent, blogPageDefaults } from "@/content/blog";
+import { list, text } from "@/content/types";
 
 interface BlogPhilosophySoundSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    fieldNotes?: {
-      title: string;
-      excerpt: string;
-      category?: string;
-      author?: string;
-      image?: { asset?: { _ref: string }; alt?: string };
-    }[];
-    audioTracks?: {
-      title: string;
-      duration: string;
-      category?: string;
-      audioUrl?: string;
-    }[];
-  };
+  data?: BlogPageContent["philosophySection"];
 }
 
 export function BlogPhilosophySoundSection({
   data,
 }: BlogPhilosophySoundSectionProps) {
-  const notes = data?.fieldNotes
-    ? data.fieldNotes.map((n, i) => ({
-        id: `field-note-${i}`,
-        author: n.author || fieldNotes[i]?.author || "",
-        location: n.category || fieldNotes[i]?.location || "",
-        title: n.title,
-        quote: `"\u201C${n.excerpt}\u201D"`,
-      }))
-    : fieldNotes;
-
-  const tracks = data?.audioTracks
-    ? data.audioTracks.map((t, i) => ({
-        id: `audio-${i}`,
-        title: t.title,
-        subtitle: t.category || audioTracks[i]?.subtitle || "",
-        duration: t.duration,
-        accent: (i % 2 === 0 ? "teal" : "rust") as "teal" | "rust",
-      }))
-    : audioTracks;
+  const d = blogPageDefaults.philosophySection;
+  const notes = list(data?.fieldNotes, d.fieldNotes).map((n) => ({
+    author: n.author ?? "",
+    location: n.location ?? "",
+    title: n.title,
+    quote: n.quote,
+  }));
+  const tracks = list(data?.audioTracks, d.audioTracks).map((t, i) => ({
+    title: t.title,
+    subtitle: t.subtitle ?? "",
+    duration: t.duration ?? "",
+    accent: t.color ?? d.audioTracks[i % d.audioTracks.length].color,
+  }));
 
   return (
     <section
@@ -119,21 +32,20 @@ export function BlogPhilosophySoundSection({
           <div className="flex flex-col">
             <div className="mb-8">
               <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
-                {data?.eyebrow || "LIVING PHILOSOPHY"}
+                {text(data?.eyebrow, d.eyebrow)}
               </p>
               <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">
-                {data?.heading || "Practitioner Field Notes"}
+                {text(data?.heading, d.heading)}
               </h2>
               <p className="text-[15px] leading-[1.7] text-kynta-warm-gray">
-                {data?.description ||
-                  "Concise reflections on daily mindfulness, prana containment, and herbal decoctions by resident Vaidyas."}
+                {text(data?.description, d.description)}
               </p>
             </div>
 
             <div className="space-y-4">
-              {notes.map((note) => (
+              {notes.map((note, index) => (
                 <div
-                  key={note.id}
+                  key={`${note.title}-${index}`}
                   className="rounded-[12px] p-5 sm:p-5.5 border border-kynta-border/20 transition-all duration-200 hover:border-kynta-border/50"
                   style={{ backgroundColor: "#f1f4f2" }}
                 >
@@ -161,25 +73,24 @@ export function BlogPhilosophySoundSection({
           <div className="flex flex-col">
             <div className="mb-8">
               <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
-                SONIC RESTORATIVES
+                {text(data?.soundEyebrow, d.soundEyebrow)}
               </p>
               <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">
-                Soundscapes &amp; Audio Treatises
+                {text(data?.soundHeading, d.soundHeading)}
               </h2>
               <p className="text-[15px] leading-[1.7] text-kynta-warm-gray">
-                Bespoke spatial soundscapes recorded inside our temple
-                courtyards, calibrated for deep theta meditation.
+                {text(data?.soundDescription, d.soundDescription)}
               </p>
             </div>
 
             <div className="space-y-4 mb-5">
-              {tracks.map((track) => {
+              {tracks.map((track, index) => {
                 const isRust = track.accent === "rust";
                 const playBg = isRust ? "#9b5440" : "#004349";
 
                 return (
                   <div
-                    key={track.id}
+                    key={`${track.title}-${index}`}
                     className="bg-white rounded-[12px] p-4 sm:p-4.5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between gap-4 transition-all duration-200 hover:shadow-[0_4px_18px_rgba(0,0,0,0.04)]"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
@@ -262,9 +173,7 @@ export function BlogPhilosophySoundSection({
                 </svg>
               </div>
               <p className="text-[11px] leading-[1.6] text-kynta-warm-gray">
-                All soundscapes are mastered in lossless spatial audio. Listen
-                with noise-isolating headphones in a dim space for optimal
-                neural relaxation.
+                {text(data?.soundNote, d.soundNote)}
               </p>
             </div>
           </div>

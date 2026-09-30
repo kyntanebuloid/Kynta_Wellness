@@ -1,94 +1,20 @@
 import Image from "next/image";
 
-export interface Milestone {
-  id: string;
+import { type AboutPageContent, aboutDefaults, type TimelineIcon } from "@/content/about";
+import { type AccentColor, imageAlt, imageUrl, list, text } from "@/content/types";
+
+interface Milestone {
   year: string;
   title: string;
   description: string;
   category: string;
-  categoryColor: "rust" | "teal";
-  nodeColor: "rust" | "teal";
+  categoryColor: AccentColor;
+  nodeColor: AccentColor;
   image: string;
   imageAlt: string;
-  iconType: "botanical" | "blueprint" | "hospitality" | "alpine" | "standard";
+  iconType: TimelineIcon;
   layout: "text-left" | "text-right";
 }
-
-export const journeyMilestones: Milestone[] = [
-  {
-    id: "genesis-2018",
-    year: "2018",
-    title: "The Genesis & The Kerala Pharmacopeia",
-    description:
-      "Kynta was born out of an experimental organic herb farm in Wayanad, Kerala. Here, master botanists formulated 18 foundational tailams (herbal oils), verifying therapeutic bioavailability and shelf-stability without chemical stabilizers.",
-    category: "THE BOTANICAL ROOT",
-    categoryColor: "rust",
-    nodeColor: "rust",
-    image: "/timeline-kerala.jpg",
-    imageAlt: "Misty tea and herbal plantation terraces in Wayanad Kerala",
-    iconType: "botanical",
-    layout: "text-left",
-  },
-  {
-    id: "blueprint-2020",
-    year: "2020",
-    title: "The Architectural Blueprint",
-    description:
-      "Partnering with biophilic architects, Kynta codified the first 'Sanctuary Protocol' — a comprehensive spatial blueprint for five-star hotels encompassing hydro-circuit temperature profiling, private contemplation gardens, and allergen-neutral ventilation.",
-    category: "SPATIAL STANDARDIZATION",
-    categoryColor: "teal",
-    nodeColor: "teal",
-    image: "/timeline-blueprint.jpg",
-    imageAlt:
-      "Architectural blueprint, material swatches and interior design layout",
-    iconType: "blueprint",
-    layout: "text-right",
-  },
-  {
-    id: "deployments-2022",
-    year: "2022",
-    title: "Palace & Coastal Deployments",
-    description:
-      "Kynta assumed turnkey operational leadership for seven flagship resort sanctuaries in Udaipur, Goa, and Rishikesh. Operating with unbroken 99.4% guest satisfaction scores and setting new benchmarks for luxury wellness yield.",
-    category: "HOSPITALITY INTEGRATION",
-    categoryColor: "rust",
-    nodeColor: "rust",
-    image: "/timeline-palace.jpg",
-    imageAlt: "Heritage palace courtyard reflection pool illuminated at dusk",
-    iconType: "hospitality",
-    layout: "text-left",
-  },
-  {
-    id: "alpine-2024",
-    year: "2024",
-    title: "Alpine Corridors & Global Reach",
-    description:
-      "Adapting classical Vedic thermotherapy to sub-zero and alpine climates, launching flagship sanctuaries across high-altitude Himalayan corridors and European wellness retreats with climate-synchronized thermal circuits.",
-    category: "CONTINENTAL ADAPTATION",
-    categoryColor: "teal",
-    nodeColor: "teal",
-    image: "/timeline-alpine.jpg",
-    imageAlt:
-      "Minimalist luxury alpine wellness pavilion overlooking snowy peaks",
-    iconType: "alpine",
-    layout: "text-right",
-  },
-  {
-    id: "future-present",
-    year: "Today & The Future",
-    title: "Global Restorative Hospitality",
-    description:
-      "Managing 14+ elite wellness destination properties, expanding bespoke apothecary laboratories, and training the next generation of Vaidyas in cross-disciplinary therapeutic architecture.",
-    category: "THE DEFINITIVE STANDARD",
-    categoryColor: "teal",
-    nodeColor: "rust",
-    image: "/experience-hydro-colonnade.jpg",
-    imageAlt:
-      "Luxury tropical wellness sanctuary pool, colonnades and pavilions",
-    iconType: "standard",
-    layout: "text-left",
-  },
-];
 
 function CategoryIcon({
   type,
@@ -210,47 +136,32 @@ function TimelineNode({ color }: { color: "rust" | "teal" }) {
 }
 
 interface AboutTimelineSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    milestones?: {
-      year: string;
-      title: string;
-      description: string;
-      image?: {
-        _type: "image";
-        asset: { _ref: string; _type: "reference" };
-        alt?: string;
-      };
-    }[];
-  };
+  data?: AboutPageContent["timelineSection"];
 }
 
 export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
-  const eyebrow = data?.eyebrow || "THE JOURNEY OF KYNTA";
-  const heading =
-    data?.heading || "From Forest Apothecary to Global Sanctuaries";
-  const description =
-    data?.description ||
-    "A progression grounded in clinical rigor, heritage preservation, and architectural mastery.";
+  const d = aboutDefaults.timelineSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
 
-  const milestones: Milestone[] = data?.milestones?.length
-    ? data.milestones.map((m, i) => ({
-        ...journeyMilestones[i % journeyMilestones.length],
-        year: m.year || journeyMilestones[i % journeyMilestones.length].year,
-        title: m.title || journeyMilestones[i % journeyMilestones.length].title,
-        description:
-          m.description ||
-          journeyMilestones[i % journeyMilestones.length].description,
-        image: m.image?.asset?._ref
-          ? `/timeline-${String(i + 1).padStart(2, "0")}.jpg`
-          : journeyMilestones[i % journeyMilestones.length].image,
-        imageAlt:
-          m.image?.alt ||
-          journeyMilestones[i % journeyMilestones.length].imageAlt,
-      }))
-    : journeyMilestones;
+  const milestones: Milestone[] = list(data?.milestones, d.milestones).map(
+    (m, i) => {
+      const fallback = d.milestones[i % d.milestones.length];
+      return {
+        year: m.year,
+        title: m.title,
+        description: m.description,
+        category: m.category ?? "",
+        categoryColor: m.categoryColor ?? fallback.categoryColor,
+        nodeColor: m.dotColor ?? fallback.dotColor,
+        image: imageUrl(m.image, fallback.image),
+        imageAlt: imageAlt(m.image, { alt: m.title }),
+        iconType: m.icon ?? fallback.icon,
+        layout: i % 2 === 0 ? "text-left" : "text-right",
+      };
+    },
+  );
 
   return (
     <section
@@ -284,7 +195,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
           />
 
           <div className="space-y-14 md:space-y-20 lg:space-y-24">
-            {milestones.map((item) => {
+            {milestones.map((item, index) => {
               const isTextLeft = item.layout === "text-left";
               const isCategoryRust = item.categoryColor === "rust";
               const categoryColorClass = isCategoryRust
@@ -345,7 +256,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
               );
 
               return (
-                <div key={item.id} className="relative">
+                <div key={`${item.year}-${index}`} className="relative">
                   <div className="hidden md:flex items-center">
                     <div className="w-1/2 pr-10 lg:pr-14 flex justify-end">
                       {isTextLeft ? (

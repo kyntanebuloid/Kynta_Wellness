@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { LocationDetail } from "@/lib/sanity/data";
+import type { LocationDetail } from "@/content/locations";
 
 interface LocationDetailHeroProps {
   location: LocationDetail;
@@ -120,7 +120,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                 {/* Card Header */}
                 <div className="flex items-center justify-between mb-5 pb-4 border-b border-kynta-border/60">
                   <h2 className="text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-kynta-charcoal">
-                    Sanctuary at a Glance
+                    {location.glanceHeading}
                   </h2>
                   <span className="text-[11px] font-semibold tracking-wide text-kynta-teal">
                     {location.sanctuaryId}
@@ -129,8 +129,8 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
 
                 {/* Info Rows */}
                 <div className="flex flex-col gap-4">
-                  {location.sanctuaryInfo.map((info) => (
-                    <div key={info.label}>
+                  {location.sanctuaryInfo.map((info, index) => (
+                    <div key={`${info.label}-${index}`}>
                       <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-kynta-warm-gray mb-1">
                         {info.label}
                       </p>
@@ -174,9 +174,11 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                     </p>
                   )}
                 </div>
-                <span className="bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase px-3 py-1.5 rounded-[4px] whitespace-nowrap self-end mb-0.5">
-                  {location.gallery.mainCard.badge}
-                </span>
+                {location.gallery.mainCard.badge && (
+                  <span className="bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase px-3 py-1.5 rounded-[4px] whitespace-nowrap self-end mb-0.5">
+                    {location.gallery.mainCard.badge}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -238,8 +240,8 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
       <div className="w-full py-5 md:py-6 border-t border-kynta-border/40" style={{ backgroundColor: "#f7f9f7" }}>
         <div className="container-site">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {location.facilities.map((facility) => (
-              <div key={facility.title} className="flex items-start gap-3">
+            {location.facilities.map((facility, index) => (
+              <div key={`${facility.title}-${index}`} className="flex items-start gap-3">
                 <div className="flex-shrink-0 text-kynta-rust mt-0.5">
                   {facilityIconMap[facility.icon] || facilityIconMap.sun}
                 </div>

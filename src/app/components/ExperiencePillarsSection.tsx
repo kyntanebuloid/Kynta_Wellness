@@ -1,4 +1,11 @@
 import type { ReactNode } from "react";
+import {
+  type ExperiencesPageContent,
+  experiencesPageDefaults,
+  type PillarFooterIcon,
+  type PillarIcon,
+} from "@/content/experiences";
+import { list, text } from "@/content/types";
 
 function FlaskIcon() {
   return (
@@ -166,14 +173,14 @@ function MoonSmallIcon() {
   );
 }
 
-const iconMap: Record<string, ReactNode> = {
+const iconMap: Record<PillarIcon, ReactNode> = {
   flask: <FlaskIcon />,
   pulse: <PulseIcon />,
   building: <BuildingIcon />,
   hourglass: <HourglassIcon />,
 };
 
-const footerIconMap: Record<string, ReactNode> = {
+const footerIconMap: Record<PillarFooterIcon, ReactNode> = {
   leaf: <LeafSmallIcon />,
   target: <TargetSmallIcon />,
   droplet: <DropletSmallIcon />,
@@ -181,56 +188,8 @@ const footerIconMap: Record<string, ReactNode> = {
 };
 
 interface ExperiencePillarsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    cards?: {
-      icon?: string;
-      title: string;
-      description: string;
-    }[];
-  };
+  data?: ExperiencesPageContent["pillars"];
 }
-
-const defaultPillars = [
-  {
-    number: "01",
-    iconKey: "flask",
-    icon: <FlaskIcon />,
-    title: "Botanical Sourcing",
-    body: "Single-estate hand-pressed oils, wild-harvested Himalayan cedar, high-altitude saffron, and sacred white lotus distilled under lunar cycles.",
-    footerLabel: "Pure Botanical Potency",
-    footerIcon: <LeafSmallIcon />,
-  },
-  {
-    number: "02",
-    iconKey: "pulse",
-    icon: <PulseIcon />,
-    title: "Precision Diagnostics",
-    body: "Comprehensive Nadi Pariksha (pulse assessment), somatic tissue mapping, and doshic constitutional calibration before ritual touch initiates.",
-    footerLabel: "Doshic Tri-Balance",
-    footerIcon: <TargetSmallIcon />,
-  },
-  {
-    number: "03",
-    iconKey: "building",
-    icon: <BuildingIcon />,
-    title: "Hydrothermal Architecture",
-    body: "Hyper-dilute magnesium saline flotation pools, herb-infused steam grottos, and stepped thermal plunge baths designed with acoustic isolation.",
-    footerLabel: "Somatic Hydro-Plunges",
-    footerIcon: <DropletSmallIcon />,
-  },
-  {
-    number: "04",
-    iconKey: "hourglass",
-    icon: <HourglassIcon />,
-    title: "Unhurried Cadence",
-    body: "A minimum 90-minute immersion window ensuring full parasympathetic nervous down-regulation, zero transition rush, and profound cellular stillness.",
-    footerLabel: "Parasympathetic Shift",
-    footerIcon: <MoonSmallIcon />,
-  },
-];
 
 function ExperiencePillarCard({
   number,
@@ -272,27 +231,21 @@ function ExperiencePillarCard({
 export function ExperiencePillarsSection({
   data,
 }: ExperiencePillarsSectionProps) {
-  const pillars = data?.cards
-    ? data.cards.map((card, i) => {
-        const num = String(i + 1).padStart(2, "0");
-        const iconKey = card.icon || "flask";
-        const footerLabels = [
-          "Pure Botanical Potency",
-          "Doshic Tri-Balance",
-          "Somatic Hydro-Plunges",
-          "Parasympathetic Shift",
-        ];
-        const footerIconKeys = ["leaf", "target", "droplet", "moon"];
-        return {
-          number: num,
-          icon: iconMap[iconKey] || <FlaskIcon />,
-          title: card.title,
-          body: card.description,
-          footerLabel: footerLabels[i] || "Pure Botanical Potency",
-          footerIcon: footerIconMap[footerIconKeys[i]] || <LeafSmallIcon />,
-        };
-      })
-    : defaultPillars;
+  const d = experiencesPageDefaults.pillars;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const pillars = list(data?.cards, d.cards).map((card, i) => {
+    const fallback = d.cards[i % d.cards.length];
+    return {
+      number: text(card.number, String(i + 1).padStart(2, "0")),
+      icon: iconMap[card.icon ?? fallback.icon],
+      title: card.title,
+      body: card.description,
+      footerLabel: card.footerLabel ?? "",
+      footerIcon: footerIconMap[card.footerIcon ?? fallback.footerIcon],
+    };
+  });
 
   return (
     <section
@@ -303,27 +256,21 @@ export function ExperiencePillarsSection({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-4">
-              {data?.eyebrow || "Foundational Methodology"}
+              {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.22] text-kynta-charcoal">
-              {data?.heading || (
-                <>
-                  The Four Pillars of the
-                  <br className="hidden sm:inline" /> Kynta Experience
-                </>
-              )}
+              {heading}
             </h2>
           </div>
           <div className="flex items-start md:pt-7">
             <p className="text-[14px] leading-[1.75] text-kynta-warm-gray max-w-sm">
-              {data?.description ||
-                "Where sacred Vedic therapeutic canons intersect with precise clinical physiology to induce total restorative harmony."}
+              {description}
             </p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {pillars.map((pillar) => (
-            <ExperiencePillarCard key={pillar.number} {...pillar} />
+          {pillars.map((pillar, index) => (
+            <ExperiencePillarCard key={`${pillar.number}-${index}`} {...pillar} />
           ))}
         </div>
       </div>

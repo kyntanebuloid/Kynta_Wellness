@@ -1,96 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export interface InquiryArticle {
-  id: string;
-  categoryPill: string;
-  metadata: string;
-  title: string;
-  description: string;
-  ctaLabel: string;
-  ctaHref: string;
-  image: string;
-  imageAlt: string;
-}
-
-export const inquiryArticles: InquiryArticle[] = [
-  {
-    id: "acoustic-silence",
-    categoryPill: "ARCHITECTURE",
-    metadata: "SANCTUARY ARCHITECTURE • 6 MIN READ",
-    title:
-      "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries",
-    description:
-      "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.",
-    ctaLabel: "READ ARCHITECTURE NOTE",
-    ctaHref: "/blog/acoustic-silence-spatial-attenuation",
-    image: "/inquiry-architecture.jpg",
-    imageAlt:
-      "Serene stepped courtyard pool garden with stone walkway and pergola",
-  },
-  {
-    id: "circadian-chronobiology",
-    categoryPill: "AYURVEDIC SCIENCE",
-    metadata: "AYURVEDIC SCIENCE • 7 MIN READ",
-    title: "Circadian Chronobiology & The Art of the Evening Abhyanga",
-    description:
-      "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.",
-    ctaLabel: "READ CLINICAL INSIGHT",
-    ctaHref: "/blog/circadian-chronobiology-evening-abhyanga",
-    image: "/inquiry-ayurveda.jpg",
-    imageAlt:
-      "Traditional warm bronze oil vessel with red linen cloth and rolled towels",
-  },
-  {
-    id: "thermal-transitions",
-    categoryPill: "HYDROTHERAPY",
-    metadata: "HYDROTHERMAL THERAPY • 5 MIN READ",
-    title: "Thermal Transitions: The Physiological Protocol of Salt Grottos",
-    description:
-      "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.",
-    ctaLabel: "READ FIELD REPORT",
-    ctaHref: "/blog/thermal-transitions-salt-grottos",
-    image: "/inquiry-hydrotherapy.jpg",
-    imageAlt:
-      "Calm stone thermal hydro plunge pool with waterfall and loungers",
-  },
-];
+import { type BlogPageContent, blogPageDefaults } from "@/content/blog";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface BlogInquiriesSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    articles?: {
-      title: string;
-      excerpt: string;
-      category?: string;
-      readTime?: string;
-      author?: string;
-      image?: { asset?: { _ref: string }; alt?: string };
-    }[];
-  };
+  data?: BlogPageContent["inquiriesSection"];
 }
 
 export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
-  const articles = data?.articles
-    ? data.articles.map((a, i) => ({
-        id: String(i),
-        categoryPill: a.category || inquiryArticles[i]?.categoryPill || "",
-        metadata: `${a.category || ""} • ${a.readTime || ""}`,
-        title: a.title,
-        description: a.excerpt,
-        ctaLabel: "READ MORE",
-        ctaHref: `/blog/${a.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, "")}`,
-        image: a.image?.asset?._ref
-          ? `/inquiry-${i}.jpg`
-          : inquiryArticles[i]?.image || "",
-        imageAlt: a.image?.alt || inquiryArticles[i]?.imageAlt || "",
-      }))
-    : inquiryArticles;
+  const d = blogPageDefaults.inquiriesSection;
+  const articles = list(data?.articles, d.articles).map((a, i) => {
+    const fallback = d.articles[i % d.articles.length];
+    return {
+      categoryPill: a.tag ?? "",
+      metadata: a.meta ?? "",
+      title: a.title,
+      description: a.description,
+      ctaLabel: text(a.linkLabel, "READ MORE"),
+      ctaHref: text(a.url, "/blog"),
+      image: imageUrl(a.image, fallback.image),
+      imageAlt: imageAlt(a.image, { alt: a.title }),
+    };
+  });
 
   return (
     <section
@@ -101,24 +33,24 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 md:mb-12">
           <div>
             <p className="text-sm font-medium text-kynta-rust tracking-wide mb-2">
-              {data?.eyebrow || "PEER-REVIEWED FIELDWORK"}
+              {text(data?.eyebrow, d.eyebrow)}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal">
-              {data?.heading || "Recent Inquiries &amp; Protocols"}
+              {text(data?.heading, d.heading)}
             </h2>
           </div>
 
           <div>
             <p className="text-xs font-semibold tracking-wider uppercase text-kynta-warm-gray sm:text-right pb-1">
-              {data?.description || "REFLECTING 2024–2025 SANCTUARY TRIALS"}
+              {text(data?.note, d.note)}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {articles.map((article) => (
+          {articles.map((article, index) => (
             <article
-              key={article.id}
+              key={`${article.title}-${index}`}
               className="bg-white rounded-[16px] overflow-hidden border border-kynta-border/40 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] group"
             >
               <div>

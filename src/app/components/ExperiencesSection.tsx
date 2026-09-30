@@ -2,40 +2,37 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import {
+  type ExperiencesPageContent,
+  experiencesPageDefaults,
+} from "@/content/experiences";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface ExperiencesSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    subheading?: string;
-    filters?: {
-      label: string;
-      value: string;
-    }[];
-    experiences?: {
-      title: string;
-      description: string;
-      category: string;
-      image?: string;
-      duration?: string;
-      price?: string;
-    }[];
-  };
+  data?: ExperiencesPageContent["hero"];
 }
 
-const defaultCategories = [
-  "All Experiences",
-  "Signature Rituals",
-  "Hydrothermal & Thermal Baths",
-  "Multi-Day Retreats",
-  "Couples & Duets",
-  "Sound & Meditative Immersion",
-];
-
 export function ExperiencesSection({ data }: ExperiencesSectionProps) {
-  const [activeFilter, setActiveFilter] = useState<string>("All Experiences");
+  const d = experiencesPageDefaults.hero;
+  const filters = list(data?.filters, d.filters);
+  const [activeFilter, setActiveFilter] = useState<string>(filters[0]);
 
-  const filters = data?.filters?.map((f) => f.value) || defaultCategories;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const headingItalic = text(data?.headingItalic, d.headingItalic);
+  const heading = text(data?.heading, d.heading);
+  const headingLine2 = text(data?.headingLine2, d.headingLine2);
+  const description = text(data?.description, d.description);
+  const f = data?.featured;
+  const featured = {
+    image: imageUrl(f?.image, d.featured.image),
+    alt: imageAlt(f?.image, d.featured.image),
+    tags: list(f?.tags, d.featured.tags),
+    category: text(f?.category, d.featured.category),
+    title: text(f?.title, d.featured.title),
+    description: text(f?.description, d.featured.description),
+    buttonLabel: text(f?.buttonLabel, d.featured.buttonLabel),
+    buttonUrl: text(f?.buttonUrl, d.featured.buttonUrl),
+  };
 
   return (
     <section
@@ -58,8 +55,7 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
               style={{ backgroundColor: "#b0603a" }}
               aria-hidden="true"
             />
-            {data?.eyebrow ||
-              "Curated Experiences &amp; Restorative Rituals &nbsp;·&nbsp; Vedic Medicine &amp; Hydrotherapy"}
+            <span className="whitespace-pre">{eyebrow}</span>
           </span>
         </div>
 
@@ -75,12 +71,11 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
             className="not-italic font-serif italic"
             style={{ color: "var(--kynta-teal)" }}
           >
-            {data?.heading?.split(" ").slice(0, 2).join(" ") ||
-              "Transformative Journeys"}
+            {headingItalic}
           </em>{" "}
-          {data?.heading?.split(" ").slice(2).join(" ") || "Crafted"}
+          {heading}
           <br />
-          {data?.subheading || "for Body &amp; Mind."}
+          {headingLine2}
         </h2>
 
         {/* ── Description ── */}
@@ -93,8 +88,7 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
             color: "var(--kynta-warm-gray)",
           }}
         >
-          {data?.subheading ||
-            "From single bespoke somatic rituals to multi-day immersive detox retreats across India's most extraordinary palace hotels and secluded eco-resorts."}
+          {description}
         </p>
 
         {/* ── Category Filter Pills ── */}
@@ -133,14 +127,8 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
           >
             {/* Image */}
             <Image
-              src={
-                data?.experiences?.[0]?.image ||
-                "/experience-hydro-colonnade.jpg"
-              }
-              alt={
-                data?.experiences?.[0]?.title ||
-                "The Royal Stepped Hydro-Colonnade"
-              }
+              src={featured.image}
+              alt={featured.alt}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 818px"
@@ -158,6 +146,7 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
 
             {/* Feature pills – top-left */}
             <div className="absolute top-4 left-4 flex gap-2">
+              {featured.tags[0] && (
               <span
                 className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1.5 rounded-full"
                 style={{
@@ -185,8 +174,10 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
                   <path d="M18 8v8" />
                   <path d="M22 10v4" />
                 </svg>
-                Acoustic Silence &lt; 24dB
+                {featured.tags[0]}
               </span>
+              )}
+              {featured.tags[1] && (
               <span
                 className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1.5 rounded-full"
                 style={{
@@ -211,8 +202,9 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
                   <path d="M12 6v12" />
                   <path d="M8 10l4-4 4 4" />
                 </svg>
-                Single-Batch Cold Pressed Herbals
+                {featured.tags[1]}
               </span>
+              )}
             </div>
 
             {/* Bottom content row */}
@@ -223,28 +215,26 @@ export function ExperiencesSection({ data }: ExperiencesSectionProps) {
                   className="text-[10px] font-semibold tracking-[0.18em] uppercase mb-2"
                   style={{ color: "rgba(255,255,255,0.7)" }}
                 >
-                  {data?.experiences?.[0]?.category || "Spatial Architecture"}
+                  {featured.category}
                 </p>
                 <h3 className="font-serif text-[26px] md:text-[28px] leading-[1.2] text-white mb-2">
-                  {data?.experiences?.[0]?.title ||
-                    "The Royal Stepped Hydro-Colonnade"}
+                  {featured.title}
                 </h3>
                 <p
                   className="text-[13px] leading-[1.6]"
                   style={{ color: "rgba(255,255,255,0.7)" }}
                 >
-                  {data?.experiences?.[0]?.description ||
-                    "Natural sandstone pavilions calibrated with thermostatic plunge chambers and sound-dampened lime plaster vaults."}
+                  {featured.description}
                 </p>
               </div>
 
               {/* Right – CTA button */}
               <a
-                href="/book"
+                href={featured.buttonUrl}
                 className="flex-shrink-0 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.12em] uppercase px-5 py-3 rounded-md bg-white hover:bg-gray-50 transition-colors"
                 style={{ color: "#2c2c2c" }}
               >
-                Book an Immersion
+                {featured.buttonLabel}
                 <svg
                   width="12"
                   height="12"

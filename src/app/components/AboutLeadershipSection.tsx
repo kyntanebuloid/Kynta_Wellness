@@ -1,53 +1,22 @@
 import Image from "next/image";
 
-export interface LeadershipMember {
-  id: string;
+import { type AboutPageContent, aboutDefaults, type CredentialIcon as CredentialIconType } from "@/content/about";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
+
+interface LeadershipMember {
   role: string;
   name: string;
   bio: string;
-  credentialIcon: "hospitality" | "protocol" | "architecture";
+  credentialIcon: CredentialIconType;
   credentialText: string;
   image: string;
   imageAlt: string;
 }
 
-export const leadershipTeam: LeadershipMember[] = [
-  {
-    id: "ananya-varma",
-    role: "FOUNDER & MANAGING DIRECTOR",
-    name: "Ananya Varma",
-    bio: "Former director of luxury resort developments across Southeast Asia and Switzerland. Dedicated the last 15 years to institutionalizing traditional Indian healing into seamless five-star operational frameworks.",
-    credentialIcon: "hospitality",
-    credentialText: "22 Years in Luxury Hospitality",
-    image: "/leadership-ananya.jpg",
-    imageAlt: "Ananya Varma, Founder & Managing Director",
-  },
-  {
-    id: "harish-namboodiri",
-    role: "CHIEF AYURVEDIC VAIDYA",
-    name: "Dr. Harish Namboodiri, BAMS",
-    bio: "Descendant of an illustrious Malabar healing family. Dr. Namboodiri oversees Kynta's botanical pharmacopeia, pulse diagnostic diagnostics, and therapist marma certification curriculum.",
-    credentialIcon: "protocol",
-    credentialText: "Dean of Clinical Protocol",
-    image: "/leadership-harish.jpg",
-    imageAlt: "Dr. Harish Namboodiri, Chief Ayurvedic Vaidya",
-  },
-  {
-    id: "devendra-sengupta",
-    role: "HEAD OF SPATIAL ARCHITECTURE",
-    name: "Devendra Sengupta",
-    bio: "Specialist in sensorial acoustic design and biophilic thermal circuits. Curates soundscapes, stone stratification, and micro-climates inside our sanctuary treatment pavilions.",
-    credentialIcon: "architecture",
-    credentialText: "Architectural Sensory Lead",
-    image: "/leadership-devendra.jpg",
-    imageAlt: "Devendra Sengupta, Head of Spatial Architecture",
-  },
-];
-
 function CredentialIcon({
   type,
 }: {
-  type: LeadershipMember["credentialIcon"];
+  type: CredentialIconType;
 }) {
   switch (type) {
     case "hospitality":
@@ -148,43 +117,27 @@ function LeadershipCard({ member }: { member: LeadershipMember }) {
 }
 
 interface AboutLeadershipSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    members?: {
-      name: string;
-      role: string;
-      bio?: string;
-      image?: {
-        _type: "image";
-        asset: { _ref: string; _type: "reference" };
-        alt?: string;
-      };
-    }[];
-  };
+  data?: AboutPageContent["leadershipSection"];
 }
 
 export function AboutLeadershipSection({ data }: AboutLeadershipSectionProps) {
-  const eyebrow = data?.eyebrow || "CLINICAL & CREATIVE LEADERSHIP";
-  const heading = data?.heading || "Stewarded by Masters of Lineage & Space";
-  const description =
-    data?.description ||
-    "Our council unites traditional Vaidyas, hospitality innovators, and sensory designers to deliver authentic, medically grounded tranquility.";
+  const d = aboutDefaults.leadershipSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
 
-  const team: LeadershipMember[] = data?.members?.length
-    ? data.members.map((m, i) => ({
-        ...leadershipTeam[i % leadershipTeam.length],
-        name: m.name || leadershipTeam[i % leadershipTeam.length].name,
-        role: m.role || leadershipTeam[i % leadershipTeam.length].role,
-        bio: m.bio || leadershipTeam[i % leadershipTeam.length].bio,
-        image: m.image?.asset?._ref
-          ? `/leadership-${String(i + 1).padStart(2, "0")}.jpg`
-          : leadershipTeam[i % leadershipTeam.length].image,
-        imageAlt:
-          m.image?.alt || leadershipTeam[i % leadershipTeam.length].imageAlt,
-      }))
-    : leadershipTeam;
+  const team: LeadershipMember[] = list(data?.members, d.members).map((m, i) => {
+    const fallback = d.members[i % d.members.length];
+    return {
+      name: m.name,
+      role: m.role,
+      bio: m.bio ?? "",
+      credentialIcon: m.credentialIcon ?? fallback.credentialIcon,
+      credentialText: m.credentialText ?? "",
+      image: imageUrl(m.image, fallback.image),
+      imageAlt: imageAlt(m.image, { alt: m.name }),
+    };
+  });
 
   return (
     <section
@@ -205,8 +158,8 @@ export function AboutLeadershipSection({ data }: AboutLeadershipSectionProps) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {team.map((member) => (
-            <LeadershipCard key={member.id} member={member} />
+          {team.map((member, index) => (
+            <LeadershipCard key={`${member.name}-${index}`} member={member} />
           ))}
         </div>
       </div>

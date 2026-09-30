@@ -4,54 +4,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export const blogCategories = [
-  "ALL ESSAYS",
-  "BOTANICAL APOTHECARY",
-  "SANCTUARY ARCHITECTURE",
-  "CIRCADIAN SOMATICS",
-  "AYURVEDIC SCIENCE",
-  "VAIDYA CASE STUDIES",
-];
-
-export const featuredArticle = {
-  badge: "COVER MONOGRAPH",
-  category: "BOTANICAL APOTHECARY",
-  issue: "ISSUE 28",
-  readTime: "8 MIN READ",
-  title:
-    "The Alchemy of Fresh Wildcrafted Botanicals: Seasonal Kashayams in High-Stress Restoration",
-  description:
-    "Why fresh-pressed decoctions and artisanal marma formulations yield biological equilibrium far beyond standardized extracts. Dr. Ananya Varma details our 48-hour wildcrafting harvest protocols in the Nilgiri foothills.",
-  author: {
-    initials: "AV",
-    name: "DR. ANANYA VARMA",
-    role: "Chief Vaidya & Botanical Formulation Director",
-  },
-  image: "/blog-featured-kashayam.jpg",
-  imageAlt:
-    "Ayurvedic botanical oil extraction with golden elixir dropper into hammered bronze bowl",
-  href: "/blog/alchemy-of-fresh-wildcrafted-botanicals",
-};
+import { type BlogPageContent, blogPageDefaults } from "@/content/blog";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface BlogHeroSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    subheading?: string;
-  };
-  filters?: {
-    label: string;
-    value: string;
-  }[];
+  data?: BlogPageContent["hero"];
 }
 
-export function BlogHeroSection({ data, filters }: BlogHeroSectionProps) {
-  const categories = filters
-    ? filters.map((f) => f.label.toUpperCase())
-    : blogCategories;
-  const [activeCategory, setActiveCategory] = useState(
-    categories[0] ?? "ALL ESSAYS",
-  );
+export function BlogHeroSection({ data }: BlogHeroSectionProps) {
+  const d = blogPageDefaults.hero;
+  const categories = list(data?.categories, d.categories);
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const f = data?.featured;
+  const df = d.featured;
+  const featuredArticle = {
+    image: imageUrl(f?.image, df.image),
+    imageAlt: imageAlt(f?.image, df.image),
+    badge: text(f?.badge, df.badge),
+    category: text(f?.category, df.category),
+    issue: text(f?.issue, df.issue),
+    readTime: text(f?.readTime, df.readTime),
+    title: text(f?.title, df.title),
+    description: text(f?.description, df.description),
+    author: {
+      initials: text(f?.authorInitials, df.authorInitials),
+      name: text(f?.authorName, df.authorName),
+      role: text(f?.authorRole, df.authorRole),
+    },
+    href: text(f?.url, df.url),
+    linkLabel: text(f?.linkLabel, df.linkLabel),
+  };
 
   return (
     <section
@@ -65,18 +47,16 @@ export function BlogHeroSection({ data, filters }: BlogHeroSectionProps) {
             aria-hidden="true"
           />
           <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
-            {data?.eyebrow || "THE KYNTA SANCTUARY GAZETTE — VOL. IV"}
+            {text(data?.eyebrow, d.eyebrow)}
           </span>
         </div>
 
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal font-normal mb-5 max-w-2xl">
-          {data?.heading ||
-            "Treatises on Stillness, Botanical Formulations &amp; Restorative Space."}
+          {text(data?.heading, d.heading)}
         </h1>
 
         <p className="text-base sm:text-lg text-kynta-warm-gray leading-relaxed max-w-xl mb-8 md:mb-10">
-          {data?.subheading ||
-            "Dispatches from our Ayurvedic practitioners, spatial masterplanners, and apothecary artisans exploring the intersection of Vedic healing, circadian biology, and contemporary architecture."}
+          {text(data?.subheading, d.subheading)}
         </p>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-10 md:mb-12">
@@ -162,7 +142,7 @@ export function BlogHeroSection({ data, filters }: BlogHeroSectionProps) {
                 className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 flex-shrink-0 group"
                 style={{ color: "var(--kynta-teal-dark)" }}
               >
-                <span>READ TREATISE</span>
+                <span>{featuredArticle.linkLabel}</span>
                 <span className="transition-transform duration-200 group-hover:translate-x-0.5">
                   →
                 </span>

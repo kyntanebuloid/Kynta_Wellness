@@ -23,10 +23,7 @@ export default async function LocationsPage() {
       <TopBar settings={siteSettings} />
       <Header settings={siteSettings} />
       <main>
-        <LocationsSection
-          data={locations?.hero}
-          locations={locations?.locations}
-        />
+        <LocationsSection page={locations} />
         <SanctuaryCTASection data={locations?.ctaSection} />
       </main>
       <Footer settings={siteSettings} />

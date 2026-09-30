@@ -1,142 +1,70 @@
-import { defineField, defineType } from "sanity";
+import { defineType } from "sanity";
+import { img, obj, objList, seo, str, strList, txt } from "./helpers";
 
+// Mirrors src/content/contact.ts, top to bottom of the Contact page.
 export default defineType({
   name: "contactPage",
   title: "Contact Page",
   type: "document",
   fields: [
-    defineField({
-      name: "hero",
-      title: "Hero Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "subheading",
-          title: "Subheading",
-          type: "string",
-        }),
-      ],
-    }),
-    defineField({
-      name: "tabs",
-      title: "Contact Tabs",
-      type: "array",
-      of: [
-        defineField({
-          name: "tab",
-          title: "Tab",
-          type: "object",
-          fields: [
-            defineField({ name: "label", title: "Label", type: "string" }),
-            defineField({ name: "value", title: "Value", type: "string" }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "contactInfo",
-      title: "Contact Information",
-      type: "object",
-      fields: [
-        defineField({ name: "email", title: "Email", type: "string" }),
-        defineField({ name: "phone", title: "Phone", type: "string" }),
-        defineField({
-          name: "address",
-          title: "Address",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "workingHours",
-          title: "Working Hours",
-          type: "string",
-        }),
-      ],
-    }),
-    defineField({
-      name: "locationCards",
-      title: "Location Cards",
-      type: "array",
-      of: [
-        defineField({
-          name: "locationCard",
-          title: "Location Card",
-          type: "object",
-          fields: [
-            defineField({ name: "name", title: "Name", type: "string" }),
-            defineField({ name: "address", title: "Address", type: "string" }),
-            defineField({ name: "phone", title: "Phone", type: "string" }),
-            defineField({ name: "hours", title: "Hours", type: "string" }),
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-              fields: [
-                defineField({ name: "alt", title: "Alt Text", type: "string" }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "formFields",
-      title: "Form Field Labels",
-      type: "object",
-      fields: [
-        defineField({ name: "nameLabel", title: "Name Label", type: "string" }),
-        defineField({
-          name: "emailLabel",
-          title: "Email Label",
-          type: "string",
-        }),
-        defineField({
-          name: "phoneLabel",
-          title: "Phone Label",
-          type: "string",
-        }),
-        defineField({
-          name: "serviceLabel",
-          title: "Service Label",
-          type: "string",
-        }),
-        defineField({
-          name: "messageLabel",
-          title: "Message Label",
-          type: "string",
-        }),
-        defineField({
-          name: "submitButtonLabel",
-          title: "Submit Button Label",
-          type: "string",
-        }),
-      ],
-    }),
-    defineField({
-      name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        defineField({ name: "title", title: "SEO Title", type: "string" }),
-        defineField({
-          name: "description",
-          title: "SEO Description",
-          type: "text",
-          rows: 2,
-        }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
-      ],
-    }),
+    obj("hero", "1. Heading", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("subheading", "Description"),
+    ]),
+    obj("desks", "2. Contact Details (left column)", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      str("phoneLabel", "Phone – Label"),
+      str("phone", "Phone – Number"),
+      str("phoneHours", "Phone – Hours"),
+      str("whatsappLabel", "WhatsApp – Label"),
+      str("whatsappNumber", "WhatsApp – Number Shown"),
+      str("whatsappUrl", "WhatsApp – Link", { description: "e.g. https://wa.me/919820048300" }),
+      str("whatsappBadge", "WhatsApp – Badge"),
+      str("emailHeading", "Emails – Heading"),
+      objList(
+        "emails",
+        "Emails",
+        "emailRow",
+        "Email",
+        [str("label", "Label"), str("email", "Email Address")],
+        "email",
+      ),
+      img("image", "Photo"),
+      str("imageLabel", "Photo – Small Label"),
+      str("imageCaption", "Photo – Caption"),
+      str("hoursHeading", "Hours – Heading"),
+      txt("hoursText", "Hours – Text", 3),
+    ]),
+    obj("form", "3. Enquiry Form (right column)", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      strList("tabs", "Tabs", { description: "Three enquiry types." }),
+      str("nameLabel", "Name – Label"),
+      str("namePlaceholder", "Name – Placeholder"),
+      str("emailLabel", "Email – Label"),
+      str("emailPlaceholder", "Email – Placeholder"),
+      str("phoneLabel", "Phone – Label"),
+      str("phonePlaceholder", "Phone – Placeholder"),
+      str("sanctuaryLabel", "Sanctuary – Label"),
+      str("sanctuaryPlaceholder", "Sanctuary – Placeholder"),
+      strList("sanctuaries", "Sanctuary Options"),
+      str("intentLabel", "Intent – Label"),
+      str("intentDefault", "Intent – Pre-filled Text"),
+      str("datesLabel", "Dates – Label"),
+      str("datesPlaceholder", "Dates – Placeholder"),
+      str("messageLabel", "Message – Label"),
+      txt("messagePlaceholder", "Message – Placeholder", 2),
+      str("privacyNote", "Privacy Note"),
+      str("submitLabel", "Submit Button"),
+      txt("successMessage", "Thank-you Message", 2),
+    ]),
+    seo(),
   ],
   preview: {
-    select: { title: "hero.heading" },
+    prepare: () => ({ title: "Contact Page" }),
   },
 });

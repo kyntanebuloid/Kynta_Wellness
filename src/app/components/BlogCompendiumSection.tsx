@@ -1,35 +1,11 @@
-export interface CompendiumChapter {
-  id: string;
-  title: string;
-  subtitle: string;
-  iconType: "microbiome" | "thermal" | "architecture";
-}
+import {
+  type BlogPageContent,
+  blogPageDefaults,
+  type ChapterIcon as ChapterIconType,
+} from "@/content/blog";
+import { list, text } from "@/content/types";
 
-export const compendiumChapters: CompendiumChapter[] = [
-  {
-    id: "chapter-1",
-    title: "Chapter I: Microbiome Restoration via Triphala Protocols",
-    subtitle:
-      "Biomarker shifts over 21 days of continuous botanical assimilation in high-altitude environments.",
-    iconType: "microbiome",
-  },
-  {
-    id: "chapter-2",
-    title: "Chapter II: Thermal Shock Proteins in Somatic Healing",
-    subtitle:
-      "Vascular remodeling observed through alternating cedar sweat lodges and copper ice plunge cycles.",
-    iconType: "thermal",
-  },
-  {
-    id: "chapter-3",
-    title: "Chapter III: Spatial Biophilic Engineering in Heritage Palaces",
-    subtitle:
-      "Integrating Vaastu architectural orientations with calibrated acoustic damping for cortisol reduction.",
-    iconType: "architecture",
-  },
-];
-
-function ChapterIcon({ type }: { type: CompendiumChapter["iconType"] }) {
+function ChapterIcon({ type }: { type: ChapterIconType }) {
   switch (type) {
     case "microbiome":
       return (
@@ -100,38 +76,37 @@ function ChapterIcon({ type }: { type: CompendiumChapter["iconType"] }) {
 }
 
 interface BlogCompendiumSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    chapters?: {
-      title: string;
-      description: string;
-      chapterNumber?: string;
-      author?: string;
-      image?: { asset?: { _ref: string }; alt?: string };
-    }[];
-    practitionerNotes?: {
-      title: string;
-      author: string;
-      role?: string;
-      excerpt?: string;
-    }[];
-  };
+  data?: BlogPageContent["compendiumSection"];
 }
 
+const barColors = { teal: "#004349", rust: "#9b5440" } as const;
+
 export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
-  const chapters = data?.chapters
-    ? data.chapters.map((ch, i) => ({
-        id: ch.chapterNumber || `chapter-${i + 1}`,
-        title: ch.title,
-        subtitle: ch.description,
-        iconType:
-          (["microbiome", "thermal", "architecture"][
-            i % 3
-          ] as CompendiumChapter["iconType"]) || "architecture",
-      }))
-    : compendiumChapters;
+  const d = blogPageDefaults.compendiumSection;
+  const chapters = list(data?.chapters, d.chapters).map((ch, i) => ({
+    title: ch.title,
+    subtitle: ch.description,
+    iconType: ch.icon ?? d.chapters[i % d.chapters.length].icon,
+  }));
+  const primaryLabel = text(data?.primaryCta?.label, d.primaryCta.label);
+  const primaryUrl = text(data?.primaryCta?.url, d.primaryCta.url);
+  const secondaryLabel = text(data?.secondaryCta?.label, d.secondaryCta.label);
+  const secondaryUrl = text(data?.secondaryCta?.url, d.secondaryCta.url);
+  const l = data?.ledger;
+  const ledger = {
+    label: text(l?.label, d.ledger.label),
+    code: text(l?.code, d.ledger.code),
+    statValue: text(l?.statValue, d.ledger.statValue),
+    statLabel: text(l?.statLabel, d.ledger.statLabel),
+    bars: list(l?.bars, d.ledger.bars).map((bar) => ({
+      label: bar.label,
+      value: bar.value,
+      percent: Math.min(100, Math.max(0, bar.percent ?? 0)),
+      color: barColors[bar.color ?? "teal"],
+      isRust: bar.color === "rust",
+    })),
+    footnote: text(l?.footnote, d.ledger.footnote),
+  };
 
   return (
     <section
@@ -157,22 +132,21 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                 <path d="M6 6h10" />
                 <path d="M6 10h10" />
               </svg>
-              <span>{data?.eyebrow || "SPECIAL MONOGRAPH COLLECTION"}</span>
+              <span>{text(data?.eyebrow, d.eyebrow)}</span>
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-white font-normal mb-4 max-w-xl">
-              {data?.heading || "The 2025 Integrative Longevity Compendium"}
+              {text(data?.heading, d.heading)}
             </h2>
 
             <p className="text-[15px] leading-[1.7] text-[#a0beb6] max-w-xl mb-8">
-              {data?.description ||
-                "Download our 64-page peer-reviewed monograph examining clinical data from over 14,000 guest retreat journeys across our Indian and overseas sanctuaries."}
+              {text(data?.description, d.description)}
             </p>
 
             <div className="w-full space-y-3 mb-8">
-              {chapters.map((chapter) => (
+              {chapters.map((chapter, index) => (
                 <div
-                  key={chapter.id}
+                  key={`${chapter.title}-${index}`}
                   className="rounded-[12px] p-4 sm:p-4.5 bg-white/[0.05] border border-white/10 hover:bg-white/[0.08] transition-all flex items-start gap-3.5"
                 >
                   <div
@@ -196,7 +170,7 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
               <a
-                href="#download-pdf"
+                href={primaryUrl}
                 className="px-5 py-3 rounded-[6px] text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
                 style={{ backgroundColor: "#9b5440" }}
               >
@@ -215,11 +189,11 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                <span>REQUEST DIGITAL MONOGRAPH (PDF)</span>
+                <span>{primaryLabel}</span>
               </a>
 
               <a
-                href="#order-hardcover"
+                href={secondaryUrl}
                 className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase text-white/90 hover:text-white transition-colors flex items-center gap-2"
               >
                 <svg
@@ -236,7 +210,7 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                   <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                 </svg>
-                <span>ORDER HARDCOVER EDITION</span>
+                <span>{secondaryLabel}</span>
               </a>
             </div>
           </div>
@@ -246,10 +220,10 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
-                    INSTITUTIONAL LEDGER
+                    {ledger.label}
                   </span>
                   <span className="text-[10px] tracking-wider text-kynta-warm-gray font-mono">
-                    ISBN 978–0–9882
+                    {ledger.code}
                   </span>
                 </div>
 
@@ -259,10 +233,10 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                       className="font-serif text-[26px] sm:text-[28px] leading-tight font-normal"
                       style={{ color: "var(--kynta-teal-dark)" }}
                     >
-                      14,280+
+                      {ledger.statValue}
                     </p>
                     <p className="text-[9px] font-semibold tracking-[0.12em] uppercase text-kynta-warm-gray mt-0.5">
-                      DOCUMENTED GUEST BASELINES
+                      {ledger.statLabel}
                     </p>
                   </div>
 
@@ -284,48 +258,33 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                   </div>
                 </div>
 
-                <div className="mb-5">
-                  <div className="flex items-center justify-between text-[11px] sm:text-[11.5px] font-medium mb-1.5">
-                    <span className="text-kynta-charcoal">
-                      Sleep Architecture Index
-                    </span>
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--kynta-teal-dark)" }}
-                    >
-                      +41.8% REM Stabilization
-                    </span>
+                {ledger.bars.map((bar, index) => (
+                  <div
+                    key={`${bar.label}-${index}`}
+                    className={index === ledger.bars.length - 1 ? "mb-6" : "mb-5"}
+                  >
+                    <div className="flex items-center justify-between text-[11px] sm:text-[11.5px] font-medium mb-1.5">
+                      <span className="text-kynta-charcoal">{bar.label}</span>
+                      <span
+                        className={bar.isRust ? "font-semibold text-kynta-rust" : "font-semibold"}
+                        style={bar.isRust ? undefined : { color: "var(--kynta-teal-dark)" }}
+                      >
+                        {bar.value}
+                      </span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-[#e8ecea] overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${bar.percent}%`, backgroundColor: bar.color }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-[#e8ecea] overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: "78%", backgroundColor: "#004349" }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <div className="flex items-center justify-between text-[11px] sm:text-[11.5px] font-medium mb-1.5">
-                    <span className="text-kynta-charcoal">
-                      Salivary Cortisol Reduction
-                    </span>
-                    <span className="font-semibold text-kynta-rust">
-                      −32.4% Post 7–Day Rasayana
-                    </span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-[#e8ecea] overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: "64%", backgroundColor: "#9b5440" }}
-                    />
-                  </div>
-                </div>
+                ))}
               </div>
 
               <div className="pt-3 border-t border-kynta-border/20 text-center">
                 <p className="text-[10px] italic text-kynta-warm-gray leading-normal">
-                  Compiled across 6 wellness sanctuaries with the International
-                  Council for Integrative Therapeutics.
+                  {ledger.footnote}
                 </p>
               </div>
             </div>

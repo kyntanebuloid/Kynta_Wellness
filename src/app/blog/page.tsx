@@ -25,7 +25,7 @@ export default async function BlogPage() {
       <TopBar settings={siteSettings} />
       <Header settings={siteSettings} />
       <main>
-        <BlogHeroSection data={blog?.hero} filters={blog?.filters} />
+        <BlogHeroSection data={blog?.hero} />
         <BlogInquiriesSection data={blog?.inquiriesSection} />
         <BlogCompendiumSection data={blog?.compendiumSection} />
         <BlogPhilosophySoundSection data={blog?.philosophySection} />

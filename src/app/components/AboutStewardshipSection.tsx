@@ -1,87 +1,25 @@
 import Image from "next/image";
 
-export interface StewardshipFeature {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export const stewardshipFeatures: StewardshipFeature[] = [
-  {
-    id: "fair-trade",
-    title: "Direct Fair-Trade Foraging Alliances",
-    description:
-      "Supporting 240+ tribal farming families with stable year-round honorariums.",
-  },
-  {
-    id: "zero-synthetics",
-    title: "100% Zero Single-Use Synthetics",
-    description:
-      "All vessel packaging is hand-blown amber glass or unglazed terracotta earthenware.",
-  },
-  {
-    id: "hydro-systems",
-    title: "Closed-Loop Hydro Systems",
-    description:
-      "Thermal suites utilize mineral stone filtering to recycle 94% of restorative water.",
-  },
-];
-
-export const stewardshipImages = {
-  foraging: {
-    src: "/stewardship-foraging.jpg",
-    alt: "Indigenous women harvesting botanicals according to lunar cycles in Nilgiri hills",
-  },
-  apothecary: {
-    src: "/stewardship-apothecary.jpg",
-    alt: "Ceramic apothecary elixir vessels and dried botanical herbs on linen",
-  },
-  extraction: {
-    src: "/stewardship-extraction.jpg",
-    alt: "Clay distillation vessel dripping pure herbal essence into laboratory beakers",
-  },
-  hydro: {
-    src: "/stewardship-hydro.jpg",
-    alt: "Biophilic sanctuary garden with pebble water stream and lush tropical foliage",
-  },
-};
+import { type AboutPageContent, aboutDefaults } from "@/content/about";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface AboutStewardshipSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    features?: {
-      title: string;
-      description: string;
-    }[];
-    images?: {
-      _type: "image";
-      asset: { _ref: string; _type: "reference" };
-      alt?: string;
-    }[];
-  };
+  data?: AboutPageContent["stewardshipSection"];
 }
 
 export function AboutStewardshipSection({
   data,
 }: AboutStewardshipSectionProps) {
-  const eyebrow = data?.eyebrow || "ECOLOGICAL STEWARDSHIP";
-  const heading = data?.heading || "Honoring the Soil That Restores Us";
-  const description =
-    data?.description ||
-    "True wellness cannot be extracted at the expense of local communities or living ecosystems. Our whole-plant botanicals are hand-harvested according to traditional lunar cycles by indigenous tribal cooperatives in the Nilgiri and Western Ghats biospheres.";
-
-  const features: StewardshipFeature[] = data?.features?.length
-    ? data.features.map((f, i) => ({
-        ...stewardshipFeatures[i % stewardshipFeatures.length],
-        title:
-          f.title || stewardshipFeatures[i % stewardshipFeatures.length].title,
-        description:
-          f.description ||
-          stewardshipFeatures[i % stewardshipFeatures.length].description,
-      }))
-    : stewardshipFeatures;
+  const d = aboutDefaults.stewardshipSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const features = list(data?.features, d.features);
+  const photos = d.images.map((fallback, i) => ({
+    src: imageUrl(data?.images?.[i], fallback),
+    alt: imageAlt(data?.images?.[i], fallback),
+  }));
+  const [foraging, extraction, apothecary, hydro] = photos;
 
   return (
     <section
@@ -153,8 +91,8 @@ export function AboutStewardshipSection({
                 <div className="flex flex-col gap-3 sm:gap-4">
                   <div className="relative aspect-[4/3] w-full rounded-[14px] sm:rounded-[16px] overflow-hidden shadow-sm">
                     <Image
-                      src={stewardshipImages.foraging.src}
-                      alt={stewardshipImages.foraging.alt}
+                      src={foraging.src}
+                      alt={foraging.alt}
                       fill
                       sizes="(max-width: 768px) 50vw, 220px"
                       className="object-cover transition-transform duration-700 hover:scale-105"
@@ -163,8 +101,8 @@ export function AboutStewardshipSection({
 
                   <div className="relative aspect-[16/10] w-full rounded-[14px] sm:rounded-[16px] overflow-hidden shadow-sm">
                     <Image
-                      src={stewardshipImages.extraction.src}
-                      alt={stewardshipImages.extraction.alt}
+                      src={extraction.src}
+                      alt={extraction.alt}
                       fill
                       sizes="(max-width: 768px) 50vw, 220px"
                       className="object-cover transition-transform duration-700 hover:scale-105"
@@ -175,8 +113,8 @@ export function AboutStewardshipSection({
                 <div className="flex flex-col gap-3 sm:gap-4 pt-3 sm:pt-4">
                   <div className="relative aspect-[4/3] w-full rounded-[14px] sm:rounded-[16px] overflow-hidden shadow-sm">
                     <Image
-                      src={stewardshipImages.apothecary.src}
-                      alt={stewardshipImages.apothecary.alt}
+                      src={apothecary.src}
+                      alt={apothecary.alt}
                       fill
                       sizes="(max-width: 768px) 50vw, 220px"
                       className="object-cover transition-transform duration-700 hover:scale-105"
@@ -185,8 +123,8 @@ export function AboutStewardshipSection({
 
                   <div className="relative aspect-[4/3] w-full rounded-[14px] sm:rounded-[16px] overflow-hidden shadow-sm">
                     <Image
-                      src={stewardshipImages.hydro.src}
-                      alt={stewardshipImages.hydro.alt}
+                      src={hydro.src}
+                      alt={hydro.alt}
                       fill
                       sizes="(max-width: 768px) 50vw, 220px"
                       className="object-cover transition-transform duration-700 hover:scale-105"

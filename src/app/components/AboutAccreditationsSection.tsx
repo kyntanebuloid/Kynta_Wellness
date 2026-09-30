@@ -1,38 +1,11 @@
-export interface Accreditation {
-  id: string;
-  title: string;
-  subtitle: string;
-  iconType: "medal" | "shield" | "star" | "eco";
-}
+import {
+  type AboutPageContent,
+  type AccreditationIcon as AccreditationIconType,
+  aboutDefaults,
+} from "@/content/about";
+import { list, text } from "@/content/types";
 
-export const accreditations: Accreditation[] = [
-  {
-    id: "gwi",
-    title: "Global Wellness Institute",
-    subtitle: "CHARTER SPA MEMBER",
-    iconType: "medal",
-  },
-  {
-    id: "apb",
-    title: "Ayurvedic Pharmacopoeia Board",
-    subtitle: "CERTIFIED 100% PURE ORIGIN",
-    iconType: "shield",
-  },
-  {
-    id: "lsa",
-    title: "Luxury Spa Awards",
-    subtitle: "BEST HOLISTIC CONCEPT 2024",
-    iconType: "star",
-  },
-  {
-    id: "ess",
-    title: "Eco-Sanctuary Standard",
-    subtitle: "ZERO SINGLE-USE PLASTIC",
-    iconType: "eco",
-  },
-];
-
-function AccreditationIcon({ type }: { type: Accreditation["iconType"] }) {
+function AccreditationIcon({ type }: { type: AccreditationIconType }) {
   switch (type) {
     case "medal":
       return (
@@ -112,34 +85,19 @@ function AccreditationIcon({ type }: { type: Accreditation["iconType"] }) {
 }
 
 interface AboutAccreditationsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    awards?: {
-      title: string;
-      organization: string;
-      year?: string;
-      description?: string;
-    }[];
-  };
+  data?: AboutPageContent["accreditationsSection"];
 }
 
 export function AboutAccreditationsSection({
   data,
 }: AboutAccreditationsSectionProps) {
-  const eyebrow =
-    data?.eyebrow ||
-    "RECOGNIZED BY GLOBAL WELLNESS & HERITAGE HOSPITALITY COUNCILS";
-
-  const displayAccreditations: Accreditation[] = data?.awards?.length
-    ? data.awards.map((a, i) => ({
-        ...accreditations[i % accreditations.length],
-        title: a.title || accreditations[i % accreditations.length].title,
-        subtitle:
-          a.organization || accreditations[i % accreditations.length].subtitle,
-      }))
-    : accreditations;
+  const d = aboutDefaults.accreditationsSection;
+  const eyebrow = text(data?.heading, d.heading);
+  const awards = list(data?.awards, d.awards).map((a, i) => ({
+    title: a.title,
+    subtitle: a.subtitle ?? "",
+    iconType: a.icon ?? d.awards[i % d.awards.length].icon,
+  }));
 
   return (
     <section
@@ -152,9 +110,9 @@ export function AboutAccreditationsSection({
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {displayAccreditations.map((item) => (
+          {awards.map((item, index) => (
             <div
-              key={item.id}
+              key={`${item.title}-${index}`}
               className="bg-white rounded-[14px] border border-kynta-border/30 shadow-[0_2px_12px_rgba(0,0,0,0.025)] py-7 px-5 flex flex-col items-center justify-center text-center transition-all duration-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5"
             >
               <div className="mb-3.5 flex items-center justify-center">

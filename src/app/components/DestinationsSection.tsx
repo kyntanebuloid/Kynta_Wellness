@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import type { Homepage, LocationsPage } from "@/types/sanity";
+import type { LocationContent } from "@/content/locations";
+import type { Homepage } from "@/types/sanity";
 
 interface DestinationsSectionProps {
   data?: Homepage["destinationsSection"];
-  locations?: LocationsPage["locations"];
+  locations?: LocationContent[];
 }
 
 const defaultDestinations = [
@@ -184,7 +185,7 @@ export function DestinationsSection({
       hours: d.hours || "08:00 – 21:00 Daily",
       title: d.name,
       address: d.address || "",
-      description: d.description || d.address || "A calm and relaxing spa",
+      description: d.cardDescription || d.address || "A calm and relaxing spa",
       tags: d.services || [],
       detailsHref:
         d.detailsUrl || (d.slug ? `/locations/${d.slug}` : "/locations"),

@@ -1,81 +1,25 @@
 import Image from "next/image";
 
-export interface TransformationCard {
-  id: string;
-  location: string;
-  metricPill: string;
-  metricPillColor: "teal" | "neutral";
-  title: string;
-  description: string;
-  footerLabel: string;
-}
-
-export const transformations: TransformationCard[] = [
-  {
-    id: "udaipur",
-    location: "UDAIPUR, RAJASTHAN",
-    metricPill: "+44% Yield",
-    metricPillColor: "teal",
-    title: "The Royal Stepped Reservoir",
-    description:
-      "16,000 sq ft subterranean stepped reservoir converted into cavernous hydrothermal suites and acoustic salt-immersion grottos.",
-    footerLabel: "HISTORIC PALACE HERITAGE CONVERSION",
-  },
-  {
-    id: "shimla",
-    location: "SHIMLA, HIMALAYAS",
-    metricPill: "+3.1d Stay",
-    metricPillColor: "neutral",
-    title: "The Pine Canopy Pavilion",
-    description:
-      "Glass-enclosed cedar hydro-sanctuary with altitude-acclimatizing herbal steam circuits and panoramic alpine views.",
-    footerLabel: "ALPINE BIOPHILIC HYDROTHERAPY",
-  },
-  {
-    id: "goa",
-    location: "NORTH GOA COAST",
-    metricPill: "98.6% Rating",
-    metricPillColor: "teal",
-    title: "The Coconut Grove Hermitage",
-    description:
-      "Woven bamboo open-air pavilions and warm sea-salt hydro pools integrating Marma point bodywork and Ayurvedic compresses.",
-    footerLabel: "COASTAL WELLNESS SANCTUARY",
-  },
-];
+import {
+  type HospitalityPageContent,
+  hospitalityPageDefaults,
+} from "@/content/hospitality";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface HospitalityTransformationsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    transformations?: {
-      title: string;
-      before: string;
-      after: string;
-      description: string;
-    }[];
-  };
+  data?: HospitalityPageContent["transformationsSection"];
 }
 
 export function HospitalityTransformationsSection({
   data,
 }: HospitalityTransformationsSectionProps) {
-  const eyebrow = data?.eyebrow || "PROVEN TRANSFORMATIONS";
-  const heading = data?.heading || "Sanctuaries Across Diverse Terrains";
-  const description =
-    data?.description ||
-    "Each sanctuary is uniquely contextualized to geographic topology, indigenous flora, and native architecture.";
-
-  const displayTransformations: TransformationCard[] = data?.transformations
-    ?.length
-    ? data.transformations.map((t, i) => ({
-        ...transformations[i % transformations.length],
-        title: t.title || transformations[i % transformations.length].title,
-        description:
-          t.description ||
-          transformations[i % transformations.length].description,
-      }))
-    : transformations;
+  const d = hospitalityPageDefaults.transformationsSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const photo = imageUrl(data?.image, d.image);
+  const photoAlt = imageAlt(data?.image, d.image);
+  const displayTransformations = list(data?.transformations, d.transformations);
 
   return (
     <section
@@ -99,8 +43,8 @@ export function HospitalityTransformationsSection({
           <div className="lg:col-span-7">
             <div className="relative w-full aspect-[553/173] rounded-[16px] sm:rounded-[18px] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
               <Image
-                src="/hospitality-terrains.jpg"
-                alt="Luxury resort sanctuary outdoor hydro pool with waterfall and loungers"
+                src={photo}
+                alt={photoAlt}
                 fill
                 sizes="(max-width: 1024px) 100vw, 600px"
                 className="object-cover transition-transform duration-700 hover:scale-105"
@@ -110,9 +54,9 @@ export function HospitalityTransformationsSection({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {displayTransformations.map((item) => (
+          {displayTransformations.map((item, index) => (
             <div
-              key={item.id}
+              key={`${item.title}-${index}`}
               className="bg-white rounded-[16px] border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.025)] flex flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-[0_6px_22px_rgba(0,0,0,0.04)]"
             >
               <div className="p-6 sm:p-7 flex flex-col flex-1">
@@ -122,12 +66,12 @@ export function HospitalityTransformationsSection({
                   </span>
                   <span
                     className={`text-[9px] sm:text-[9.5px] font-semibold tracking-[0.04em] px-2.5 py-0.5 rounded-full flex-shrink-0 ${
-                      item.metricPillColor === "teal"
+                      item.metricHighlighted
                         ? "bg-[#e5f0ed] text-[#0a4844]"
                         : "bg-[#e8ebec] text-[#2c4046]"
                     }`}
                   >
-                    {item.metricPill}
+                    {item.metric}
                   </span>
                 </div>
 

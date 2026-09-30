@@ -1,301 +1,122 @@
 import { defineField, defineType } from "sanity";
+import {
+  accentColor,
+  choice,
+  img,
+  linkObj,
+  obj,
+  objList,
+  seo,
+  str,
+  strList,
+  txt,
+} from "./helpers";
 
+// Mirrors src/content/blog.ts, top to bottom of the Blog page.
 export default defineType({
   name: "blogPage",
   title: "Blog Page",
   type: "document",
   fields: [
-    defineField({
-      name: "hero",
-      title: "Hero Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "subheading",
-          title: "Subheading",
-          type: "string",
-        }),
-      ],
-    }),
-    defineField({
-      name: "filters",
-      title: "Category Filters",
-      type: "array",
-      of: [
-        defineField({
-          name: "filter",
-          title: "Filter",
-          type: "object",
-          fields: [
-            defineField({ name: "label", title: "Label", type: "string" }),
-            defineField({ name: "value", title: "Value", type: "string" }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "inquiriesSection",
-      title: "Inquiries Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "articles",
-          title: "Inquiry Articles",
-          type: "array",
-          of: [
+    obj("hero", "1. Hero & Featured Article", [
+      str("eyebrow", "Small Label"),
+      txt("heading", "Heading", 2),
+      txt("subheading", "Description", 3),
+      strList("categories", "Category Buttons"),
+      obj("featured", "Featured Article", [
+        img("image", "Photo"),
+        str("badge", "Photo Badge"),
+        str("category", "Category"),
+        str("issue", "Issue"),
+        str("readTime", "Read Time"),
+        txt("title", "Title", 2),
+        txt("description", "Description", 3),
+        str("authorInitials", "Author Initials"),
+        str("authorName", "Author Name"),
+        str("authorRole", "Author Role"),
+        str("url", "Link"),
+        str("linkLabel", "Link Label"),
+      ]),
+    ]),
+    obj("inquiriesSection", "2. Recent Articles", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      str("note", "Right-hand Note"),
+      objList("articles", "Articles", "inquiryArticle", "Article", [
+        img("image", "Photo"),
+        str("tag", "Photo Tag"),
+        str("meta", "Category & Read Time"),
+        txt("title", "Title", 2),
+        txt("description", "Description", 2),
+        str("linkLabel", "Link Label"),
+        str("url", "Link"),
+      ]),
+    ]),
+    obj("compendiumSection", "3. Monograph", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description"),
+      objList("chapters", "Chapters", "chapter", "Chapter", [
+        choice("icon", "Icon", [
+          ["microbiome", "Leaf"],
+          ["thermal", "Sunrise"],
+          ["architecture", "Building"],
+        ]),
+        str("title", "Title"),
+        txt("description", "Description", 2),
+      ]),
+      linkObj("primaryCta", "Main Button"),
+      linkObj("secondaryCta", "Second Button"),
+      obj("ledger", "Data Card", [
+        str("label", "Small Label"),
+        str("code", "Code (e.g. ISBN)"),
+        str("statValue", "Big Number"),
+        str("statLabel", "Big Number Label"),
+        objList(
+          "bars",
+          "Progress Bars",
+          "bar",
+          "Bar",
+          [
+            str("label", "Label"),
+            str("value", "Result"),
             defineField({
-              name: "article",
-              title: "Article",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "excerpt",
-                  title: "Excerpt",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "category",
-                  title: "Category",
-                  type: "string",
-                }),
-                defineField({
-                  name: "readTime",
-                  title: "Read Time",
-                  type: "string",
-                }),
-                defineField({
-                  name: "author",
-                  title: "Author",
-                  type: "string",
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
+              name: "percent",
+              title: "Bar Fill (%)",
+              type: "number",
+              validation: (rule) => rule.min(0).max(100),
             }),
+            accentColor("color", "Colour"),
           ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "compendiumSection",
-      title: "Compendium Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "chapters",
-          title: "Compendium Chapters",
-          type: "array",
-          of: [
-            defineField({
-              name: "chapter",
-              title: "Chapter",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 3,
-                }),
-                defineField({
-                  name: "chapterNumber",
-                  title: "Chapter Number",
-                  type: "string",
-                }),
-                defineField({
-                  name: "author",
-                  title: "Author",
-                  type: "string",
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
-        defineField({
-          name: "practitionerNotes",
-          title: "Practitioner Notes",
-          type: "array",
-          of: [
-            defineField({
-              name: "note",
-              title: "Practitioner Note",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "author",
-                  title: "Author",
-                  type: "string",
-                }),
-                defineField({ name: "role", title: "Role", type: "string" }),
-                defineField({
-                  name: "excerpt",
-                  title: "Excerpt",
-                  type: "text",
-                  rows: 2,
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "philosophySection",
-      title: "Philosophy & Sound Section",
-      type: "object",
-      fields: [
-        defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
-        defineField({ name: "heading", title: "Heading", type: "string" }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 3,
-        }),
-        defineField({
-          name: "fieldNotes",
-          title: "Field Notes",
-          type: "array",
-          of: [
-            defineField({
-              name: "fieldNote",
-              title: "Field Note",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "excerpt",
-                  title: "Excerpt",
-                  type: "text",
-                  rows: 2,
-                }),
-                defineField({
-                  name: "category",
-                  title: "Category",
-                  type: "string",
-                }),
-                defineField({
-                  name: "author",
-                  title: "Author",
-                  type: "string",
-                }),
-                defineField({
-                  name: "image",
-                  title: "Image",
-                  type: "image",
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({
-                      name: "alt",
-                      title: "Alt Text",
-                      type: "string",
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
-        defineField({
-          name: "audioTracks",
-          title: "Audio Tracks",
-          type: "array",
-          of: [
-            defineField({
-              name: "track",
-              title: "Audio Track",
-              type: "object",
-              fields: [
-                defineField({ name: "title", title: "Title", type: "string" }),
-                defineField({
-                  name: "duration",
-                  title: "Duration",
-                  type: "string",
-                }),
-                defineField({
-                  name: "category",
-                  title: "Category",
-                  type: "string",
-                }),
-                defineField({
-                  name: "audioUrl",
-                  title: "Audio URL",
-                  type: "url",
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        defineField({ name: "title", title: "SEO Title", type: "string" }),
-        defineField({
-          name: "description",
-          title: "SEO Description",
-          type: "text",
-          rows: 2,
-        }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
-      ],
-    }),
+          "label",
+        ),
+        txt("footnote", "Footnote", 2),
+      ]),
+    ]),
+    obj("philosophySection", "4. Field Notes & Soundscapes", [
+      str("eyebrow", "Field Notes – Small Label"),
+      str("heading", "Field Notes – Heading"),
+      txt("description", "Field Notes – Description", 2),
+      objList("fieldNotes", "Field Notes", "fieldNote", "Note", [
+        str("author", "Author"),
+        str("location", "Location"),
+        str("title", "Title"),
+        txt("quote", "Quote"),
+      ]),
+      str("soundEyebrow", "Soundscapes – Small Label"),
+      str("soundHeading", "Soundscapes – Heading"),
+      txt("soundDescription", "Soundscapes – Description", 2),
+      objList("audioTracks", "Tracks", "audioTrack", "Track", [
+        str("title", "Title"),
+        str("subtitle", "Subtitle"),
+        str("duration", "Duration"),
+        accentColor("color", "Colour"),
+      ]),
+      txt("soundNote", "Listening Note", 2),
+    ]),
+    seo(),
   ],
   preview: {
-    select: { title: "hero.heading" },
+    prepare: () => ({ title: "Blog Page" }),
   },
 });

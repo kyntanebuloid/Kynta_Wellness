@@ -2,47 +2,77 @@
 
 import Image from "next/image";
 import { useState } from "react";
-
-type BookingTab = "private" | "hospitality" | "vaidya";
+import { type ContactPageContent, contactPageDefaults } from "@/content/contact";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface ContactSectionProps {
-  data?: {
-    hero?: {
-      eyebrow?: string;
-      heading?: string;
-      subheading?: string;
-    };
-    tabs?: {
-      label: string;
-      value: string;
-    }[];
-    contactInfo?: {
-      email?: string;
-      phone?: string;
-      address?: string;
-      workingHours?: string;
-    };
-    locationCards?: {
-      name: string;
-      address: string;
-      phone?: string;
-      hours?: string;
-      image?: { asset?: { _ref: string }; alt?: string };
-    }[];
-    formFields?: {
-      nameLabel?: string;
-      emailLabel?: string;
-      phoneLabel?: string;
-      serviceLabel?: string;
-      messageLabel?: string;
-      submitButtonLabel?: string;
-    };
-  };
+  data?: ContactPageContent;
 }
 
+const inputClass =
+  "w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none";
+const labelClass =
+  "text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5";
+
 export function ContactSection({ data }: ContactSectionProps) {
-  const [activeTab, setActiveTab] = useState<BookingTab>("private");
+  const [activeTab, setActiveTab] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+
+  const d = contactPageDefaults;
+  const hero = {
+    eyebrow: text(data?.hero?.eyebrow, d.hero.eyebrow),
+    heading: text(data?.hero?.heading, d.hero.heading),
+    subheading: text(data?.hero?.subheading, d.hero.subheading),
+  };
+  const dk = data?.desks;
+  const desks = {
+    eyebrow: text(dk?.eyebrow, d.desks.eyebrow),
+    heading: text(dk?.heading, d.desks.heading),
+    description: text(dk?.description, d.desks.description),
+    phoneLabel: text(dk?.phoneLabel, d.desks.phoneLabel),
+    phone: text(dk?.phone, d.desks.phone),
+    phoneHours: text(dk?.phoneHours, d.desks.phoneHours),
+    whatsappLabel: text(dk?.whatsappLabel, d.desks.whatsappLabel),
+    whatsappNumber: text(dk?.whatsappNumber, d.desks.whatsappNumber),
+    whatsappUrl: text(dk?.whatsappUrl, d.desks.whatsappUrl),
+    whatsappBadge: text(dk?.whatsappBadge, d.desks.whatsappBadge),
+    emailHeading: text(dk?.emailHeading, d.desks.emailHeading),
+    emails: list(dk?.emails, d.desks.emails),
+    image: imageUrl(dk?.image, d.desks.image),
+    imageAlt: imageAlt(dk?.image, d.desks.image),
+    imageLabel: text(dk?.imageLabel, d.desks.imageLabel),
+    imageCaption: text(dk?.imageCaption, d.desks.imageCaption),
+    hoursHeading: text(dk?.hoursHeading, d.desks.hoursHeading),
+    hoursText: text(dk?.hoursText, d.desks.hoursText),
+  };
+  const f = data?.form;
+  const form = {
+    eyebrow: text(f?.eyebrow, d.form.eyebrow),
+    heading: text(f?.heading, d.form.heading),
+    description: text(f?.description, d.form.description),
+    tabs: list(f?.tabs, d.form.tabs),
+    nameLabel: text(f?.nameLabel, d.form.nameLabel),
+    namePlaceholder: text(f?.namePlaceholder, d.form.namePlaceholder),
+    emailLabel: text(f?.emailLabel, d.form.emailLabel),
+    emailPlaceholder: text(f?.emailPlaceholder, d.form.emailPlaceholder),
+    phoneLabel: text(f?.phoneLabel, d.form.phoneLabel),
+    phonePlaceholder: text(f?.phonePlaceholder, d.form.phonePlaceholder),
+    sanctuaryLabel: text(f?.sanctuaryLabel, d.form.sanctuaryLabel),
+    sanctuaryPlaceholder: text(
+      f?.sanctuaryPlaceholder,
+      d.form.sanctuaryPlaceholder,
+    ),
+    sanctuaries: list(f?.sanctuaries, d.form.sanctuaries),
+    intentLabel: text(f?.intentLabel, d.form.intentLabel),
+    intentDefault: text(f?.intentDefault, d.form.intentDefault),
+    datesLabel: text(f?.datesLabel, d.form.datesLabel),
+    datesPlaceholder: text(f?.datesPlaceholder, d.form.datesPlaceholder),
+    messageLabel: text(f?.messageLabel, d.form.messageLabel),
+    messagePlaceholder: text(f?.messagePlaceholder, d.form.messagePlaceholder),
+    privacyNote: text(f?.privacyNote, d.form.privacyNote),
+    submitLabel: text(f?.submitLabel, d.form.submitLabel),
+    successMessage: text(f?.successMessage, d.form.successMessage),
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,15 +90,14 @@ export function ContactSection({ data }: ContactSectionProps) {
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-kynta-rust flex-shrink-0" />
             <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
-              {data?.hero?.eyebrow || "SANCTUARY LIAISON &amp; CONCIERGE"}
+              {hero.eyebrow}
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-teal-dark font-normal mb-4">
-            {data?.hero?.heading || "Connect With Our Sanctuary Desks"}
+            {hero.heading}
           </h1>
           <p className="text-[15px] sm:text-[16px] leading-[1.75] text-kynta-warm-gray max-w-2xl">
-            {data?.hero?.subheading ||
-              "Connect with our sanctuary curators for retreat reservations, clinical Vaidya consultations, and institutional advisory. Our team responds with ancestral precision and unyielding discretion."}
+            {hero.subheading}
           </p>
         </div>
 
@@ -76,15 +105,13 @@ export function ContactSection({ data }: ContactSectionProps) {
           <div className="lg:col-span-5 flex flex-col">
             <div className="mb-6">
               <p className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-1.5">
-                DIRECT COMMUNICATION PORTALS
+                {desks.eyebrow}
               </p>
               <h2 className="font-serif text-[26px] sm:text-[30px] md:text-[32px] leading-tight text-kynta-teal-dark font-normal mb-2.5">
-                Sanctuary Desks
+                {desks.heading}
               </h2>
               <p className="text-[12px] sm:text-[12.5px] leading-[1.62] text-kynta-warm-gray">
-                Our stewards oversee limited correspondence streams to preserve
-                the sanctity and deep attention owed to every guest and
-                institutional patron.
+                {desks.description}
               </p>
             </div>
 
@@ -106,18 +133,18 @@ export function ContactSection({ data }: ContactSectionProps) {
                 </div>
                 <div className="min-w-0">
                   <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-0.5">
-                    PRIVATE GUEST CONCIERGE
+                    {desks.phoneLabel}
                   </span>
                   <a
-                    href={`tel:${data?.contactInfo?.phone || "+917250333494"}`}
+                    href={`tel:${desks.phone.replace(/[^+\d]/g, "")}`}
                     className="text-[13.5px] sm:text-[14px] font-semibold text-kynta-charcoal block hover:text-kynta-teal-dark transition-colors"
                   >
-                    {data?.contactInfo?.phone || "+91 7250333494"}
+                    {desks.phone}
                   </a>
                 </div>
               </div>
               <span className="text-[10px] sm:text-[11px] text-kynta-warm-gray font-normal whitespace-nowrap pl-2">
-                {data?.contactInfo?.workingHours || "07:00 – 22:00 IST"}
+                {desks.phoneHours}
               </span>
             </div>
 
@@ -139,57 +166,51 @@ export function ContactSection({ data }: ContactSectionProps) {
                 </div>
                 <div className="min-w-0">
                   <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-0.5">
-                    ENCRYPTED SANCTUARY WHATSAPP
+                    {desks.whatsappLabel}
                   </span>
                   <a
-                    href="https://wa.me/919820048300"
+                    href={desks.whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[13.5px] sm:text-[14px] font-semibold text-kynta-charcoal block hover:text-kynta-teal-dark transition-colors"
                   >
-                    +91 98200 48300
+                    {desks.whatsappNumber}
                   </a>
                 </div>
               </div>
               <span className="text-[9px] font-semibold tracking-[0.14em] uppercase px-2 py-0.5 rounded-[4px] bg-[#fdf0ec] text-kynta-rust whitespace-nowrap">
-                INSTANT
+                {desks.whatsappBadge}
               </span>
             </div>
 
             <div className="bg-white rounded-[12px] p-5 border border-kynta-border/40 shadow-[0_2px_12px_rgba(0,0,0,0.02)] mb-4">
               <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-3">
-                SPECIALIZED EMAIL DESKS
+                {desks.emailHeading}
               </span>
               <div className="space-y-2.5">
-                <div className="flex items-center justify-between text-[11.5px] sm:text-[12px] gap-2">
-                  <span className="text-kynta-warm-gray">
-                    Official email address
-                  </span>
-                  <a
-                    href={`mailto:${data?.contactInfo?.email || "info@kyntawellness.com"}`}
-                    className="text-kynta-teal-dark hover:underline font-medium"
+                {desks.emails.map((row, index) => (
+                  <div
+                    key={`${row.email}-${index}`}
+                    className={`flex items-center justify-between text-[11.5px] sm:text-[12px] gap-2${
+                      index > 0 ? " pt-2 border-t border-kynta-border/20" : ""
+                    }`}
                   >
-                    {data?.contactInfo?.email || "info@kyntawellness.com"}
-                  </a>
-                </div>
-                <div className="flex items-center justify-between text-[11.5px] sm:text-[12px] gap-2 pt-2 border-t border-kynta-border/20">
-                  <span className="text-kynta-warm-gray">
-                    Official email address
-                  </span>
-                  <a
-                    href="mailto:bussinss@kyntawellness.com"
-                    className="text-kynta-teal-dark hover:underline font-medium"
-                  >
-                    bussinss@kyntawellness.com
-                  </a>
-                </div>
+                    <span className="text-kynta-warm-gray">{row.label}</span>
+                    <a
+                      href={`mailto:${row.email}`}
+                      className="text-kynta-teal-dark hover:underline font-medium"
+                    >
+                      {row.email}
+                    </a>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="relative rounded-[14px] overflow-hidden border border-kynta-border/40 shadow-sm mb-4 bg-kynta-charcoal aspect-[16/9.5] group">
               <Image
-                src="/contact-chamber.png"
-                alt="Kynta Treatment Chambers"
+                src={desks.image}
+                alt={desks.imageAlt}
                 fill
                 sizes="(max-width: 1024px) 100vw, 480px"
                 className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -197,10 +218,10 @@ export function ContactSection({ data }: ContactSectionProps) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#141412] via-[#141412]/80 via-40% to-transparent flex flex-col justify-end p-5">
                 <p className="text-[9px] font-semibold tracking-[0.16em] uppercase text-[#d5c3aa] mb-1">
-                  THERAPEUTIC ARCHITECTURE
+                  {desks.imageLabel}
                 </p>
                 <p className="font-serif text-[14px] sm:text-[15px] font-normal text-white leading-snug">
-                  Kynta Treatment Chambers • Udaipur, Shimla &amp; Mandrem
+                  {desks.imageCaption}
                 </p>
               </div>
             </div>
@@ -224,125 +245,86 @@ export function ContactSection({ data }: ContactSectionProps) {
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
                 <span className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal">
-                  CIRCADIAN RECEPTION HOURS
+                  {desks.hoursHeading}
                 </span>
               </div>
               <p className="text-[11px] sm:text-[11.5px] leading-[1.62] text-kynta-warm-gray">
-                In alignment with ancient chronobiology (Brahma Muhurta through
-                Sandhya), our telephone concierges are accessible from 07:00 to
-                22:00 IST. Digital dispatches undergo intake around the clock.
+                {desks.hoursText}
               </p>
             </div>
           </div>
 
           <div className="lg:col-span-7 bg-white rounded-[16px] p-6 sm:p-8 md:p-10 border border-kynta-border/40 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
             <p className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
-              CONCIERGE INTAKE
+              {form.eyebrow}
             </p>
             <h2 className="font-serif text-[28px] sm:text-[34px] leading-tight text-kynta-teal-dark font-normal mb-2.5">
-              Initiate Sanctuary Dialogue
+              {form.heading}
             </h2>
             <p className="text-[12px] sm:text-[12.5px] leading-[1.6] text-kynta-warm-gray mb-6">
-              Please share your preferred rhythm, sanctuary location, or
-              operational scope. Our desk curator will review and assemble your
-              customized therapeutic folio.
+              {form.description}
             </p>
 
             <div className="bg-[#eceeeb] p-1 rounded-[8px] flex items-center gap-1 mb-6 overflow-x-auto">
-              <button
-                type="button"
-                onClick={() => setActiveTab("private")}
-                className={`flex-1 py-2 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all whitespace-nowrap text-center ${
-                  activeTab === "private"
-                    ? "bg-kynta-teal-dark text-white shadow-sm"
-                    : "text-kynta-warm-gray hover:text-kynta-charcoal"
-                }`}
-              >
-                PRIVATE GUEST BOOKING
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("hospitality")}
-                className={`flex-1 py-2 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all whitespace-nowrap text-center ${
-                  activeTab === "hospitality"
-                    ? "bg-kynta-teal-dark text-white shadow-sm"
-                    : "text-kynta-warm-gray hover:text-kynta-charcoal"
-                }`}
-              >
-                HOSPITALITY &amp; TURNKEY
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("vaidya")}
-                className={`flex-1 py-2 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all whitespace-nowrap text-center ${
-                  activeTab === "vaidya"
-                    ? "bg-kynta-teal-dark text-white shadow-sm"
-                    : "text-kynta-warm-gray hover:text-kynta-charcoal"
-                }`}
-              >
-                VAIDYA CONSULTATION
-              </button>
+              {form.tabs.map((tab, index) => (
+                <button
+                  key={`${tab}-${index}`}
+                  type="button"
+                  onClick={() => setActiveTab(index)}
+                  className={`flex-1 py-2 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all whitespace-nowrap text-center ${
+                    activeTab === index
+                      ? "bg-kynta-teal-dark text-white shadow-sm"
+                      : "text-kynta-warm-gray hover:text-kynta-charcoal"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label
-                    htmlFor="guest-name"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    {data?.formFields?.nameLabel ||
-                      "PRINCIPAL GUEST / EXECUTIVE NAME *"}
+                  <label htmlFor="guest-name" className={labelClass}>
+                    {form.nameLabel}
                   </label>
                   <input
                     id="guest-name"
                     type="text"
                     required
-                    placeholder="e.g. Lady Anya Vardhan"
-                    className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none"
+                    placeholder={form.namePlaceholder}
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="guest-email"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    {data?.formFields?.emailLabel ||
-                      "CONFIDENTIAL EMAIL ADDRESS *"}
+                  <label htmlFor="guest-email" className={labelClass}>
+                    {form.emailLabel}
                   </label>
                   <input
                     id="guest-email"
                     type="email"
                     required
-                    placeholder="name@domain.com"
-                    className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none"
+                    placeholder={form.emailPlaceholder}
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="guest-phone"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    {data?.formFields?.phoneLabel ||
-                      "DIRECT TELEPHONE / WHATSAPP"}
+                  <label htmlFor="guest-phone" className={labelClass}>
+                    {form.phoneLabel}
                   </label>
                   <input
                     id="guest-phone"
                     type="tel"
-                    placeholder="+91 / +44 / +1 ..."
-                    className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none"
+                    placeholder={form.phonePlaceholder}
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="sanctuary-select"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    {data?.formFields?.serviceLabel ||
-                      "SANCTUARY OF RESONANCE *"}
+                  <label htmlFor="sanctuary-select" className={labelClass}>
+                    {form.sanctuaryLabel}
                   </label>
                   <div className="relative">
                     <select
@@ -352,26 +334,13 @@ export function ContactSection({ data }: ContactSectionProps) {
                       className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal appearance-none cursor-pointer outline-none"
                     >
                       <option value="" disabled>
-                        Select an Estate
+                        {form.sanctuaryPlaceholder}
                       </option>
-                      <option value="kumarakom">
-                        Kumarakom Retreat, Kerala
-                      </option>
-                      <option value="udaipur">
-                        Udaipur Lake Sanctuary, Rajasthan
-                      </option>
-                      <option value="shimla">
-                        Himalayan High Sanctuaries, Shimla
-                      </option>
-                      <option value="goa">
-                        Mandrem Coconut Grove, North Goa
-                      </option>
-                      <option value="bhanjwar">
-                        Bhanjwar Estate, Kangra Valley
-                      </option>
-                      <option value="multiple">
-                        Multiple Sanctuaries / Institutional Scope
-                      </option>
+                      {form.sanctuaries.map((option, index) => (
+                        <option key={`${option}-${index}`} value={option}>
+                          {option}
+                        </option>
+                      ))}
                     </select>
                     <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-kynta-warm-gray">
                       <svg
@@ -391,48 +360,38 @@ export function ContactSection({ data }: ContactSectionProps) {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="therapeutic-intent"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    PRIMARY THERAPEUTIC INTENT
+                  <label htmlFor="therapeutic-intent" className={labelClass}>
+                    {form.intentLabel}
                   </label>
                   <input
                     id="therapeutic-intent"
                     type="text"
-                    defaultValue="14–21 Day Classical Panchakarma"
-                    className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none"
+                    defaultValue={form.intentDefault}
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="anticipated-dates"
-                    className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                  >
-                    ANTICIPATED SEASON / DATES
+                  <label htmlFor="anticipated-dates" className={labelClass}>
+                    {form.datesLabel}
                   </label>
                   <input
                     id="anticipated-dates"
                     type="text"
-                    placeholder="e.g. October 2025 / Flexible"
-                    className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none"
+                    placeholder={form.datesPlaceholder}
+                    className={inputClass}
                   />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="project-specifications"
-                  className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5"
-                >
-                  {data?.formFields?.messageLabel ||
-                    "SOMATIC SENSITIVITIES, DIETARY PRINCIPLES, OR PROJECT SPECIFICATIONS"}
+                <label htmlFor="project-specifications" className={labelClass}>
+                  {form.messageLabel}
                 </label>
                 <textarea
                   id="project-specifications"
                   rows={4}
-                  placeholder="Detail any existing medical protocols, sleep rhythms, botanical allergies, or institutional hotel scale requirements..."
+                  placeholder={form.messagePlaceholder}
                   className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] p-3.5 text-[12px] leading-[1.6] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none resize-none"
                 />
               </div>
@@ -454,8 +413,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   <p className="text-[10px] sm:text-[10.5px] leading-tight max-w-[280px]">
-                    All intakes are bound by statutory Ayush and GDPR
-                    confidential protocols.
+                    {form.privacyNote}
                   </p>
                 </div>
 
@@ -463,15 +421,13 @@ export function ContactSection({ data }: ContactSectionProps) {
                   type="submit"
                   className="bg-kynta-teal-dark hover:bg-kynta-teal text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase px-7 py-3.5 rounded-[6px] transition-all duration-200 shadow-sm whitespace-nowrap active:scale-[0.98] self-start sm:self-auto"
                 >
-                  {data?.formFields?.submitButtonLabel ||
-                    "TRANSMIT CONCIERGE FOLIO"}
+                  {form.submitLabel}
                 </button>
               </div>
 
               {submitted && (
                 <div className="mt-3 p-3 rounded-[6px] bg-[#eef4f1] border border-[#d2e2db] text-[11.5px] text-kynta-teal-dark text-center font-medium transition-opacity duration-300">
-                  Thank you. Your concierge intake folio has been securely
-                  transmitted. A sanctuary curator will contact you promptly.
+                  {form.successMessage}
                 </div>
               )}
             </form>

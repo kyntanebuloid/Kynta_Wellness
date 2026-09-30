@@ -4,81 +4,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-import type { SanityImage } from "@/types/sanity";
-import { urlFor } from "@/lib/sanity/image";
+import {
+  type ExperiencesPageContent,
+  experiencesPageDefaults,
+} from "@/content/experiences";
+import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface ExperienceTreatmentsSectionProps {
-  data?: {
-    eyebrow?: string;
-    heading?: string;
-    description?: string;
-    cards?: {
-      title: string;
-      slug?: string;
-      description: string;
-      duration?: string;
-      sensoryNote?: string;
-      image?: SanityImage | string;
-    }[];
-  };
+  data?: ExperiencesPageContent["treatmentsSection"];
 }
-
-const defaultTreatments = [
-  {
-    image: "/treatment-spa-sojourns.jpg",
-    label: "Signature Bodywork",
-    duration: "75 / 90 Mins",
-    title: "SPA SOJOURNS",
-    slug: "spa-sojourns",
-    description:
-      "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe, these rituals leave you feeling renewed, centered, and completely at ease.",
-    sensory: "Cedarwood • Ginger Root • SmokyVetiver",
-  },
-  {
-    image: "/treatment-massage.jpg",
-    label: "Signature Bodywork",
-    duration: "75 / 90 Mins",
-    title: "MASSAGE SELECTIONS",
-    slug: "massage-selections",
-    description:
-      "Step into a world of deep relaxation with our curated Full Body Massage selections. Each therapy is thoughtfully designed to release tension, improve circulation, and restore inner harmony. Surrender to skilled hands and experience complete mind-body renewal.",
-    sensory: "Cedarwood • Ginger Root • SmokyVetiver",
-  },
-  {
-    image: "/treatment-glamour-glow.jpg",
-    label: "Signature Bodywork",
-    duration: "75 / 90 Mins",
-    title: "GLAMOUR GLOW",
-    slug: "glamour-glow",
-    description:
-      "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin. Enriched with skin-loving ingredients, this treatment removes impurities, enhances natural radiance, and leaves your skin smooth, refreshed, and beautifully glowing. Perfect before special occasions or whenever your skin needs a luminous boost.",
-    sensory: "Cedarwood • Ginger Root • SmokyVetiver",
-  },
-];
 
 function TreatmentCard({
   image,
+  alt,
   label,
   duration,
   title,
   slug,
   description,
   sensory,
+  linkLabel,
 }: {
   image: string;
+  alt: string;
   label: string;
   duration: string;
   title: string;
   slug: string;
   description: string;
   sensory: string;
+  linkLabel: string;
 }) {
   return (
     <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40 min-w-[280px] flex-1">
       <div className="relative w-full" style={{ aspectRatio: "295 / 172" }}>
         <Image
           src={image}
-          alt={title}
+          alt={alt}
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
@@ -105,7 +67,7 @@ function TreatmentCard({
           href={`/experiences/${slug}`}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-kynta-teal hover:text-kynta-teal-light transition-colors"
         >
-          Explore
+          {linkLabel}
           <svg
             className="w-3.5 h-3.5"
             fill="none"
@@ -178,40 +140,31 @@ export function ExperienceTreatmentsSection({
     }
   };
 
-  const treatments = data?.cards
-    ? data.cards.map((card, idx) => {
-        const fallbackSlug =
-          card.slug ||
-          card.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-
-        const fallbackImages = [
-          "/treatment-spa-sojourns.jpg",
-          "/treatment-massage.jpg",
-          "/treatment-glamour-glow.jpg",
-        ];
-
-        let imageSrc = fallbackImages[idx % fallbackImages.length];
-        if (typeof card.image === "string") {
-          imageSrc = card.image;
-        } else if (card.image) {
-          try {
-            imageSrc = urlFor(card.image).url();
-          } catch {
-            imageSrc = fallbackImages[idx % fallbackImages.length];
-          }
-        }
-
-        return {
-          image: imageSrc,
-          label: data.eyebrow || "Signature Bodywork",
-          duration: card.duration || "75 / 90 Mins",
-          title: card.title,
-          slug: fallbackSlug || "spa-sojourns",
-          description: card.description,
-          sensory: card.sensoryNote || "Cedarwood • Ginger Root • SmokyVetiver",
-        };
-      })
-    : defaultTreatments;
+  const d = experiencesPageDefaults.treatmentsSection;
+  const eyebrow = text(data?.eyebrow, d.eyebrow);
+  const heading = text(data?.heading, d.heading);
+  const description = text(data?.description, d.description);
+  const linkLabel = text(data?.linkLabel, d.linkLabel);
+  const treatments = list(data?.cards, d.cards).map((card, idx) => {
+    const fallback = d.cards[idx % d.cards.length];
+    const slug =
+      card.slug ||
+      card.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    return {
+      image: imageUrl(card.image, fallback.image),
+      alt: imageAlt(card.image, { alt: card.title }),
+      label: card.label ?? "",
+      duration: card.duration ?? "",
+      title: card.title,
+      slug,
+      description: card.description,
+      sensory: card.sensoryNote ?? "",
+      linkLabel,
+    };
+  });
 
   return (
     <section
@@ -222,21 +175,15 @@ export function ExperienceTreatmentsSection({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
           <div>
             <p className="text-sm font-medium text-kynta-rust tracking-wide mb-4">
-              {data?.eyebrow || "Apothecary & Therapies"}
+              {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal">
-              {data?.heading || (
-                <>
-                  Signature rituals conceived for deep
-                  <br className="hidden sm:inline" /> restorative release.
-                </>
-              )}
+              {heading}
             </h2>
           </div>
           <div className="flex flex-col justify-between">
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-sm">
-              {data?.description ||
-                "Formulated with single-estate botanical extracts, warm Himalayan stone compresses, and ancient marma touch."}
+              {description}
             </p>
             <div className="flex items-center gap-3 mt-6 md:mt-0 md:justify-end">
               <CircleArrowButton direction="left" onClick={() => scroll("left")} />
@@ -248,8 +195,8 @@ export function ExperienceTreatmentsSection({
           ref={carouselRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto scroll-smooth pb-2"
         >
-          {treatments.map((t) => (
-            <TreatmentCard key={t.title} {...t} />
+          {treatments.map((t, index) => (
+            <TreatmentCard key={`${t.slug}-${index}`} {...t} />
           ))}
         </div>
       </div>

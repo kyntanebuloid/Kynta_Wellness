@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Experience } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/image";
+import { experienceGalleryFor } from "@/content/experience-gallery";
 
 interface ExperienceDetailHeroProps {
   experience: Experience;
@@ -21,34 +22,10 @@ function resolveImageUrl(
 }
 
 export function ExperienceDetailHero({ experience }: ExperienceDetailHeroProps) {
-  // Default image fallbacks based on slug or sensible defaults
-  const slug = experience.slug?.current || "";
-
-  let defaultMainImg = "/exp-spa-sojourns-main.png";
-  let defaultTopRightImg = "/exp-spa-sojourns-potli.png";
-  let defaultBottomRightImg = "/exp-spa-sojourns-pavilion.png";
-
-  if (slug === "massage-selections") {
-    defaultMainImg = "/treatment-massage.jpg";
-    defaultTopRightImg = "/article-herbal-compress.jpg";
-    defaultBottomRightImg = "/destination-glenwood.jpg";
-  } else if (slug === "glamour-glow") {
-    defaultMainImg = "/treatment-glamour-glow.jpg";
-    defaultTopRightImg = "/triad-touch.jpg";
-    defaultBottomRightImg = "/hospitality-chamber.jpg";
-  } else if (slug === "hydrotherapy-plunge") {
-    defaultMainImg = "/experience-hydro-colonnade.jpg";
-    defaultTopRightImg = "/inquiry-hydrotherapy.jpg";
-    defaultBottomRightImg = "/destination-heritage.jpg";
-  } else if (slug === "couples-sanctuary") {
-    defaultMainImg = "/destination-glenwood.jpg";
-    defaultTopRightImg = "/triad-spatial.jpg";
-    defaultBottomRightImg = "/location-rawai-tents.jpg";
-  } else if (slug === "sound-immersion") {
-    defaultMainImg = "/triad-vedic.jpg";
-    defaultTopRightImg = "/inquiry-architecture.jpg";
-    defaultBottomRightImg = "/timeline-alpine.jpg";
-  }
+  const gallery = experienceGalleryFor(experience.slug?.current || "");
+  const defaultMainImg = gallery.main;
+  const defaultTopRightImg = gallery.topRight;
+  const defaultBottomRightImg = gallery.bottomRight;
 
   const mainCardImage = resolveImageUrl(
     experience.gallery?.mainCard?.image || experience.image,

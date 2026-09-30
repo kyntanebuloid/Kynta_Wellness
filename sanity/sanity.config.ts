@@ -12,6 +12,8 @@ if (!projectId) {
 export default defineConfig({
   name: "kynta",
   title: "Kynta Wellness",
+  // Must match the Next.js route the Studio is mounted on (src/app/studio).
+  basePath: "/studio",
   projectId,
   dataset,
   plugins: [
