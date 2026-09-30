@@ -9,30 +9,74 @@ interface LocationDetailHeroProps {
 /* ── Facility icons ── */
 const facilityIconMap: Record<string, React.ReactNode> = {
   sun: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <title>Solar</title>
       <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
+      <path d="M12 2v2" />
+      <path d="M12 20v2" />
+      <path d="m4.93 4.93 1.41 1.41" />
+      <path d="m17.66 17.66 1.41 1.41" />
+      <path d="M2 12h2" />
+      <path d="M20 12h2" />
+      <path d="m6.34 17.66-1.41 1.41" />
+      <path d="m19.07 4.93-1.41 1.41" />
     </svg>
   ),
   flower: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <title>Botanical</title>
       <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m3 4.5a4.5 4.5 0 1 0 4.5-4.5M12 16.5V15m4.5-3H15" />
       <circle cx="12" cy="12" r="3" />
     </svg>
   ),
   mountain: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <title>Meditation</title>
       <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
     </svg>
   ),
   car: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <title>Transit</title>
       <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2.7-3.6A2 2 0 0 0 13.7 5H6.3a2 2 0 0 0-1.6.9L2 9.5C1.4 9.7 1 10.4 1 11.1V16c0 .6.4 1 1 1h2" />
-      <circle cx="7" cy="17" r="2" /><circle cx="17" cy="17" r="2" />
+      <circle cx="7" cy="17" r="2" />
+      <circle cx="17" cy="17" r="2" />
     </svg>
   ),
 };
@@ -41,7 +85,14 @@ const facilityIconMap: Record<string, React.ReactNode> = {
 function formatTitle(name: string) {
   const words = name.split(" ");
   // Find common place keywords to italicize
-  const placeKeywords = ["Pushkar", "Dharamshala", "Dalhousie", "Rajasthan", "Palampur", "Resort"];
+  const placeKeywords = [
+    "Pushkar",
+    "Dharamshala",
+    "Dalhousie",
+    "Rajasthan",
+    "Palampur",
+    "Resort",
+  ];
   const lastWord = words[words.length - 1];
   const hasItalicPlace = placeKeywords.includes(lastWord);
 
@@ -60,7 +111,10 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
   return (
     <section className="w-full bg-white" id="location-detail">
       {/* ═══ Top Hero Section ═══ */}
-      <div className="w-full pt-8 sm:pt-10 md:pt-12 pb-10 md:pb-14" style={{ backgroundColor: "#f7f9f7" }}>
+      <div
+        className="w-full pt-8 sm:pt-10 md:pt-12 pb-10 md:pb-14"
+        style={{ backgroundColor: "#f7f9f7" }}
+      >
         <div className="container-site">
           {/* Breadcrumb Eyebrow */}
           <div className="flex items-center gap-2 mb-6">
@@ -80,9 +134,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
             <div className="lg:col-span-7">
               <h1 className="font-serif text-[32px] sm:text-[40px] md:text-[48px] lg:text-[54px] leading-[1.1] text-kynta-charcoal font-normal mb-5">
                 {titleMain}{" "}
-                {titleItalic && (
-                  <em className="italic">{titleItalic}</em>
-                )}
+                {titleItalic && <em className="italic">{titleItalic}</em>}
               </h1>
 
               <p className="text-[15px] sm:text-[16px] leading-[1.75] text-kynta-warm-gray max-w-xl mb-8">
@@ -96,9 +148,19 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                   className="inline-flex items-center gap-2 px-7 py-3.5 text-xs font-semibold tracking-widest uppercase text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
                 >
                   {location.primaryCta.label}
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                  >
                     <title>Arrow</title>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
                   </svg>
                 </Link>
                 {location.dossier && (
@@ -108,11 +170,51 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-7 py-3.5 text-xs font-semibold tracking-widest uppercase text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
                   >
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                    >
                       <title>Download</title>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25"
+                      />
                     </svg>
                     {location.dossier.label}
+                  </a>
+                )}
+
+                {location.mapUrl && (
+                  <a
+                    href={location.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 text-xs font-semibold tracking-widest uppercase text-kynta-charcoal bg-white border border-kynta-charcoal rounded-full hover:bg-kynta-charcoal hover:text-white transition-all duration-200"
+                  >
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                    >
+                      <title>Location</title>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                      />
+                    </svg>
+                    View on Google Maps
                   </a>
                 )}
               </div>
@@ -151,7 +253,10 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
       </div>
 
       {/* ═══ Image Gallery Section ═══ */}
-      <div className="w-full py-6 md:py-8" style={{ backgroundColor: "#f7f9f7" }}>
+      <div
+        className="w-full py-6 md:py-8"
+        style={{ backgroundColor: "#f7f9f7" }}
+      >
         <div className="container-site">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4">
             {/* Left Large Card */}
@@ -241,11 +346,17 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
       </div>
 
       {/* ═══ Facilities Strip ═══ */}
-      <div className="w-full py-5 md:py-6 border-t border-kynta-border/40" style={{ backgroundColor: "#f7f9f7" }}>
+      <div
+        className="w-full py-5 md:py-6 border-t border-kynta-border/40"
+        style={{ backgroundColor: "#f7f9f7" }}
+      >
         <div className="container-site">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {location.facilities.map((facility, index) => (
-              <div key={`${facility.title}-${index}`} className="flex items-start gap-3">
+              <div
+                key={`${facility.title}-${index}`}
+                className="flex items-start gap-3"
+              >
                 <div className="flex-shrink-0 text-kynta-rust mt-0.5">
                   {facilityIconMap[facility.icon] || facilityIconMap.sun}
                 </div>
@@ -262,6 +373,27 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
           </div>
         </div>
       </div>
+
+      {/* ═══ Map (only when set in Sanity) ═══ */}
+      {location.mapEmbedUrl && (
+        <div
+          className="w-full py-10 md:py-14"
+          style={{ backgroundColor: "#f7f9f7" }}
+        >
+          <div className="container-site">
+            <div className="relative w-full overflow-hidden rounded-[6px] border border-kynta-border aspect-[16/9] md:aspect-[21/8]">
+              <iframe
+                src={location.mapEmbedUrl}
+                title={`Map of ${location.name}`}
+                className="absolute inset-0 h-full w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

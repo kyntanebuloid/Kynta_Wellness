@@ -108,6 +108,16 @@ const location = defineField({
       group: "detail",
       description: "e.g. SANCTUARY DOSSIER (PDF)",
     }),
+    str("mapUrl", "Google Maps Link",{
+      group: "detail",
+      description:
+      "Open the place in Google Maps → Share → Copy link, then paste it here. Leave empty to hide the button.",
+    }),
+    str("mapEmbedUrl", "Google Maps Embed Link", {
+      group: "detail",
+      description:
+        "Google Maps → Share → Embed a map → copy only the src=\"…\" part (starts with https://www.google.com/maps/embed). Leave empty to hide the map.",
+    }),
     obj(
       "gallery",
       "Photo Gallery",

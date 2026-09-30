@@ -724,6 +724,12 @@ function galleryCard(
   };
 }
 
+// Only allow real Google Maps embed links inside the iframe.
+function googleMapsEmbed(url: string | undefined): string | null {
+  const value = url?.trim();
+  return value?.startsWith("https://www.google.com/maps/embed") ? value : null;
+}
+
 function toLocationDetail(
   stored: LocationContent | undefined,
   fallback: LocationContent | undefined,
@@ -753,9 +759,15 @@ function toLocationDetail(
           url: s.dossier.url,
         }
       : null,
+    mapUrl: s.mapUrl?.trim() || null,
+    mapEmbedUrl: googleMapsEmbed(s.mapEmbedUrl),
+
     gallery: {
       mainCard: galleryCard(s.gallery?.mainCard, f.gallery?.mainCard),
-      topRightCard: galleryCard(s.gallery?.topRightCard, f.gallery?.topRightCard),
+      topRightCard: galleryCard(
+        s.gallery?.topRightCard,
+        f.gallery?.topRightCard,
+      ),
       bottomRightCard: galleryCard(
         s.gallery?.bottomRightCard,
         f.gallery?.bottomRightCard,

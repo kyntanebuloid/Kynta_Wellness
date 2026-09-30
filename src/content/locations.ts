@@ -35,6 +35,9 @@ export interface LocationContent {
   /** Button text for the downloadable PDF; the button only shows once a PDF is uploaded. */
   dossierLabel?: string;
   dossier?: ContentFile;
+  mapUrl?: string;
+  mapEmbedUrl?: string;
+
   gallery?: {
     mainCard?: GalleryCardContent;
     topRightCard?: GalleryCardContent;
@@ -69,6 +72,11 @@ export interface LocationDetail {
   primaryCta: Required<ContentLink>;
   /** Null until a PDF is uploaded for this location. */
   dossier: { label: string; url: string } | null;
+    /** Null unless a Google Maps link is set in Sanity. */
+  mapUrl: string | null;
+  /** Null unless a valid Google Maps embed link is set in Sanity. */
+  mapEmbedUrl: string | null;
+
   gallery: {
     mainCard: LocationGalleryCard;
     topRightCard: LocationGalleryCard;
