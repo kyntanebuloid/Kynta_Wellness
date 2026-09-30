@@ -3,6 +3,17 @@ import type { AccentColor, ContentImage } from "./types";
 export type PillarIcon = "flask" | "pulse" | "building" | "hourglass";
 export type PillarFooterIcon = "leaf" | "target" | "droplet" | "moon";
 
+export interface ExperienceCategory {
+  label: string;
+  image?: ContentImage;
+  tags?: string[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+  buttonUrl?: string;
+}
+
 export interface ExperiencesPageContent {
   hero?: {
     eyebrow?: string;
@@ -10,16 +21,8 @@ export interface ExperiencesPageContent {
     heading?: string;
     headingLine2?: string;
     description?: string;
-    filters?: string[];
-    featured?: {
-      image?: ContentImage;
-      tags?: string[];
-      category?: string;
-      title?: string;
-      description?: string;
-      buttonLabel?: string;
-      buttonUrl?: string;
-    };
+    /** One button per category; clicking it shows that category's card. */
+    categories?: ExperienceCategory[];
   };
   pillars?: {
     eyebrow?: string;
@@ -63,6 +66,39 @@ export interface ExperiencesPageContent {
   };
 }
 
+const extraTreatmentCards = [
+  {
+    image: { url: "/experience-hydro-colonnade.jpg", alt: "Hydrotherapy Plunge" },
+    label: "Hydrothermal & Thermal Baths",
+    duration: "45 Mins",
+    title: "HYDROTHERAPY PLUNGE",
+    slug: "hydrotherapy-plunge",
+    description:
+      "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration. Our hydrotherapy protocols combine heated mineral pools with cold plunge immersion for maximum therapeutic benefit.",
+    sensoryNote: "Eucalyptus • Sea Salt • Mountain Pine",
+  },
+  {
+    image: { url: "/destination-glenwood.jpg", alt: "Couples Sanctuary" },
+    label: "Couples & Duets",
+    duration: "120 Mins",
+    title: "COUPLES SANCTUARY",
+    slug: "couples-sanctuary",
+    description:
+      "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals. Designed for partners seeking a communal path to deep relaxation and cellular renewal.",
+    sensoryNote: "White Lotus • Rose Absolute • Cardamom",
+  },
+  {
+    image: { url: "/triad-vedic.jpg", alt: "Sound Immersion" },
+    label: "Sound & Meditative Immersion",
+    duration: "60 Mins",
+    title: "SOUND IMMERSION",
+    slug: "sound-immersion",
+    description:
+      "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states. Experience the resonant frequencies of Tibetan singing bowls, crystal bowls, and traditional Rudra Veena harmonics.",
+    sensoryNote: "Frankincense • Myrrh • Himalayan Sandalwood",
+  },
+];
+
 export const experiencesPageDefaults = {
   hero: {
     eyebrow:
@@ -72,27 +108,92 @@ export const experiencesPageDefaults = {
     headingLine2: "for Body & Mind.",
     description:
       "From single bespoke somatic rituals to multi-day immersive detox retreats across India's most extraordinary palace hotels and secluded eco-resorts.",
-    filters: [
-      "All Experiences",
-      "Signature Rituals",
-      "Hydrothermal & Thermal Baths",
-      "Multi-Day Retreats",
-      "Couples & Duets",
-      "Sound & Meditative Immersion",
-    ],
-    featured: {
-      image: {
-        url: "/experience-hydro-colonnade.jpg",
-        alt: "The Royal Stepped Hydro-Colonnade",
+    categories: [
+      {
+        label: "All Experiences",
+        image: {
+          url: "/experience-hydro-colonnade.jpg",
+          alt: "The Royal Stepped Hydro-Colonnade",
+        },
+        tags: ["Acoustic Silence < 24dB", "Single-Batch Cold Pressed Herbals"],
+        eyebrow: "Spatial Architecture",
+        title: "The Royal Stepped Hydro-Colonnade",
+        description:
+          "Natural sandstone pavilions calibrated with thermostatic plunge chambers and sound-dampened lime plaster vaults.",
+        buttonLabel: "Book an Immersion",
+        buttonUrl: "/book",
       },
-      tags: ["Acoustic Silence < 24dB", "Single-Batch Cold Pressed Herbals"],
-      category: "Spatial Architecture",
-      title: "The Royal Stepped Hydro-Colonnade",
-      description:
-        "Natural sandstone pavilions calibrated with thermostatic plunge chambers and sound-dampened lime plaster vaults.",
-      buttonLabel: "Book an Immersion",
-      buttonUrl: "/book",
-    },
+      {
+        label: "Signature Rituals",
+        image: {
+          url: "/exp-spa-sojourns-main.png",
+          alt: "Spa Sojourns treatment pavilion",
+        },
+        tags: ["Tailored Pressure", "Aroma Elixirs"],
+        eyebrow: "Signature Bodywork · 75 / 90 Mins",
+        title: "Spa Sojourns",
+        description:
+          "Immersive wellness journeys that blend therapeutic touch with deep relaxation, crafted to rejuvenate from head to toe.",
+        buttonLabel: "Explore Ritual",
+        buttonUrl: "/experiences/spa-sojourns",
+      },
+      {
+        label: "Hydrothermal & Thermal Baths",
+        image: {
+          url: "/inquiry-hydrotherapy.jpg",
+          alt: "Stone thermal hydro plunge pool",
+        },
+        tags: ["Thermal Shock", "Saline Flotation"],
+        eyebrow: "Hydrothermal & Thermal Baths · 45 Mins",
+        title: "Hydrotherapy Plunge",
+        description:
+          "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration.",
+        buttonLabel: "Explore Ritual",
+        buttonUrl: "/experiences/hydrotherapy-plunge",
+      },
+      {
+        label: "Multi-Day Retreats",
+        image: {
+          url: "/destination-heritage.jpg",
+          alt: "Heritage retreat courtyard",
+        },
+        tags: ["Personalised Programme", "Resident Vaidyas"],
+        eyebrow: "Multi-Day Retreats",
+        title: "Immersive Restorative Retreats",
+        description:
+          "Multi-day programmes combining daily rituals, Ayurvedic consultations and nourishing cuisine at our partner sanctuaries.",
+        buttonLabel: "Plan a Retreat",
+        buttonUrl: "/contact",
+      },
+      {
+        label: "Couples & Duets",
+        image: {
+          url: "/destination-glenwood.jpg",
+          alt: "Couples treatment pavilion",
+        },
+        tags: ["Synchronized Touch", "Dual Teak Beds"],
+        eyebrow: "Couples & Duets · 120 Mins",
+        title: "Couples Sanctuary",
+        description:
+          "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals.",
+        buttonLabel: "Explore Ritual",
+        buttonUrl: "/experiences/couples-sanctuary",
+      },
+      {
+        label: "Sound & Meditative Immersion",
+        image: {
+          url: "/triad-vedic.jpg",
+          alt: "Sound and meditation chamber",
+        },
+        tags: ["Theta Harmonics", "Tibetan Bells"],
+        eyebrow: "Sound & Meditative Immersion · 60 Mins",
+        title: "Sound Immersion",
+        description:
+          "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states.",
+        buttonLabel: "Explore Ritual",
+        buttonUrl: "/experiences/sound-immersion",
+      },
+    ],
   },
   pillars: {
     eyebrow: "Foundational Methodology",
@@ -158,23 +259,24 @@ export const experiencesPageDefaults = {
       {
         image: { url: "/treatment-massage.jpg", alt: "Massage Selections" },
         label: "Signature Bodywork",
-        duration: "75 / 90 Mins",
+        duration: "60 / 90 Mins",
         title: "MASSAGE SELECTIONS",
         slug: "massage-selections",
         description:
           "Step into a world of deep relaxation with our curated Full Body Massage selections. Each therapy is thoughtfully designed to release tension, improve circulation, and restore inner harmony. Surrender to skilled hands and experience complete mind-body renewal.",
-        sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver",
+        sensoryNote: "Brahmi • Ashwagandha • Sandalwood",
       },
       {
         image: { url: "/treatment-glamour-glow.jpg", alt: "Glamour Glow" },
         label: "Signature Bodywork",
-        duration: "75 / 90 Mins",
+        duration: "60 Mins",
         title: "GLAMOUR GLOW",
         slug: "glamour-glow",
         description:
           "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin. Enriched with skin-loving ingredients, this treatment removes impurities, enhances natural radiance, and leaves your skin smooth, refreshed, and beautifully glowing. Perfect before special occasions or whenever your skin needs a luminous boost.",
-        sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver",
+        sensoryNote: "Floral Jasmine • Mineral Crisp • Sweet Neroli",
       },
+      ...extraTreatmentCards,
     ],
   },
   protocolSection: {

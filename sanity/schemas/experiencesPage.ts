@@ -1,4 +1,4 @@
-import { defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 import {
   accentColor,
   choice,
@@ -25,18 +25,39 @@ export default defineType({
       str("heading", "Heading – Rest of Line 1"),
       str("headingLine2", "Heading – Line 2"),
       txt("description", "Description", 3),
-      strList("filters", "Category Buttons"),
-      obj("featured", "Featured Card", [
-        img("image", "Photo"),
-        strList("tags", "Tags (top-left pills)", {
-          description: "Up to two; the first shows a sound icon, the second a leaf.",
-        }),
-        str("category", "Category"),
-        str("title", "Title"),
-        txt("description", "Description", 2),
-        str("buttonLabel", "Button Label"),
-        str("buttonUrl", "Button Link"),
-      ]),
+      defineField({
+        name: "categories",
+        title: "Categories",
+        description:
+          "Each category is a button on the page. Clicking it shows that category's photo card. The first one is shown when the page opens.",
+        type: "array",
+        of: [
+          defineField({
+            name: "experienceCategory",
+            title: "Category",
+            type: "object",
+            fields: [
+              str("label", "Button Label", {
+                description: "e.g. Signature Rituals",
+              }),
+              img("image", "Photo"),
+              strList("tags", "Tags (pills on the photo)", {
+                description: "Up to two short tags.",
+              }),
+              str("eyebrow", "Small Label (above the title)"),
+              str("title", "Title"),
+              txt("description", "Description", 2),
+              str("buttonLabel", "Button Label"),
+              str("buttonUrl", "Button Link", {
+                description: "e.g. /experiences/spa-sojourns or /book",
+              }),
+            ],
+            preview: {
+              select: { title: "label", subtitle: "title", media: "image" },
+            },
+          }),
+        ],
+      }),
     ]),
     obj("pillars", "2. Four Pillars", [
       str("eyebrow", "Small Label"),
@@ -68,11 +89,11 @@ export default defineType({
       str("linkLabel", "Card Link Label"),
       objList("cards", "Cards", "treatmentCard", "Card", [
         img("image", "Photo"),
-        str("label", "Tag"),
-        str("duration", "Duration"),
+        str("label", "Tag (top-left of photo)"),
+        str("duration", "Duration (bottom-right of photo)"),
         str("title", "Title"),
         str("slug", "Experience Slug", {
-          description: "The card links to /experiences/<slug>.",
+          description: "The Explore link goes to /experiences/<slug>, e.g. spa-sojourns.",
         }),
         txt("description", "Description", 4),
         str("sensoryNote", "Sensory Note"),

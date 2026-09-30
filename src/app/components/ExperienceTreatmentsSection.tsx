@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   type ExperiencesPageContent,
@@ -36,7 +36,7 @@ function TreatmentCard({
   linkLabel: string;
 }) {
   return (
-    <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40 min-w-[280px] flex-1">
+    <div className="flex flex-col h-full bg-white rounded-md overflow-hidden border border-kynta-border/40">
       <div className="relative w-full" style={{ aspectRatio: "295 / 172" }}>
         <Image
           src={image}
@@ -91,15 +91,18 @@ function TreatmentCard({
 function CircleArrowButton({
   direction,
   onClick,
+  disabled,
 }: {
   direction: "left" | "right";
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
+      disabled={disabled}
+      className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors disabled:opacity-35 disabled:cursor-default disabled:hover:bg-kynta-teal-dark"
       aria-label={`Scroll ${direction}`}
     >
       <svg
@@ -132,12 +135,32 @@ export function ExperienceTreatmentsSection({
   data,
 }: ExperienceTreatmentsSectionProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
+  const updateArrows = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateArrows();
+    window.addEventListener("resize", updateArrows);
+    return () => window.removeEventListener("resize", updateArrows);
+  }, [updateArrows]);
+
+  // Moves exactly one card (card width + gap) per click.
   const scroll = (direction: "left" | "right") => {
-    if (carouselRef.current) {
-      const scrollAmount = direction === "left" ? -360 : 360;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    const el = carouselRef.current;
+    if (!el) return;
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 16 : el.clientWidth;
+    el.scrollBy({
+      left: direction === "left" ? -step : step,
+      behavior: "smooth",
+    });
   };
 
   const d = experiencesPageDefaults.treatmentsSection;
@@ -185,18 +208,34 @@ export function ExperienceTreatmentsSection({
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-sm">
               {description}
             </p>
+            {treatments.length> 3 &&(
             <div className="flex items-center gap-3 mt-6 md:mt-0 md:justify-end">
-              <CircleArrowButton direction="left" onClick={() => scroll("left")} />
-              <CircleArrowButton direction="right" onClick={() => scroll("right")} />
+              <CircleArrowButton
+                direction="left"
+                onClick={() => scroll("left")}
+                disabled={!canScrollLeft}
+              />
+              <CircleArrowButton
+                direction="right"
+                onClick={() => scroll("right")}
+                disabled={!canScrollRight}
+              />
             </div>
+            )}
           </div>
         </div>
         <div
           ref={carouselRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto scroll-smooth pb-2"
+          onScroll={updateArrows}
+          className="no-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
         >
           {treatments.map((t, index) => (
-            <TreatmentCard key={`${t.slug}-${index}`} {...t} />
+            <div
+              key={`${t.slug}-${index}`}
+              className="snap-start flex-shrink-0 w-full sm:w-[calc((100%-16px)/2)] lg:w-[calc((100%-32px)/3)]"
+            >
+              <TreatmentCard {...t} />
+            </div>
           ))}
         </div>
       </div>
