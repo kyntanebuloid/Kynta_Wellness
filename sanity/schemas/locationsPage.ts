@@ -95,7 +95,19 @@ const location = defineField({
       { group: "detail" },
     ),
     linkObj("primaryCta", "Main Button", { group: "detail" }),
-    linkObj("secondaryCta", "Second Button", { group: "detail" }),
+    defineField({
+      name: "dossier",
+      title: "Dossier PDF",
+      type: "file",
+      group: "detail",
+      description:
+        "Upload a PDF to show the download button on this location's page. Leave empty to hide the button.",
+      options: { accept: ".pdf,application/pdf" },
+    }),
+    str("dossierLabel", "Dossier Button Label", {
+      group: "detail",
+      description: "e.g. SANCTUARY DOSSIER (PDF)",
+    }),
     obj(
       "gallery",
       "Photo Gallery",

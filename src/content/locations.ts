@@ -1,4 +1,4 @@
-import type { ContentImage, ContentLink } from "./types";
+import type { ContentFile, ContentImage, ContentLink } from "./types";
 
 export type LocationRegion = "himalayan" | "rajasthan";
 export type LocationService = "spa" | "dining" | "pool" | "wifi" | "suite";
@@ -32,7 +32,9 @@ export interface LocationContent {
   sanctuaryId?: string;
   sanctuaryInfo?: { label: string; title: string }[];
   primaryCta?: ContentLink;
-  secondaryCta?: ContentLink;
+  /** Button text for the downloadable PDF; the button only shows once a PDF is uploaded. */
+  dossierLabel?: string;
+  dossier?: ContentFile;
   gallery?: {
     mainCard?: GalleryCardContent;
     topRightCard?: GalleryCardContent;
@@ -65,7 +67,8 @@ export interface LocationDetail {
   glanceHeading: string;
   sanctuaryInfo: { label: string; title: string }[];
   primaryCta: Required<ContentLink>;
-  secondaryCta: Required<ContentLink>;
+  /** Null until a PDF is uploaded for this location. */
+  dossier: { label: string; url: string } | null;
   gallery: {
     mainCard: LocationGalleryCard;
     topRightCard: LocationGalleryCard;
@@ -152,10 +155,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {
@@ -250,10 +250,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {
@@ -348,10 +345,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {
@@ -446,10 +440,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {
@@ -544,10 +535,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {
@@ -644,10 +632,7 @@ export const locationsPageDefaults = {
         label: "BOOK TREATMENT & STAY",
         url: "/contact",
       },
-      secondaryCta: {
-        label: "SANCTUARY DOSSIER (PDF)",
-        url: "#",
-      },
+      dossierLabel: "SANCTUARY DOSSIER (PDF)",
       gallery: {
         mainCard: {
           image: {

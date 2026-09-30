@@ -8,6 +8,11 @@ export interface ContentImage {
   alt?: string | null;
 }
 
+/** An uploaded file (e.g. a PDF), resolved to its public URL. */
+export interface ContentFile {
+  url?: string | null;
+}
+
 export interface ContentLink {
   label?: string;
   url?: string;

@@ -131,9 +131,21 @@ function sanityImageUrl(ref: string): string | null {
   return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${size}.${ext}`;
 }
 
+const FILE_REF = /^file-([a-f0-9]+)-([a-z0-9]+)$/i;
+
+function sanityFileUrl(ref: string): string | null {
+  const match = FILE_REF.exec(ref);
+  if (!match) return null;
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+  const [, id, ext] = match;
+  return `https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}`;
+}
+
 /**
- * Replaces every Sanity image object in a document with `{ url, alt }`, the
- * shape the page components and src/content defaults use.
+ * Replaces every Sanity image object in a document with `{ url, alt }`, and
+ * every uploaded file with `{ url }` — the shapes the page components and
+ * src/content defaults use.
  */
 function resolveImages<T>(value: unknown): T {
   if (Array.isArray(value)) {
@@ -147,6 +159,9 @@ function resolveImages<T>(value: unknown): T {
         url: sanityImageUrl(ref),
         alt: typeof record.alt === "string" ? record.alt : null,
       } as T;
+    }
+    if (typeof ref === "string" && ref.startsWith("file-")) {
+      return { url: sanityFileUrl(ref) } as T;
     }
     return Object.fromEntries(
       Object.entries(record).map(([key, child]) => [key, resolveImages(child)]),
@@ -729,10 +744,15 @@ function toLocationDetail(
       label: f.primaryCta?.label ?? "BOOK TREATMENT & STAY",
       url: f.primaryCta?.url ?? "/contact",
     }),
-    secondaryCta: link(s.secondaryCta, {
-      label: f.secondaryCta?.label ?? "SANCTUARY DOSSIER (PDF)",
-      url: f.secondaryCta?.url ?? "#",
-    }),
+    dossier: s.dossier?.url
+      ? {
+          label: text(
+            s.dossierLabel,
+            f.dossierLabel ?? "SANCTUARY DOSSIER (PDF)",
+          ),
+          url: s.dossier.url,
+        }
+      : null,
     gallery: {
       mainCard: galleryCard(s.gallery?.mainCard, f.gallery?.mainCard),
       topRightCard: galleryCard(s.gallery?.topRightCard, f.gallery?.topRightCard),
