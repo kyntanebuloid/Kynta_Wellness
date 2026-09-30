@@ -4,13 +4,20 @@
 //   - converts the content using the Sanity schema (adds _key/_type,
 //     uploads local /public photos as Sanity images),
 //   - fails if the content has a field the schema doesn't define,
-//   - replaces the document, keeping any SEO text already in Sanity.
+//   - replaces the document, keeping fields that only exist in Sanity
+//     (SEO text, uploaded PDFs, map links).
 //
-// Dry run:  npx tsx scripts/sync-content-to-sanity.ts --dry-run
-// Apply:    npx tsx scripts/sync-content-to-sanity.ts   (needs SANITY_API_WRITE_TOKEN)
-// One page: add --only=aboutPage
+// Per page (see package.json): npm run sync:about, sync:hotels, sync:blog, …
+// All pages:                   npm run sync:all
+// Dry run (no changes):        npm run sync:about -- --dry-run
+// Needs SANITY_API_WRITE_TOKEN in .env.local.
 
-import { createReadStream, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import {
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { createClient } from "@sanity/client";
 import { config } from "dotenv";
@@ -57,9 +64,12 @@ function uploadLocalImage(publicPath: string): Promise<string> {
   let pending = uploads.get(publicPath);
   if (!pending) {
     const file = path.join(process.cwd(), "public", decodeURI(publicPath));
-    if (!existsSync(file)) throw new Error(`Image not found in /public: ${publicPath}`);
+    if (!existsSync(file))
+      throw new Error(`Image not found in /public: ${publicPath}`);
     pending = client.assets
-      .upload("image", createReadStream(file), { filename: path.basename(file) })
+      .upload("image", createReadStream(file), {
+        filename: path.basename(file),
+      })
       .then((asset) => {
         console.log(`    ↑ ${publicPath}`);
         return asset._id;
@@ -78,7 +88,9 @@ async function convertImage(value: Value, where: string) {
   }
   const url: string = value.url;
   if (typeof url !== "string" || !url.startsWith("/")) {
-    throw new Error(`${where}: only local /public images can be pushed (got ${url})`);
+    throw new Error(
+      `${where}: only local /public images can be pushed (got ${url})`,
+    );
   }
   const ref = await uploadLocalImage(url);
   return {
@@ -96,13 +108,18 @@ async function convertObject(value: Value, fields: Field[], where: string) {
   for (const [name, child] of Object.entries(value)) {
     if (child === undefined || child === null) continue;
     const field = fields.find((f) => f.name === name);
-    if (!field) throw new Error(`${where}.${name}: not defined in the Sanity schema`);
+    if (!field)
+      throw new Error(`${where}.${name}: not defined in the Sanity schema`);
     out[name] = await convertField(child, field, `${where}.${name}`);
   }
   return out;
 }
 
-async function convertField(value: Value, field: Field, where: string): Promise<Value> {
+async function convertField(
+  value: Value,
+  field: Field,
+  where: string,
+): Promise<Value> {
   switch (field.type) {
     case "object":
       return convertObject(value, field.fields, where);
@@ -131,6 +148,50 @@ async function convertField(value: Value, field: Field, where: string): Promise<
   }
 }
 
+const isPlainObject = (v: Value) =>
+  v !== null && typeof v === "object" && !Array.isArray(v);
+
+/**
+ * Copies over fields that only exist in Sanity — things added in Studio that
+ * the built-in content has no value for (SEO text, uploaded PDFs, map links) —
+ * so re-running a page doesn't wipe them. Built-in content still wins for
+ * every field it defines. List items are matched by `slug` when they have one,
+ * otherwise by position.
+ */
+function keepStudioOnlyFields(
+  next: Value,
+  current: Value,
+  fields: Field[],
+): Value {
+  if (!isPlainObject(next) || !isPlainObject(current)) return next;
+  const out: Record<string, Value> = { ...next };
+  for (const field of fields) {
+    const name = field.name;
+    const existing = current[name];
+    if (existing === undefined || existing === null) continue;
+    if (!(name in out)) {
+      out[name] = existing;
+    } else if (field.type === "object") {
+      out[name] = keepStudioOnlyFields(out[name], existing, field.fields);
+    } else if (
+      field.type === "array" &&
+      field.of?.[0]?.type === "object" &&
+      Array.isArray(out[name]) &&
+      Array.isArray(existing)
+    ) {
+      out[name] = out[name].map((item: Value, i: number) => {
+        const match =
+          (item?.slug && existing.find((e: Value) => e?.slug === item.slug)) ||
+          (!item?.slug ? existing[i] : undefined);
+        return match
+          ? keepStudioOnlyFields(item, match, field.of[0].fields)
+          : item;
+      });
+    }
+  }
+  return out;
+}
+
 // Experiences hold prices used for payments, so they are never replaced:
 // only empty photo slots are filled with the photos the detail page shows.
 async function fillExperiencePhotos() {
@@ -147,13 +208,26 @@ async function fillExperiencePhotos() {
     const photos = experienceGalleryFor(exp.slug?.current ?? "");
     const slots: [string, string, boolean][] = [
       ["image", photos.main, Boolean(exp.image)],
-      ["gallery.mainCard.image", photos.main, Boolean(exp.gallery?.mainCard?.image)],
-      ["gallery.topRightCard.image", photos.topRight, Boolean(exp.gallery?.topRightCard?.image)],
-      ["gallery.bottomRightCard.image", photos.bottomRight, Boolean(exp.gallery?.bottomRightCard?.image)],
+      [
+        "gallery.mainCard.image",
+        photos.main,
+        Boolean(exp.gallery?.mainCard?.image),
+      ],
+      [
+        "gallery.topRightCard.image",
+        photos.topRight,
+        Boolean(exp.gallery?.topRightCard?.image),
+      ],
+      [
+        "gallery.bottomRightCard.image",
+        photos.bottomRight,
+        Boolean(exp.gallery?.bottomRightCard?.image),
+      ],
     ];
     const set: Record<string, Value> = {};
     for (const [field, url, filled] of slots) {
-      if (!filled) set[field] = await convertImage({ url }, `${exp._id}.${field}`);
+      if (!filled)
+        set[field] = await convertImage({ url }, `${exp._id}.${field}`);
     }
     const count = Object.keys(set).length;
     if (count === 0) {
@@ -190,10 +264,13 @@ async function main() {
       JSON.stringify(current, null, 2),
     );
 
-    const converted = await convertObject(target.content, schema.fields, target.id);
+    const converted = await convertObject(
+      target.content,
+      schema.fields,
+      target.id,
+    );
     const doc = {
-      ...converted,
-      ...(current?.seo ? { seo: current.seo } : {}),
+      ...keepStudioOnlyFields(converted, current, schema.fields),
       _id: target.id,
       _type: target.type,
     };

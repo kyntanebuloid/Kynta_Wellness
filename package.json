@@ -11,7 +11,16 @@
     "sanity": "sanity dev",
     "sanity:build": "sanity build",
     "sanity:seed": "npx tsx sanity/seed.ts",
-    "test:emails": "npx tsx scripts/test-booking-emails.ts"
+    "test:emails": "npx tsx scripts/test-booking-emails.ts",
+    "sync:all": "npx tsx scripts/sync-content-to-sanity.ts",
+    "sync:home": "npx tsx scripts/sync-homepage-to-sanity.ts",
+    "sync:about": "npx tsx scripts/sync-content-to-sanity.ts --only=aboutPage",
+    "sync:experiences": "npx tsx scripts/sync-content-to-sanity.ts --only=experiencesPage",
+    "sync:experience-photos": "npx tsx scripts/sync-content-to-sanity.ts --only=experiences",
+    "sync:locations": "npx tsx scripts/sync-content-to-sanity.ts --only=locationsPage",
+    "sync:hotels": "npx tsx scripts/sync-content-to-sanity.ts --only=hospitalityPage",
+    "sync:blog": "npx tsx scripts/sync-content-to-sanity.ts --only=blogPage",
+    "sync:contact": "npx tsx scripts/sync-content-to-sanity.ts --only=contactPage"
   },
   "dependencies": {
     "@sanity/client": "^8.6.1",

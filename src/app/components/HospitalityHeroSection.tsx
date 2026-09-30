@@ -18,35 +18,12 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
   const description = text(data?.description, d.description);
   const primaryLabel = text(data?.primaryCta?.label, d.primaryCta.label);
   const primaryUrl = text(data?.primaryCta?.url, d.primaryCta.url);
-  const secondaryLabel = text(data?.secondaryCta?.label, d.secondaryCta.label);
-  const secondaryUrl = data?.secondaryCta?.url?.trim() || d.secondaryCta.url;
+  const prospectusLabel = text(data?.prospectusLabel, d.prospectusLabel);
+  const prospectusPdf = data?.prospectusPdf?.url ?? null;
   const [badgeOne, badgeTwo] = list(data?.badges, d.badges);
   const photo = imageUrl(data?.image, d.image);
   const photoAlt = imageAlt(data?.image, d.image);
   const imageCaption = text(data?.imageCaption, d.imageCaption);
-
-  const secondaryClassName =
-    "px-6 py-3 rounded-full bg-white/80 hover:bg-white text-kynta-charcoal border border-kynta-border/80 text-[11px] font-medium tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2";
-  const secondaryContent = (
-    <>
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="7 10 12 15 17 10" />
-        <line x1="12" y1="15" x2="12" y2="3" />
-      </svg>
-      <span>{secondaryLabel}</span>
-    </>
-  );
 
   return (
     <section
@@ -96,14 +73,30 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                 </svg>
               </Link>
 
-              {secondaryUrl ? (
-                <Link href={secondaryUrl} className={secondaryClassName}>
-                  {secondaryContent}
-                </Link>
-              ) : (
-                <button type="button" className={secondaryClassName}>
-                  {secondaryContent}
-                </button>
+              {prospectusPdf && (
+                <a
+                  href={prospectusPdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 rounded-full bg-white/80 hover:bg-white text-kynta-charcoal border border-kynta-border/80 text-[11px] font-medium tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>{prospectusLabel}</span>
+                </a>
               )}
             </div>
 

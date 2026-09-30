@@ -1,4 +1,4 @@
-import type { ContentImage, ContentLink } from "./types";
+import type { ContentFile, ContentImage, ContentLink } from "./types";
 
 export type AssuranceIcon = "certified" | "housing" | "closed-loop" | "pms";
 
@@ -8,7 +8,9 @@ export interface HospitalityPageContent {
     heading?: string;
     description?: string;
     primaryCta?: ContentLink;
-    secondaryCta?: ContentLink;
+    prospectusLabel?: string;
+    /** The prospectus button only shows once a PDF is uploaded. */
+    prospectusPdf?: ContentFile;
     badges?: string[];
     image?: ContentImage;
     imageCaption?: string;
@@ -68,7 +70,7 @@ export const hospitalityPageDefaults = {
     description:
       "We convert underutilized hotel square footage into high-yield, brand-defining sanctuaries of unhurried restorative stillness and clinical Ayurvedic excellence.",
     primaryCta: { label: "REQUEST FEASIBILITY STUDY", url: "/contact" },
-    secondaryCta: { label: "DOWNLOAD PROSPECTUS", url: "" },
+    prospectusLabel: "DOWNLOAD PROSPECTUS",
     badges: [
       "ACCREDITED CLINICAL VAIDYA STAFFING",
       "TURNKEY FORBES LQA PROTOCOLS",

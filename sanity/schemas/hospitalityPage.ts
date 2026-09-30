@@ -22,8 +22,16 @@ export default defineType({
       txt("heading", "Heading", 2),
       txt("description", "Description", 3),
       linkObj("primaryCta", "Main Button"),
-      linkObj("secondaryCta", "Second Button", {
-        description: "Leave the link empty to show it without a link.",
+      str("prospectusLabel", "Prospectus Button Label", {
+        description: "e.g. DOWNLOAD PROSPECTUS",
+      }),
+      defineField({
+        name: "prospectusPdf",
+        title: "Prospectus PDF",
+        type: "file",
+        description:
+          "Upload a PDF to show the prospectus button. Leave empty to hide it.",
+        options: { accept: ".pdf,application/pdf" },
       }),
       strList("badges", "Trust Badges", { description: "Up to two." }),
       img("image", "Photo"),
@@ -35,7 +43,11 @@ export default defineType({
         "Numbers",
         "metric",
         "Number",
-        [str("value", "Value"), str("label", "Label"), str("description", "Description")],
+        [
+          str("value", "Value"),
+          str("label", "Label"),
+          str("description", "Description"),
+        ],
         "label",
       ),
     ]),
@@ -69,7 +81,11 @@ export default defineType({
         "Stat Cards",
         "stat",
         "Stat",
-        [str("value", "Value"), str("label", "Label"), txt("description", "Description", 2)],
+        [
+          str("value", "Value"),
+          str("label", "Label"),
+          txt("description", "Description", 2),
+        ],
         "label",
       ),
     ]),
