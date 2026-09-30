@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Playfair_Display } from "next/font/google";
-import { PageScanLoader } from "./components/PageScanLoader";
+import { NavigationProgress } from "./components/NavigationProgress";
 import { SanityLiveRefresh } from "./components/SanityLiveRefresh";
 import { ScrollEffects } from "./components/ScrollEffects";
 import "./globals.css";
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col font-sans">
         <ScrollEffects />
-        <PageScanLoader />
+        <NavigationProgress />
         {children}
         <SanityLiveRefresh />
       </body>

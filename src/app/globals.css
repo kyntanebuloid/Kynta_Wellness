@@ -171,166 +171,17 @@ html[data-low-power] #hero .wisp {
   will-change: auto;
 }
 
-/* ── Page scan loader (PageScanLoader.tsx) ─────────────────────────────
-   Outlines of the page being opened draw in while a scan beam sweeps down.
-   Only clip-path, transform and opacity animate, so it stays cheap. Sizes
-   start at phone size and grow from 640px up. */
-.page-scan {
+/* ── Navigation progress bar (NavigationProgress.tsx) ──────────────────
+   Only transform and opacity change, so it costs next to nothing. */
+.nav-progress {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
-  z-index: 30; /* below the sticky header (z-40) */
-  background: #f7f9f7;
-  overflow: hidden;
-  animation: page-scan-in 0.2s ease-out both;
-}
-
-.page-scan--leaving {
-  animation: page-scan-out 0.3s ease-in both;
-}
-
-.page-scan__layout {
-  position: relative;
-  height: 100%;
-  padding-top: clamp(24px, 5vh, 56px);
-}
-
-.ps {
-  position: relative;
-  border: 1px solid rgba(44, 44, 44, 0.32);
-  border-radius: 4px;
-  animation: ps-draw 0.4s cubic-bezier(0.65, 0, 0.35, 1) both;
-  animation-delay: calc(min(var(--i, 0), 14) * 35ms);
-}
-
-.ps-line {
-  height: 9px;
-}
-
-.ps-h {
-  height: 22px;
-}
-
-.ps-pill,
-.ps-chip {
-  height: 26px;
-  border-radius: 999px;
-}
-
-.ps-btn {
-  height: 42px;
-  width: 128px;
-  border-radius: 999px;
-}
-
-.ps-card {
-  border-radius: 12px;
-}
-
-.ps-field {
-  height: 40px;
-  border-radius: 6px;
-}
-
-/* Image placeholders: a box with a blueprint cross. */
-.ps-img {
-  border-radius: 12px;
-  background:
-    linear-gradient(
-      to top right,
-      transparent calc(50% - 0.5px),
-      rgba(44, 44, 44, 0.14) 50%,
-      transparent calc(50% + 0.5px)
-    ),
-    linear-gradient(
-      to top left,
-      transparent calc(50% - 0.5px),
-      rgba(44, 44, 44, 0.14) 50%,
-      transparent calc(50% + 0.5px)
-    );
-}
-
-@media (min-width: 640px) {
-  .ps-line {
-    height: 11px;
-  }
-  .ps-h {
-    height: 32px;
-  }
-  .ps-pill,
-  .ps-chip {
-    height: 30px;
-  }
-  .ps-btn {
-    height: 46px;
-    width: 160px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .ps-h {
-    height: 40px;
-  }
-}
-
-.page-scan__beam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 80px;
-  background: linear-gradient(
-    to bottom,
-    rgba(44, 44, 44, 0) 0%,
-    rgba(44, 44, 44, 0.05) 85%,
-    rgba(44, 44, 44, 0.5) 99%,
-    rgba(44, 44, 44, 0) 100%
-  );
+  height: 3px;
+  z-index: 50;
+  pointer-events: none;
+  background: var(--kynta-teal);
+  box-shadow: 0 0 8px rgba(26, 92, 87, 0.35);
+  transform-origin: left center;
   will-change: transform;
-  animation: page-scan-beam 1.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-@keyframes ps-draw {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes page-scan-beam {
-  from {
-    transform: translateY(-80px);
-  }
-  to {
-    transform: translateY(100vh);
-  }
-}
-
-@keyframes page-scan-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes page-scan-out {
-  to {
-    opacity: 0;
-  }
-}
-
-/* Without a GPU, show the outline at once instead of drawing it. */
-html[data-low-power] .ps {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ps {
-    animation: none;
-  }
-  .page-scan__beam {
-    display: none;
-  }
 }
