@@ -8,12 +8,8 @@ type Extra = { description?: string; group?: string };
 export const str = (name: string, title: string, extra: Extra = {}) =>
   defineField({ name, title, type: "string", ...extra });
 
-export const txt = (
-  name: string,
-  title: string,
-  rows = 3,
-  extra: Extra = {},
-) => defineField({ name, title, type: "text", rows, ...extra });
+export const txt = (name: string, title: string, rows = 3, extra: Extra = {}) =>
+  defineField({ name, title, type: "text", rows, ...extra });
 
 export const img = (name: string, title: string, extra: Extra = {}) =>
   defineField({
@@ -22,6 +18,16 @@ export const img = (name: string, title: string, extra: Extra = {}) =>
     type: "image",
     options: { hotspot: true },
     fields: [defineField({ name: "alt", title: "Alt Text", type: "string" })],
+    ...extra,
+  });
+
+/** PDF upload; the matching button on the site only shows once a file is uploaded. */
+export const pdf = (name: string, title: string, extra: Extra = {}) =>
+  defineField({
+    name,
+    title,
+    type: "file",
+    options: { accept: ".pdf,application/pdf" },
     ...extra,
   });
 
@@ -92,7 +98,13 @@ export const objList = (
   });
 
 export const strList = (name: string, title: string, extra: Extra = {}) =>
-  defineField({ name, title, type: "array", of: [{ type: "string" }], ...extra });
+  defineField({
+    name,
+    title,
+    type: "array",
+    of: [{ type: "string" }],
+    ...extra,
+  });
 
 export const imgList = (name: string, title: string, extra: Extra = {}) =>
   defineField({

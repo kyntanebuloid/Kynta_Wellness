@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
-import { type BlogPageContent, blogPageDefaults } from "@/content/blog";
+import {
+  type BlogCategory,
+  type BlogPageContent,
+  blogPageDefaults,
+} from "@/content/blog";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
 
 interface BlogHeroSectionProps {
@@ -13,27 +16,38 @@ interface BlogHeroSectionProps {
 
 export function BlogHeroSection({ data }: BlogHeroSectionProps) {
   const d = blogPageDefaults.hero;
-  const categories = list(data?.categories, d.categories);
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
-  const f = data?.featured;
-  const df = d.featured;
-  const featuredArticle = {
-    image: imageUrl(f?.image, df.image),
-    imageAlt: imageAlt(f?.image, df.image),
-    badge: text(f?.badge, df.badge),
-    category: text(f?.category, df.category),
-    issue: text(f?.issue, df.issue),
-    readTime: text(f?.readTime, df.readTime),
-    title: text(f?.title, df.title),
-    description: text(f?.description, df.description),
-    author: {
-      initials: text(f?.authorInitials, df.authorInitials),
-      name: text(f?.authorName, df.authorName),
-      role: text(f?.authorRole, df.authorRole),
-    },
-    href: text(f?.url, df.url),
-    linkLabel: text(f?.linkLabel, df.linkLabel),
-  };
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Older Sanity content stored categories as plain names; treat those as a
+  // label with the built-in article for that position.
+  const stored = (
+    data?.categories as (BlogCategory | string)[] | undefined
+  )?.map((c, i) =>
+    typeof c === "string"
+      ? { ...d.categories[i % d.categories.length], label: c }
+      : c,
+  );
+  const categories = list(stored, d.categories).map((c, i) => {
+    const fallback = d.categories[i % d.categories.length];
+    return {
+      label: c.label,
+      image: imageUrl(c.image, fallback.image),
+      imageAlt: imageAlt(c.image, { alt: c.title || c.label }),
+      badge: c.badge ?? "",
+      meta: [c.category, c.issue, c.readTime].filter(Boolean).join("  •  "),
+      title: c.title ?? c.label,
+      description: c.description ?? "",
+      author: {
+        initials: c.authorInitials ?? "",
+        name: c.authorName ?? "",
+        role: c.authorRole ?? "",
+      },
+      // PDF first, then a link; nothing means no read link at all.
+      href: c.pdf?.url || c.url?.trim() || null,
+      linkLabel: text(c.linkLabel, "READ ARTICLE"),
+    };
+  });
+  const article = categories[Math.min(activeIndex, categories.length - 1)];
 
   return (
     <section
@@ -59,14 +73,20 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
           {text(data?.subheading, d.subheading)}
         </p>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-10 md:mb-12">
-          {categories.map((category) => {
-            const isActive = activeCategory === category;
+        <div
+          className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-10 md:mb-12"
+          role="tablist"
+          aria-label="Blog categories"
+        >
+          {categories.map((category, index) => {
+            const isActive = index === activeIndex;
             return (
               <button
-                key={category}
+                key={`${category.label}-${index}`}
                 type="button"
-                onClick={() => setActiveCategory(category)}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveIndex(index)}
                 className={`text-[9.5px] sm:text-[10px] font-semibold tracking-[0.1em] uppercase px-3.5 py-2 rounded-[6px] transition-all duration-200 ${
                   isActive
                     ? "text-white shadow-sm"
@@ -74,79 +94,103 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
                 }`}
                 style={isActive ? { backgroundColor: "#004349" } : undefined}
               >
-                {category}
+                {category.label}
               </button>
             );
           })}
         </div>
 
-        <div className="bg-white rounded-[18px] sm:rounded-[20px] overflow-hidden border border-kynta-border/40 shadow-[0_8px_30px_rgba(0,0,0,0.035)] grid grid-cols-1 lg:grid-cols-12">
+        <div
+          className="bg-white rounded-[18px] sm:rounded-[20px] overflow-hidden border border-kynta-border/40 shadow-[0_8px_30px_rgba(0,0,0,0.035)] grid grid-cols-1 lg:grid-cols-12"
+          role="tabpanel"
+        >
           <div className="lg:col-span-7 relative w-full h-[280px] sm:h-[340px] lg:h-auto min-h-[320px] lg:min-h-[420px] overflow-hidden bg-[#ebe8e1]">
-            <Image
-              src={featuredArticle.image}
-              alt={featuredArticle.imageAlt}
-              fill
-              sizes="(max-width: 1024px) 100vw, 600px"
-              priority
-              className="object-cover transition-transform duration-700 hover:scale-105"
-            />
+            {/* All photos are stacked so switching crossfades instead of flashing. */}
+            {categories.map((category, index) => (
+              <Image
+                key={`${category.image}-${index}`}
+                src={category.image}
+                alt={index === activeIndex ? category.imageAlt : ""}
+                fill
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                priority={index === 0}
+                className={`object-cover transition-opacity duration-500 ${
+                  index === activeIndex ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
 
-            <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md rounded-[6px] px-3 py-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-white/80">
-              <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
-                {featuredArticle.badge}
-              </span>
-            </div>
+            {article.badge && (
+              <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md rounded-[6px] px-3 py-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-white/80">
+                <span className="text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-rust">
+                  {article.badge}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-5 p-6 sm:p-8 lg:p-9 flex flex-col justify-between">
             <div>
-              <p className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase text-kynta-rust mb-3">
-                {featuredArticle.category} &nbsp;•&nbsp; {featuredArticle.issue}{" "}
-                &nbsp;•&nbsp; {featuredArticle.readTime}
-              </p>
+              {article.meta && (
+                <p className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase text-kynta-rust mb-3 whitespace-pre-wrap">
+                  {article.meta}
+                </p>
+              )}
 
               <h2 className="font-serif text-[21px] sm:text-[23px] md:text-[25px] lg:text-[27px] leading-[1.22] font-normal text-kynta-charcoal mb-3.5">
-                <Link
-                  href={featuredArticle.href}
-                  className="hover:text-kynta-teal-dark transition-colors"
-                >
-                  {featuredArticle.title}
-                </Link>
+                {article.href ? (
+                  <a
+                    href={article.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-kynta-teal-dark transition-colors"
+                  >
+                    {article.title}
+                  </a>
+                ) : (
+                  article.title
+                )}
               </h2>
 
               <p className="text-[11.5px] sm:text-[12px] leading-[1.65] text-kynta-warm-gray mb-8">
-                {featuredArticle.description}
+                {article.description}
               </p>
             </div>
 
             <div className="pt-4 border-t border-kynta-border/30 flex items-center justify-between gap-4 mt-auto">
               <div className="flex items-center gap-3">
-                <div
-                  className="w-9 h-9 rounded-[6px] text-white flex items-center justify-center font-serif text-[12px] font-medium flex-shrink-0"
-                  style={{ backgroundColor: "#004349" }}
-                >
-                  {featuredArticle.author.initials}
-                </div>
+                {article.author.initials && (
+                  <div
+                    className="w-9 h-9 rounded-[6px] text-white flex items-center justify-center font-serif text-[12px] font-medium flex-shrink-0"
+                    style={{ backgroundColor: "#004349" }}
+                  >
+                    {article.author.initials}
+                  </div>
+                )}
                 <div>
                   <p className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.06em] uppercase text-kynta-charcoal leading-tight">
-                    {featuredArticle.author.name}
+                    {article.author.name}
                   </p>
                   <p className="text-[9.5px] sm:text-[10px] text-kynta-warm-gray leading-tight mt-0.5">
-                    {featuredArticle.author.role}
+                    {article.author.role}
                   </p>
                 </div>
               </div>
 
-              <Link
-                href={featuredArticle.href}
-                className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 flex-shrink-0 group"
-                style={{ color: "var(--kynta-teal-dark)" }}
-              >
-                <span>{featuredArticle.linkLabel}</span>
-                <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                  →
-                </span>
-              </Link>
+              {article.href && (
+                <a
+                  href={article.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors flex items-center gap-1.5 flex-shrink-0 group"
+                  style={{ color: "var(--kynta-teal-dark)" }}
+                >
+                  <span>{article.linkLabel}</span>
+                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </a>
+              )}
             </div>
           </div>
         </div>

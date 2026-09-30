@@ -107,9 +107,9 @@ async function buildHomepage(current: Doc): Promise<Doc> {
     "/article-revpash.jpg",
   ];
   const defaultArticles = [
-    { category: "Health", readTime: "6 Min Read", topic: "Ayurveda", title: "How Warm Herbal Bags Help You Recover From Stress", excerpt: "Warm bags filled with herbs relax deep muscles and help lower stress in your body.", url: "/blog/herbal-compresses" },
-    { category: "Spa Design", readTime: "8 Min Read", topic: "Design", title: "How to Build a Calm Spa With Nature and Ayurveda", excerpt: "How stone, quiet rooms and natural light help your body relax on its own.", url: "/blog/spa-sanctuaries" },
-    { category: "Hotel Business", readTime: "5 Min Read", topic: "Hotels", title: "How a Good Spa Helps a Hotel Earn More", excerpt: "Why smart hotel owners turn empty spa space into busy spas that bring in more money.", url: "/blog/revpash-optimization" },
+    { category: "Health", readTime: "6 Min Read", topic: "Ayurveda", title: "How Warm Herbal Bags Help You Recover From Stress", excerpt: "Warm bags filled with herbs relax deep muscles and help lower stress in your body.", url: "/blog" },
+    { category: "Spa Design", readTime: "8 Min Read", topic: "Design", title: "How to Build a Calm Spa With Nature and Ayurveda", excerpt: "How stone, quiet rooms and natural light help your body relax on its own.", url: "/blog" },
+    { category: "Hotel Business", readTime: "5 Min Read", topic: "Hotels", title: "How a Good Spa Helps a Hotel Earn More", excerpt: "Why smart hotel owners turn empty spa space into busy spas that bring in more money.", url: "/blog" },
   ];
   // The page showed "<readTime> • <author>" for Sanity articles; author becomes the topic.
   const articleSource: Doc[] = Array.isArray(journal.articles) && journal.articles.length > 0
@@ -327,7 +327,7 @@ async function buildSiteSettings(current: Doc): Promise<Doc> {
       legalLinks: keyed("footerLink", [
         link("Privacy Policy", "/privacy"),
         link("Terms of Service", "/terms"),
-        link("Spa", "/spas"),
+        link("Spa Locations", "/locations"),
       ]),
       copyright: "© 2025 Kynta Wellness Private Limited. All rights reserved.",
     },

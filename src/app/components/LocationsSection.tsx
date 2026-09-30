@@ -219,12 +219,10 @@ export function LocationsSection({ page }: LocationsSectionProps) {
     const fallback =
       d.locations.find((l) => l.slug === loc.slug) ??
       d.locations[i % d.locations.length];
-    const slug =
-      loc.slug || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const slug = loc.slug || loc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     return {
       id: slug,
-      image:
-        loc.image?.url || loc.imagePath || imageUrl(fallback.image, {}),
+      image: loc.image?.url || loc.imagePath || imageUrl(fallback.image, {}),
       price: loc.price ?? "",
       title: loc.name,
       region: loc.region === "rajasthan" ? "rajasthan" : "himalayan",
@@ -236,10 +234,10 @@ export function LocationsSection({ page }: LocationsSectionProps) {
 
   const totalCount = mappedDestinations.length;
   const himachalCount = mappedDestinations.filter(
-    (d) => d.region === "himalayan"
+    (d) => d.region === "himalayan",
   ).length;
   const rajasthanCount = mappedDestinations.filter(
-    (d) => d.region === "rajasthan"
+    (d) => d.region === "rajasthan",
   ).length;
 
   const labels = page?.filterLabels;
@@ -256,14 +254,10 @@ export function LocationsSection({ page }: LocationsSectionProps) {
       key: "rajasthan",
       label: `${text(labels?.rajasthan, d.filterLabels.rajasthan)} (${rajasthanCount})`,
     },
-    {
-      key: "facilities",
-      label: text(labels?.facilities, d.filterLabels.facilities),
-    },
   ] as const;
 
   const filtered =
-    activeFilter === "all" || activeFilter === "facilities"
+    activeFilter === "all"
       ? mappedDestinations
       : mappedDestinations.filter((d) => d.region === activeFilter);
 

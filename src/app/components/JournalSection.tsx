@@ -14,7 +14,7 @@ const defaultArticles = [
     title: "How Warm Herbal Bags Help You Recover From Stress",
     description:
       "Warm bags filled with herbs relax deep muscles and help lower stress in your body.",
-    href: "/blog/herbal-compresses",
+    href: "/blog",
   },
   {
     image: "/article-spa-design.jpg",
@@ -23,7 +23,7 @@ const defaultArticles = [
     title: "How to Build a Calm Spa With Nature and Ayurveda",
     description:
       "How stone, quiet rooms and natural light help your body relax on its own.",
-    href: "/blog/spa-sanctuaries",
+    href: "/blog",
   },
   {
     image: "/article-revpash.jpg",
@@ -32,7 +32,7 @@ const defaultArticles = [
     title: "How a Good Spa Helps a Hotel Earn More",
     description:
       "Why smart hotel owners turn empty spa space into busy spas that bring in more money.",
-    href: "/blog/revpash-optimization",
+    href: "/blog",
   },
 ];
 

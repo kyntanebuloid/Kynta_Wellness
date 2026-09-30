@@ -6,9 +6,9 @@ import {
   linkObj,
   obj,
   objList,
+  pdf,
   seo,
   str,
-  strList,
   txt,
 } from "./helpers";
 
@@ -22,21 +22,45 @@ export default defineType({
       str("eyebrow", "Small Label"),
       txt("heading", "Heading", 2),
       txt("subheading", "Description", 3),
-      strList("categories", "Category Buttons"),
-      obj("featured", "Featured Article", [
-        img("image", "Photo"),
-        str("badge", "Photo Badge"),
-        str("category", "Category"),
-        str("issue", "Issue"),
-        str("readTime", "Read Time"),
-        txt("title", "Title", 2),
-        txt("description", "Description", 3),
-        str("authorInitials", "Author Initials"),
-        str("authorName", "Author Name"),
-        str("authorRole", "Author Role"),
-        str("url", "Link"),
-        str("linkLabel", "Link Label"),
-      ]),
+      defineField({
+        name: "categories",
+        title: "Categories",
+        description:
+          "Each category is a button. Clicking it shows that category's featured article. The first one shows when the page opens.",
+        type: "array",
+        of: [
+          defineField({
+            name: "blogCategory",
+            title: "Category",
+            type: "object",
+            fields: [
+              str("label", "Button Label", { description: "e.g. ALL ESSAYS" }),
+              img("image", "Photo"),
+              str("badge", "Photo Badge"),
+              str("category", "Category"),
+              str("issue", "Issue"),
+              str("readTime", "Read Time"),
+              txt("title", "Title", 2),
+              txt("description", "Description", 3),
+              str("authorInitials", "Author Initials"),
+              str("authorName", "Author Name"),
+              str("authorRole", "Author Role"),
+              pdf("pdf", "Article PDF", {
+                description:
+                  "Upload the article as a PDF. The read link only shows when a PDF or a link is set.",
+              }),
+              str("url", "Or Article Link", {
+                description:
+                  "Used when there is no PDF. Leave empty to hide the link.",
+              }),
+              str("linkLabel", "Link Label"),
+            ],
+            preview: {
+              select: { title: "label", subtitle: "title", media: "image" },
+            },
+          }),
+        ],
+      }),
     ]),
     obj("inquiriesSection", "2. Recent Articles", [
       str("eyebrow", "Small Label"),
@@ -49,7 +73,13 @@ export default defineType({
         txt("title", "Title", 2),
         txt("description", "Description", 2),
         str("linkLabel", "Link Label"),
-        str("url", "Link"),
+        pdf("pdf", "Article PDF", {
+          description: "The read link only shows when a PDF or a link is set.",
+        }),
+        str("url", "Or Article Link", {
+          description:
+            "Used when there is no PDF. Leave empty to hide the link.",
+        }),
       ]),
     ]),
     obj("compendiumSection", "3. Monograph", [
@@ -65,8 +95,15 @@ export default defineType({
         str("title", "Title"),
         txt("description", "Description", 2),
       ]),
-      linkObj("primaryCta", "Main Button"),
-      linkObj("secondaryCta", "Second Button"),
+      str("monographLabel", "Monograph Button Label"),
+      pdf("monographPdf", "Monograph PDF", {
+        description:
+          "Upload a PDF to show the monograph button. Leave empty to hide it.",
+      }),
+      linkObj("hardcoverCta", "Hardcover Button", {
+        description:
+          "Set a link (e.g. /contact) to show this button. Leave the link empty to hide it.",
+      }),
       obj("ledger", "Data Card", [
         str("label", "Small Label"),
         str("code", "Code (e.g. ISBN)"),

@@ -48,7 +48,9 @@ import {
 export const SANITY_CACHE_TAG = "sanity";
 const SANITY_REVALIDATE_SECONDS = 60;
 const IS_DEV = process.env.NODE_ENV === "development";
-const SANITY_TIMEOUT_MS = 5000;
+// Builds fetch every page at once, so allow more time than a live request.
+const SANITY_TIMEOUT_MS =
+  process.env.NEXT_PHASE === "phase-production-build" ? 20_000 : 5000;
 const PRICING_TIMEOUT_MS = 8000;
 const BREAKER_FAILURE_THRESHOLD = 3;
 const BREAKER_COOLDOWN_MS = 30_000;

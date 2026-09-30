@@ -1,27 +1,37 @@
-import type { AccentColor, ContentImage, ContentLink } from "./types";
+import type {
+  AccentColor,
+  ContentFile,
+  ContentImage,
+  ContentLink,
+} from "./types";
 
 export type ChapterIcon = "microbiome" | "thermal" | "architecture";
+
+/** A category button and the featured article it shows. */
+export interface BlogCategory {
+  label: string;
+  image?: ContentImage;
+  badge?: string;
+  category?: string;
+  issue?: string;
+  readTime?: string;
+  title?: string;
+  description?: string;
+  authorInitials?: string;
+  authorName?: string;
+  authorRole?: string;
+  /** The read link shows only when a PDF or a link is set (PDF wins). */
+  pdf?: ContentFile;
+  url?: string;
+  linkLabel?: string;
+}
 
 export interface BlogPageContent {
   hero?: {
     eyebrow?: string;
     heading?: string;
     subheading?: string;
-    categories?: string[];
-    featured?: {
-      image?: ContentImage;
-      badge?: string;
-      category?: string;
-      issue?: string;
-      readTime?: string;
-      title?: string;
-      description?: string;
-      authorInitials?: string;
-      authorName?: string;
-      authorRole?: string;
-      url?: string;
-      linkLabel?: string;
-    };
+    categories?: BlogCategory[];
   };
   inquiriesSection?: {
     eyebrow?: string;
@@ -34,6 +44,8 @@ export interface BlogPageContent {
       title: string;
       description: string;
       linkLabel?: string;
+      /** The read link shows only when a PDF or a link is set (PDF wins). */
+      pdf?: ContentFile;
       url?: string;
     }[];
   };
@@ -42,8 +54,11 @@ export interface BlogPageContent {
     heading?: string;
     description?: string;
     chapters?: { icon?: ChapterIcon; title: string; description: string }[];
-    primaryCta?: ContentLink;
-    secondaryCta?: ContentLink;
+    monographLabel?: string;
+    /** The monograph button only shows once a PDF is uploaded. */
+    monographPdf?: ContentFile;
+    /** The hardcover button only shows when a link is set. */
+    hardcoverCta?: ContentLink;
     ledger?: {
       label?: string;
       code?: string;
@@ -89,32 +104,124 @@ export const blogPageDefaults = {
     subheading:
       "Dispatches from our Ayurvedic practitioners, spatial masterplanners, and apothecary artisans exploring the intersection of Vedic healing, circadian biology, and contemporary architecture.",
     categories: [
-      "ALL ESSAYS",
-      "BOTANICAL APOTHECARY",
-      "SANCTUARY ARCHITECTURE",
-      "CIRCADIAN SOMATICS",
-      "AYURVEDIC SCIENCE",
-      "VAIDYA CASE STUDIES",
-    ],
-    featured: {
-      image: {
-        url: "/blog-featured-kashayam.jpg",
-        alt: "Ayurvedic botanical oil extraction with golden elixir dropper into hammered bronze bowl",
+      {
+        label: "ALL ESSAYS",
+        image: {
+          url: "/blog-featured-kashayam.jpg",
+          alt: "Ayurvedic botanical oil extraction with golden elixir dropper into hammered bronze bowl",
+        },
+        badge: "COVER MONOGRAPH",
+        category: "BOTANICAL APOTHECARY",
+        issue: "ISSUE 28",
+        readTime: "8 MIN READ",
+        title:
+          "The Alchemy of Fresh Wildcrafted Botanicals: Seasonal Kashayams in High-Stress Restoration",
+        description:
+          "Why fresh-pressed decoctions and artisanal marma formulations yield biological equilibrium far beyond standardized extracts. Dr. Ananya Varma details our 48-hour wildcrafting harvest protocols in the Nilgiri foothills.",
+        authorInitials: "AV",
+        authorName: "DR. ANANYA VARMA",
+        authorRole: "Chief Vaidya & Botanical Formulation Director",
+        url: "",
+        linkLabel: "READ TREATISE",
       },
-      badge: "COVER MONOGRAPH",
-      category: "BOTANICAL APOTHECARY",
-      issue: "ISSUE 28",
-      readTime: "8 MIN READ",
-      title:
-        "The Alchemy of Fresh Wildcrafted Botanicals: Seasonal Kashayams in High-Stress Restoration",
-      description:
-        "Why fresh-pressed decoctions and artisanal marma formulations yield biological equilibrium far beyond standardized extracts. Dr. Ananya Varma details our 48-hour wildcrafting harvest protocols in the Nilgiri foothills.",
-      authorInitials: "AV",
-      authorName: "DR. ANANYA VARMA",
-      authorRole: "Chief Vaidya & Botanical Formulation Director",
-      url: "/blog/alchemy-of-fresh-wildcrafted-botanicals",
-      linkLabel: "READ TREATISE",
-    },
+      {
+        label: "BOTANICAL APOTHECARY",
+        image: {
+          url: "/article-herbal-compress.jpg",
+          alt: "Warm herbal compress bundles",
+        },
+        badge: "APOTHECARY NOTES",
+        category: "BOTANICAL APOTHECARY",
+        issue: "ISSUE 27",
+        readTime: "6 MIN READ",
+        title: "How Warm Herbal Compresses Help the Body Recover From Stress",
+        description:
+          "Warm bundles filled with herbs relax deep muscles and help lower stress in the body.",
+        authorInitials: "HN",
+        authorName: "DR. HARISH NAMBOODIRI",
+        authorRole: "Chief Ayurvedic Vaidya",
+        url: "",
+        linkLabel: "READ TREATISE",
+      },
+      {
+        label: "SANCTUARY ARCHITECTURE",
+        image: {
+          url: "/inquiry-architecture.jpg",
+          alt: "Serene stepped courtyard pool garden with stone walkway and pergola",
+        },
+        badge: "ARCHITECTURE NOTE",
+        category: "SANCTUARY ARCHITECTURE",
+        issue: "ISSUE 26",
+        readTime: "6 MIN READ",
+        title:
+          "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries",
+        description:
+          "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.",
+        authorInitials: "DS",
+        authorName: "DEVENDRA SENGUPTA",
+        authorRole: "Head of Spatial Architecture",
+        url: "",
+        linkLabel: "READ ARCHITECTURE NOTE",
+      },
+      {
+        label: "CIRCADIAN SOMATICS",
+        image: {
+          url: "/timeline-kerala.jpg",
+          alt: "Misty herbal plantation terraces at dawn",
+        },
+        badge: "FIELD NOTE",
+        category: "CIRCADIAN SOMATICS",
+        issue: "ISSUE 25",
+        readTime: "4 MIN READ",
+        title: "On the Sacred Stillness of Bramha Muhurta",
+        description:
+          "The ninety minutes prior to sunrise possess a rarefied rhythm. When meditating before ambient light saturates the courtyard, cellular metabolic tension settles into genuine rest.",
+        authorInitials: "SN",
+        authorName: "VAIDYA SURESH NAIR",
+        authorRole: "Kumarakom Retreat",
+        url: "",
+        linkLabel: "READ FIELD NOTE",
+      },
+      {
+        label: "AYURVEDIC SCIENCE",
+        image: {
+          url: "/inquiry-ayurveda.jpg",
+          alt: "Traditional warm bronze oil vessel with red linen cloth and rolled towels",
+        },
+        badge: "CLINICAL INSIGHT",
+        category: "AYURVEDIC SCIENCE",
+        issue: "ISSUE 24",
+        readTime: "7 MIN READ",
+        title: "Circadian Chronobiology & The Art of the Evening Abhyanga",
+        description:
+          "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.",
+        authorInitials: "HN",
+        authorName: "DR. HARISH NAMBOODIRI",
+        authorRole: "Chief Ayurvedic Vaidya",
+        url: "",
+        linkLabel: "READ CLINICAL INSIGHT",
+      },
+      {
+        label: "VAIDYA CASE STUDIES",
+        image: {
+          url: "/inquiry-hydrotherapy.jpg",
+          alt: "Calm stone thermal hydro plunge pool with waterfall and loungers",
+        },
+        badge: "CASE STUDY",
+        category: "VAIDYA CASE STUDIES",
+        issue: "ISSUE 23",
+        readTime: "5 MIN READ",
+        title:
+          "Thermal Transitions: The Physiological Protocol of Salt Grottos",
+        description:
+          "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.",
+        authorInitials: "HN",
+        authorName: "DR. HARISH NAMBOODIRI",
+        authorRole: "Chief Ayurvedic Vaidya",
+        url: "",
+        linkLabel: "READ CASE STUDY",
+      },
+    ],
   },
   inquiriesSection: {
     eyebrow: "PEER-REVIEWED FIELDWORK",
@@ -133,7 +240,7 @@ export const blogPageDefaults = {
         description:
           "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.",
         linkLabel: "READ ARCHITECTURE NOTE",
-        url: "/blog/acoustic-silence-spatial-attenuation",
+        url: "",
       },
       {
         image: {
@@ -146,7 +253,7 @@ export const blogPageDefaults = {
         description:
           "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.",
         linkLabel: "READ CLINICAL INSIGHT",
-        url: "/blog/circadian-chronobiology-evening-abhyanga",
+        url: "",
       },
       {
         image: {
@@ -160,7 +267,7 @@ export const blogPageDefaults = {
         description:
           "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.",
         linkLabel: "READ FIELD REPORT",
-        url: "/blog/thermal-transitions-salt-grottos",
+        url: "",
       },
     ],
   },
@@ -189,8 +296,8 @@ export const blogPageDefaults = {
           "Integrating Vaastu architectural orientations with calibrated acoustic damping for cortisol reduction.",
       },
     ],
-    primaryCta: { label: "REQUEST DIGITAL MONOGRAPH (PDF)", url: "#download-pdf" },
-    secondaryCta: { label: "ORDER HARDCOVER EDITION", url: "#order-hardcover" },
+    monographLabel: "REQUEST DIGITAL MONOGRAPH (PDF)",
+    hardcoverCta: { label: "ORDER HARDCOVER EDITION", url: "" },
     ledger: {
       label: "INSTITUTIONAL LEDGER",
       code: "ISBN 978–0–9882",

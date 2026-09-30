@@ -88,10 +88,10 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
     subtitle: ch.description,
     iconType: ch.icon ?? d.chapters[i % d.chapters.length].icon,
   }));
-  const primaryLabel = text(data?.primaryCta?.label, d.primaryCta.label);
-  const primaryUrl = text(data?.primaryCta?.url, d.primaryCta.url);
-  const secondaryLabel = text(data?.secondaryCta?.label, d.secondaryCta.label);
-  const secondaryUrl = text(data?.secondaryCta?.url, d.secondaryCta.url);
+  const monographLabel = text(data?.monographLabel, d.monographLabel);
+  const monographPdf = data?.monographPdf?.url ?? null;
+  const hardcoverLabel = text(data?.hardcoverCta?.label, d.hardcoverCta.label);
+  const hardcoverUrl = data?.hardcoverCta?.url?.trim() || null;
   const l = data?.ledger;
   const ledger = {
     label: text(l?.label, d.ledger.label),
@@ -168,51 +168,59 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <a
-                href={primaryUrl}
-                className="px-5 py-3 rounded-[6px] text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
-                style={{ backgroundColor: "#9b5440" }}
-              >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>{primaryLabel}</span>
-              </a>
+            {(monographPdf || hardcoverUrl) && (
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                {monographPdf && (
+                  <a
+                    href={monographPdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-3 rounded-[6px] text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase transition-all duration-200 shadow-sm flex items-center gap-2"
+                    style={{ backgroundColor: "#9b5440" }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>{monographLabel}</span>
+                  </a>
+                )}
 
-              <a
-                href={secondaryUrl}
-                className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase text-white/90 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                </svg>
-                <span>{secondaryLabel}</span>
-              </a>
-            </div>
+                {hardcoverUrl && (
+                  <a
+                    href={hardcoverUrl}
+                    className="text-[10px] sm:text-[10.5px] font-semibold tracking-[0.12em] uppercase text-white/90 hover:text-white transition-colors flex items-center gap-2"
+                  >
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    <span>{hardcoverLabel}</span>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
@@ -261,13 +269,23 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                 {ledger.bars.map((bar, index) => (
                   <div
                     key={`${bar.label}-${index}`}
-                    className={index === ledger.bars.length - 1 ? "mb-6" : "mb-5"}
+                    className={
+                      index === ledger.bars.length - 1 ? "mb-6" : "mb-5"
+                    }
                   >
                     <div className="flex items-center justify-between text-[11px] sm:text-[11.5px] font-medium mb-1.5">
                       <span className="text-kynta-charcoal">{bar.label}</span>
                       <span
-                        className={bar.isRust ? "font-semibold text-kynta-rust" : "font-semibold"}
-                        style={bar.isRust ? undefined : { color: "var(--kynta-teal-dark)" }}
+                        className={
+                          bar.isRust
+                            ? "font-semibold text-kynta-rust"
+                            : "font-semibold"
+                        }
+                        style={
+                          bar.isRust
+                            ? undefined
+                            : { color: "var(--kynta-teal-dark)" }
+                        }
                       >
                         {bar.value}
                       </span>
@@ -275,7 +293,10 @@ export function BlogCompendiumSection({ data }: BlogCompendiumSectionProps) {
                     <div className="w-full h-2 rounded-full bg-[#e8ecea] overflow-hidden">
                       <div
                         className="h-full rounded-full"
-                        style={{ width: `${bar.percent}%`, backgroundColor: bar.color }}
+                        style={{
+                          width: `${bar.percent}%`,
+                          backgroundColor: bar.color,
+                        }}
                       />
                     </div>
                   </div>

@@ -72,7 +72,7 @@ export interface LocationDetail {
   primaryCta: Required<ContentLink>;
   /** Null until a PDF is uploaded for this location. */
   dossier: { label: string; url: string } | null;
-    /** Null unless a Google Maps link is set in Sanity. */
+  /** Null unless a Google Maps link is set in Sanity. */
   mapUrl: string | null;
   /** Null unless a valid Google Maps embed link is set in Sanity. */
   mapEmbedUrl: string | null;
@@ -91,7 +91,6 @@ export interface LocationsPageContent {
     all?: string;
     himalayan?: string;
     rajasthan?: string;
-    facilities?: string;
   };
   detailsLabel?: string;
   glanceHeading?: string;
@@ -118,7 +117,6 @@ export const locationsPageDefaults = {
     all: "All Enclaves",
     himalayan: "Himachal Pradesh",
     rajasthan: "Rajasthan",
-    facilities: "Filter Facilities",
   },
   detailsLabel: "Details",
   glanceHeading: "Sanctuary at a Glance",

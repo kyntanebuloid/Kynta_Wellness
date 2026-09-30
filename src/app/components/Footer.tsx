@@ -13,7 +13,7 @@ interface FooterProps {
 const defaultLegalLinks = [
   { label: "Privacy Policy", url: "/privacy" },
   { label: "Terms of Service", url: "/terms" },
-  { label: "Spa", url: "/spas" },
+  { label: "Spa Locations", url: "/locations" },
 ];
 
 function SocialIcon({

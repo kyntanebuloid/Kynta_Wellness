@@ -1,14 +1,5 @@
 import { defineField, defineType } from "sanity";
-import {
-  choice,
-  img,
-  linkObj,
-  obj,
-  objList,
-  seo,
-  str,
-  txt,
-} from "./helpers";
+import { choice, img, linkObj, obj, objList, seo, str, txt } from "./helpers";
 
 // Mirrors src/content/locations.ts. Each location powers its card on the
 // Locations page and homepage and its own /locations/<slug> detail page.
@@ -108,15 +99,15 @@ const location = defineField({
       group: "detail",
       description: "e.g. SANCTUARY DOSSIER (PDF)",
     }),
-    str("mapUrl", "Google Maps Link",{
+    str("mapUrl", "Google Maps Link", {
       group: "detail",
       description:
-      "Open the place in Google Maps → Share → Copy link, then paste it here. Leave empty to hide the button.",
+        "Open the place in Google Maps → Share → Copy link, then paste it here. Leave empty to hide the button.",
     }),
     str("mapEmbedUrl", "Google Maps Embed Link", {
       group: "detail",
       description:
-        "Google Maps → Share → Embed a map → copy only the src=\"…\" part (starts with https://www.google.com/maps/embed). Leave empty to hide the map.",
+        'Google Maps → Share → Embed a map → copy only the src="…" part (starts with https://www.google.com/maps/embed). Leave empty to hide the map.',
     }),
     obj(
       "gallery",
@@ -167,9 +158,10 @@ export default defineType({
         str("all", "All"),
         str("himalayan", "Himachal Pradesh"),
         str("rajasthan", "Rajasthan"),
-        str("facilities", "Facilities"),
       ],
-      { description: "Counts are added automatically, e.g. “All Enclaves (6)”." },
+      {
+        description: "Counts are added automatically, e.g. “All Enclaves (6)”.",
+      },
     ),
     str("detailsLabel", "Card Link Label"),
     str("glanceHeading", "Detail Page – “At a Glance” Heading"),

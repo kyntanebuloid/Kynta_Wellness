@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { type BlogPageContent, blogPageDefaults } from "@/content/blog";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
@@ -18,7 +17,8 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
       title: a.title,
       description: a.description,
       ctaLabel: text(a.linkLabel, "READ MORE"),
-      ctaHref: text(a.url, "/blog"),
+      // PDF first, then a link; nothing means no read link at all.
+      ctaHref: a.pdf?.url || a.url?.trim() || null,
       image: imageUrl(a.image, fallback.image),
       imageAlt: imageAlt(a.image, { alt: a.title }),
     };
@@ -76,12 +76,18 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
                   </p>
 
                   <h3 className="font-serif text-xl leading-snug font-normal text-kynta-charcoal mb-3">
-                    <Link
-                      href={article.ctaHref}
-                      className="hover:text-kynta-teal-dark transition-colors"
-                    >
-                      {article.title}
-                    </Link>
+                    {article.ctaHref ? (
+                      <a
+                        href={article.ctaHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-kynta-teal-dark transition-colors"
+                      >
+                        {article.title}
+                      </a>
+                    ) : (
+                      article.title
+                    )}
                   </h3>
 
                   <p className="text-[13px] leading-[1.7] text-kynta-warm-gray">
@@ -90,17 +96,21 @@ export function BlogInquiriesSection({ data }: BlogInquiriesSectionProps) {
                 </div>
               </div>
 
-              <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-2 mt-auto">
-                <Link
-                  href={article.ctaHref}
-                  className="text-xs font-semibold tracking-wide uppercase transition-colors flex items-center gap-1.5 group-hover:text-kynta-teal text-kynta-teal-dark"
-                >
-                  <span>{article.ctaLabel}</span>
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                    →
-                  </span>
-                </Link>
-              </div>
+              {article.ctaHref && (
+                <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-2 mt-auto">
+                  <a
+                    href={article.ctaHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-semibold tracking-wide uppercase transition-colors flex items-center gap-1.5 group-hover:text-kynta-teal text-kynta-teal-dark"
+                  >
+                    <span>{article.ctaLabel}</span>
+                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      →
+                    </span>
+                  </a>
+                </div>
+              )}
             </article>
           ))}
         </div>
