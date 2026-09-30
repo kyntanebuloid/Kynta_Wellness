@@ -137,15 +137,16 @@ function LocationCard({
   aspectRatio = "1 / 0.85",
 }: Destination & { aspectRatio?: string }) {
   return (
-    <div
-      className="relative w-full overflow-hidden rounded-[14px]"
+    <Link
+      href={detailsHref}
+      className="group relative block w-full overflow-hidden rounded-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a1a1a]"
       style={{ aspectRatio }}
     >
       <Image
         src={image}
         alt={title}
         fill
-        className="object-cover"
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
       />
 
@@ -178,10 +179,7 @@ function LocationCard({
             ))}
           </div>
 
-          <Link
-            href={detailsHref}
-            className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] uppercase text-white/90 hover:text-white transition-colors"
-          >
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] uppercase text-white/90 group-hover:text-white transition-colors">
             {detailsLabel}
             <svg
               width="10"
@@ -196,10 +194,10 @@ function LocationCard({
               <title>Arrow</title>
               <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
