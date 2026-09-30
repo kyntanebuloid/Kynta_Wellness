@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { isLowPowerRendering } from "@/lib/low-power";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,6 +27,38 @@ const REVEAL_FROM: Record<string, gsap.TweenVars> = {
 export function ScrollEffects() {
   const pathname = usePathname();
   const enabled = !EXCLUDED_ROUTES.test(pathname);
+  const lenisRef = useRef<Lenis | null>(null);
+  const backForwardRef = useRef(false);
+
+  // Back/forward should restore the old position; everything else starts at the top.
+  useEffect(() => {
+    const onPopState = () => {
+      backForwardRef.current = true;
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  // Lenis keeps its own scroll target across client-side navigations, so after
+  // Next.js scrolls the new page to the top Lenis would glide back to the old
+  // offset. Re-sync it on every route change.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: must re-run on each navigation
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (backForwardRef.current) {
+      backForwardRef.current = false;
+      if (lenis) {
+        const frame = requestAnimationFrame(() =>
+          lenis.scrollTo(window.scrollY, { immediate: true, force: true }),
+        );
+        return () => cancelAnimationFrame(frame);
+      }
+      return;
+    }
+    if (window.location.hash) return;
+    window.scrollTo(0, 0);
+    lenis?.scrollTo(0, { immediate: true, force: true });
+  }, [pathname]);
 
   // Flags CPU-only rendering on <html> so CSS can drop blur-heavy effects.
   useEffect(() => {
@@ -47,10 +79,12 @@ export function ScrollEffects() {
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
+    lenisRef.current = lenis;
 
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, [enabled]);
 
