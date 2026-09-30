@@ -20,7 +20,8 @@
     "sync:locations": "npx tsx scripts/sync-content-to-sanity.ts --only=locationsPage",
     "sync:hotels": "npx tsx scripts/sync-content-to-sanity.ts --only=hospitalityPage",
     "sync:blog": "npx tsx scripts/sync-content-to-sanity.ts --only=blogPage",
-    "sync:contact": "npx tsx scripts/sync-content-to-sanity.ts --only=contactPage"
+    "sync:contact": "npx tsx scripts/sync-content-to-sanity.ts --only=contactPage",
+    "blog:delete": "npx tsx scripts/delete-blog-post.ts"
   },
   "dependencies": {
     "@sanity/client": "^8.6.1",
