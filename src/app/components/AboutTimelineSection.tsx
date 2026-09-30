@@ -176,7 +176,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
           <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
             {heading}
           </h2>
-          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg mx-auto">
+          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg mx-auto" data-reveal>
             {description}
           </p>
         </div>
@@ -204,6 +204,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
 
               const textContent = (align: "left" | "right") => (
                 <div
+                  data-reveal={align === "right" ? "left" : "right"}
                   className={`max-w-[360px] flex flex-col ${
                     align === "right"
                       ? "text-right items-end ml-auto"
@@ -239,6 +240,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
 
               const imageContent = (
                 <div
+                  data-reveal="scale"
                   className="relative w-[280px] max-w-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
                   style={{
                     aspectRatio: "280 / 155",

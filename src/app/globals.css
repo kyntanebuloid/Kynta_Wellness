@@ -156,3 +156,17 @@ html {
     max-width: 1560px;
   }
 }
+
+/* Lightweight mode: set by ScrollEffects when the browser renders without a
+   GPU. Blur filters are repainted by the CPU on every scroll frame, so drop
+   them and freeze the hero smoke. */
+html[data-low-power] .header-glass {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-low-power] #hero .wisp {
+  filter: none;
+  animation: none;
+  will-change: auto;
+}

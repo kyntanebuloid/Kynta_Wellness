@@ -152,12 +152,12 @@ export function AboutLeadershipSection({ data }: AboutLeadershipSectionProps) {
           <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
             {heading}
           </h2>
-          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-xl">
+          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-xl" data-reveal>
             {description}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-stagger>
           {team.map((member, index) => (
             <LeadershipCard key={`${member.name}-${index}`} member={member} />
           ))}

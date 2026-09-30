@@ -28,7 +28,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
     >
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-20 md:mb-24">
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center" data-reveal-stagger>
             <div className="flex items-center gap-4 mb-4">
               <span
                 className="block h-px flex-shrink-0"
@@ -88,7 +88,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative" data-reveal="scale">
             <div
               className="relative w-full overflow-hidden"
               style={{
@@ -161,10 +161,11 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pt-4" data-reveal-stagger>
           {displayStats.map((s) => (
             <div key={s.label}>
               <p
+                data-count
                 className="font-serif italic text-[28px] leading-none mb-2"
                 style={{ color: "var(--kynta-teal)" }}
               >

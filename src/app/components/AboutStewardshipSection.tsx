@@ -28,6 +28,7 @@ export function AboutStewardshipSection({
     >
       <div className="container-site">
         <div
+          data-reveal="scale"
           className="rounded-[24px] md:rounded-[28px] p-7 sm:p-10 md:p-12 lg:p-14 shadow-[0_12px_44px_rgba(0,45,40,0.15)] relative overflow-hidden"
           style={{ backgroundColor: "#004349" }}
         >
@@ -51,7 +52,7 @@ export function AboutStewardshipSection({
                 {description}
               </p>
 
-              <div className="space-y-5">
+              <div className="space-y-5" data-reveal-stagger>
                 {features.map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
                     <div
@@ -87,7 +88,7 @@ export function AboutStewardshipSection({
             </div>
 
             <div className="lg:col-span-6">
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-[440px] mx-auto lg:max-w-none">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-[440px] mx-auto lg:max-w-none" data-reveal-stagger>
                 <div className="flex flex-col gap-3 sm:gap-4">
                   <div className="relative aspect-[4/3] w-full rounded-[14px] sm:rounded-[16px] overflow-hidden shadow-sm">
                     <Image

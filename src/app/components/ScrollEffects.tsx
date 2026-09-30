@@ -6,6 +6,7 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { isLowPowerRendering } from "@/lib/low-power";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,12 +16,27 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+// Starting offsets for `data-reveal="<variant>"`; plain `data-reveal` rises up.
+const REVEAL_FROM: Record<string, gsap.TweenVars> = {
+  up: { y: 28 },
+  left: { x: -48 },
+  right: { x: 48 },
+  scale: { scale: 0.94, y: 16 },
+};
+
 export function ScrollEffects() {
   const pathname = usePathname();
   const enabled = !EXCLUDED_ROUTES.test(pathname);
 
+  // Flags CPU-only rendering on <html> so CSS can drop blur-heavy effects.
   useEffect(() => {
-    if (!enabled || prefersReducedMotion()) return;
+    if (isLowPowerRendering()) {
+      document.documentElement.dataset.lowPower = "true";
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!enabled || prefersReducedMotion() || isLowPowerRendering()) return;
 
     const lenis = new Lenis({
       duration: 1.15,
@@ -40,22 +56,25 @@ export function ScrollEffects() {
 
   useEffect(() => {
     if (!enabled || prefersReducedMotion()) return;
+    const lowPower = isLowPowerRendering();
 
     const ctx = gsap.context(() => {
       const revealBase = {
-        y: 28,
         autoAlpha: 0,
-        duration: 0.9,
+        duration: lowPower ? 0.6 : 0.9,
         ease: "power3.out",
         clearProps: "transform,opacity,visibility",
       };
+      const fromFor = (el: HTMLElement) =>
+        REVEAL_FROM[el.dataset.reveal ?? ""] ?? REVEAL_FROM.up;
 
       gsap.utils
         .toArray<HTMLElement>("[data-reveal], main section h2")
         .forEach((el) => {
-          if (el.closest("[data-reveal-stagger]")) return;
+          if (el.parentElement?.closest("[data-reveal-stagger]")) return;
           gsap.from(el, {
             ...revealBase,
+            ...fromFor(el),
             scrollTrigger: { trigger: el, start: "top 88%", once: true },
           });
         });
@@ -63,23 +82,27 @@ export function ScrollEffects() {
       gsap.utils.toArray<HTMLElement>("[data-reveal-stagger]").forEach((el) => {
         gsap.from(el.children, {
           ...revealBase,
+          ...REVEAL_FROM.up,
           stagger: 0.1,
           scrollTrigger: { trigger: el, start: "top 88%", once: true },
         });
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
-        gsap.to(el, {
-          yPercent: Number(el.dataset.parallax) || 8,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
+      // Parallax repaints a large image every frame, which stutters without a GPU.
+      if (!lowPower) {
+        gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
+          gsap.to(el, {
+            yPercent: Number(el.dataset.parallax) || 8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el.parentElement,
+              start: "top top",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
         });
-      });
+      }
 
       gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
         // Effects can re-run (Strict Mode, navigation), so keep the real value on the node.

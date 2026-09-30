@@ -71,8 +71,8 @@ export function Header({ settings }: HeaderProps) {
       {/* Blur that melts into the content below instead of ending in a hard edge */}
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-x-0 top-0 h-[120px] backdrop-blur-lg transition-opacity duration-500 ${
-          solid ? "opacity-0" : "opacity-100"
+        className={`header-glass pointer-events-none absolute inset-x-0 top-0 h-[120px] backdrop-blur-lg transition-[opacity,visibility] duration-500 ${
+          solid ? "opacity-0 invisible" : "opacity-100 visible"
         }`}
         style={{
           background:

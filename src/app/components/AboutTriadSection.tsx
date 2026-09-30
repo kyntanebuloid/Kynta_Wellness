@@ -173,14 +173,14 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
             </h2>
           </div>
 
-          <div className="flex items-start md:pt-4">
+          <div className="flex items-start md:pt-4" data-reveal>
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
               {description}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-stagger>
           {cards.map((card, i) => (
             <TriadCard key={`${card.number}-${i}`} {...card} />
           ))}
