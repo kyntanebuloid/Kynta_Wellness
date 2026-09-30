@@ -1,6 +1,10 @@
 import { unstable_cache } from "next/cache";
 import type { AboutPageContent } from "@/content/about";
-import type { BlogPageContent } from "@/content/blog";
+import type {
+  BlogPageContent,
+  BlogPostDetail,
+  BlogPostSummary,
+} from "@/content/blog";
 import type { ContactPageContent } from "@/content/contact";
 import type { ExperiencesPageContent } from "@/content/experiences";
 import type { HospitalityPageContent } from "@/content/hospitality";
@@ -14,7 +18,6 @@ import {
 } from "@/content/locations";
 import { imageUrl, link, list, text } from "@/content/types";
 import type {
-  BlogPost,
   Experience,
   Faq,
   Homepage,
@@ -25,7 +28,6 @@ import type {
 } from "@/types/sanity";
 import { sanityNoCdnClient } from "./client";
 import {
-  allBlogPostsQuery,
   allExperienceSlugsQuery,
   allExperiencesQuery,
   allFaqsQuery,
@@ -33,7 +35,7 @@ import {
   allTestimonialsQuery,
   allTreatmentsQuery,
   blogPostBySlugQuery,
-  blogPostsByCategoryQuery,
+  blogPostListQuery,
   bookableExperiencesQuery,
   experienceBySlugQuery,
   experiencePricingByIdQuery,
@@ -157,7 +159,10 @@ function resolveImages<T>(value: unknown): T {
     const record = value as Record<string, unknown>;
     const ref = (record.asset as { _ref?: unknown } | undefined)?._ref;
     if (typeof ref === "string" && ref.startsWith("image-")) {
+      // Keep _type/_key/caption so images inside article text still render.
+      const { asset: _asset, crop: _crop, hotspot: _hotspot, ...rest } = record;
       return {
+        ...rest,
         url: sanityImageUrl(ref),
         alt: typeof record.alt === "string" ? record.alt : null,
       } as T;
@@ -230,24 +235,18 @@ export async function getTreatmentBySlug(
   return fetchSanity<Treatment>(treatmentBySlugQuery, { slug });
 }
 
-export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const result = await fetchSanity<BlogPost[]>(allBlogPostsQuery);
-  return result ?? [];
+/** Visible blog posts in their Studio "Position" order. */
+export async function getBlogPosts(): Promise<BlogPostSummary[]> {
+  const result = await fetchSanity<unknown[]>(blogPostListQuery);
+  return result ? resolveImages<BlogPostSummary[]>(result) : [];
 }
 
-export async function getBlogPostBySlug(
+/** A visible blog post, or null when it is missing or hidden. */
+export async function getBlogPost(
   slug: string,
-): Promise<BlogPost | null> {
-  return fetchSanity<BlogPost>(blogPostBySlugQuery, { slug });
-}
-
-export async function getBlogPostsByCategory(
-  category: string,
-): Promise<BlogPost[]> {
-  const result = await fetchSanity<BlogPost[]>(blogPostsByCategoryQuery, {
-    category,
-  });
-  return result ?? [];
+): Promise<BlogPostDetail | null> {
+  const result = await fetchSanity<unknown>(blogPostBySlugQuery, { slug });
+  return result ? resolveImages<BlogPostDetail>(result) : null;
 }
 
 export async function getAllTestimonials(): Promise<Testimonial[]> {

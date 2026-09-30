@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getBlogPage, getSiteSettings } from "@/lib/sanity/data";
+import { getBlogPage, getBlogPosts, getSiteSettings } from "@/lib/sanity/data";
 import { BlogCompendiumSection } from "../components/BlogCompendiumSection";
 import { BlogHeroSection } from "../components/BlogHeroSection";
 import { BlogInquiriesSection } from "../components/BlogInquiriesSection";
@@ -15,8 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const [blog, siteSettings] = await Promise.all([
+  const [blog, posts, siteSettings] = await Promise.all([
     getBlogPage(),
+    getBlogPosts(),
     getSiteSettings(),
   ]);
 
@@ -26,7 +27,7 @@ export default async function BlogPage() {
       <Header settings={siteSettings} />
       <main>
         <BlogHeroSection data={blog?.hero} />
-        <BlogInquiriesSection data={blog?.inquiriesSection} />
+        <BlogInquiriesSection data={blog?.inquiriesSection} posts={posts} />
         <BlogCompendiumSection data={blog?.compendiumSection} />
         <BlogPhilosophySoundSection data={blog?.philosophySection} />
       </main>

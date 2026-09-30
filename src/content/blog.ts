@@ -96,6 +96,56 @@ export interface BlogPageContent {
   };
 }
 
+/** A blog post as listed on /blog (a Sanity "Blog Post" document). */
+export interface BlogPostSummary {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  featuredImage?: ContentImage | null;
+  category?: string | null;
+  readTime?: string | null;
+  author?: string | null;
+  publishedAt?: string | null;
+}
+
+/** An inline image in the article text. */
+export interface BlogBodyImage extends ContentImage {
+  _type: "contentImage";
+  _key: string;
+  caption?: string | null;
+}
+
+export interface BlogPostDetail extends BlogPostSummary {
+  authorRole?: string | null;
+  /** Portable Text blocks and inline images. */
+  content?: ({ _type: string; _key: string } & Record<string, unknown>)[];
+  /** The download button only shows once a PDF is uploaded. */
+  pdf?: ContentFile | null;
+  pdfLabel?: string | null;
+  seo?: { title?: string | null; description?: string | null } | null;
+}
+
+const postDate = new Intl.DateTimeFormat("en-IN", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "Asia/Kolkata",
+});
+
+/** "12 Mar 2026", or "" when the date is missing or invalid. */
+export function formatPostDate(value?: string | null): string {
+  const date = value ? new Date(value) : null;
+  return date && !Number.isNaN(date.getTime()) ? postDate.format(date) : "";
+}
+
+/** "6 MIN READ · 12 MAR 2026" — whichever parts are set. */
+export function blogPostMeta(post: BlogPostSummary): string {
+  return [post.readTime, formatPostDate(post.publishedAt).toUpperCase()]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 export const blogPageDefaults = {
   hero: {
     eyebrow: "THE KYNTA SANCTUARY GAZETTE — VOL. IV",

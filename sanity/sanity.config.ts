@@ -111,7 +111,14 @@ export default defineConfig({
             S.divider(),
             S.listItem()
               .title("Blog Posts")
-              .child(S.documentTypeList("blogPost").title("Blog Posts")),
+              .child(
+                S.documentTypeList("blogPost")
+                  .title("Blog Posts")
+                  .defaultOrdering([
+                    { field: "position", direction: "asc" },
+                    { field: "publishedAt", direction: "desc" },
+                  ]),
+              ),
             S.listItem()
               .title("Testimonials")
               .child(S.documentTypeList("testimonial").title("Testimonials")),

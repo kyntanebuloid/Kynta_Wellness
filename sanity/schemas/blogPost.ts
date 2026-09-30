@@ -1,69 +1,90 @@
 import { defineField, defineType } from "sanity";
+import { img, pdf, seo, str } from "./helpers";
+
+// Each post is its own document and gets a page at /blog/<slug>.
+// The blog page lists visible posts by Position (low → high); hidden posts
+// are skipped, so 1, 2, 3, 4, (hidden), (hidden), 7 shows 7 right after 4.
 
 export default defineType({
   name: "blogPost",
   title: "Blog Post",
   type: "document",
+  groups: [
+    { name: "listing", title: "Listing", default: true },
+    { name: "article", title: "Article" },
+    { name: "seo", title: "SEO" },
+  ],
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
+      group: "listing",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "slug",
-      title: "Slug",
+      title: "Web address",
+      description:
+        "The part after /blog/. Click Generate to make it from the title.",
       type: "slug",
+      group: "listing",
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "showOnSite",
+      title: "Show on site",
+      description:
+        "Turn off to hide this post from the blog without deleting it.",
+      type: "boolean",
+      group: "listing",
+      initialValue: true,
+    }),
+    defineField({
+      name: "position",
+      title: "Position",
+      description:
+        "Order on the blog page — 1 shows first. Hidden posts are skipped. Posts without a number go last, newest first.",
+      type: "number",
+      group: "listing",
+      validation: (rule) => rule.integer().min(1),
+    }),
+    img("featuredImage", "Cover image", { group: "listing" }),
+    str("category", "Category tag", {
+      group: "listing",
+      description: "Small label on the card, e.g. BOTANICAL APOTHECARY.",
+    }),
+    str("readTime", "Read time", {
+      group: "listing",
+      description: "e.g. 6 MIN READ",
+    }),
+    defineField({
       name: "excerpt",
-      title: "Excerpt",
+      title: "Short description",
+      description: "Shown on the card and under the title on the article page.",
       type: "text",
       rows: 3,
-      validation: (rule) => rule.max(200),
+      group: "listing",
+      validation: (rule) => rule.max(300),
     }),
     defineField({
-      name: "featuredImage",
-      title: "Featured Image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt Text",
-          type: "string",
-        }),
-      ],
+      name: "publishedAt",
+      title: "Published date",
+      type: "datetime",
+      group: "listing",
+      initialValue: () => new Date().toISOString(),
     }),
-    defineField({
-      name: "author",
-      title: "Author",
-      type: "string",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "string",
-      options: {
-        list: [
-          { title: "Wellness", value: "wellness" },
-          { title: "Ayurveda", value: "ayurveda" },
-          { title: "Yoga", value: "yoga" },
-          { title: "Nutrition", value: "nutrition" },
-          { title: "Mental Health", value: "mental-health" },
-          { title: "Lifestyle", value: "lifestyle" },
-        ],
-        layout: "dropdown",
-      },
+    str("author", "Author name", { group: "article" }),
+    str("authorRole", "Author role", {
+      group: "article",
+      description: "e.g. Chief Ayurvedic Vaidya",
     }),
     defineField({
       name: "content",
-      title: "Content",
+      title: "Article text",
       type: "array",
+      group: "article",
       of: [
         { type: "block" },
         defineField({
@@ -72,45 +93,33 @@ export default defineType({
           title: "Image",
           options: { hotspot: true },
           fields: [
-            defineField({
-              name: "alt",
-              title: "Alt Text",
-              type: "string",
-            }),
+            defineField({ name: "alt", title: "Alt Text", type: "string" }),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
           ],
         }),
       ],
     }),
-    defineField({
-      name: "publishedAt",
-      title: "Published Date",
-      type: "datetime",
-      validation: (rule) => rule.required(),
+    pdf("pdf", "PDF download (optional)", {
+      group: "article",
+      description: "The download button only shows once a PDF is uploaded.",
     }),
-    defineField({
-      name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        defineField({ name: "title", title: "SEO Title", type: "string" }),
-        defineField({
-          name: "description",
-          title: "SEO Description",
-          type: "text",
-          rows: 2,
-        }),
-        defineField({
-          name: "ogImage",
-          title: "OG Image",
-          type: "image",
-          options: { hotspot: true },
-        }),
-      ],
+    str("pdfLabel", "PDF button label", {
+      group: "article",
+      description: "Defaults to DOWNLOAD PDF.",
     }),
+    { ...seo(), group: "seo" },
   ],
   orderings: [
     {
-      title: "Published Date, New",
+      title: "Position",
+      name: "positionAsc",
+      by: [
+        { field: "position", direction: "asc" },
+        { field: "publishedAt", direction: "desc" },
+      ],
+    },
+    {
+      title: "Published date, newest",
       name: "publishedAtDesc",
       by: [{ field: "publishedAt", direction: "desc" }],
     },
@@ -118,14 +127,15 @@ export default defineType({
   preview: {
     select: {
       title: "title",
-      author: "author",
-      date: "publishedAt",
+      position: "position",
+      shown: "showOnSite",
       media: "featuredImage",
     },
-    prepare(selection) {
-      const { title, author, date, media } = selection;
-      const formatted = date ? new Date(date).toLocaleDateString() : "No date";
-      return { title: `${title} by ${author}`, subtitle: formatted, media };
+    prepare({ title, position, shown, media }) {
+      const place =
+        typeof position === "number" ? `#${position}` : "No position";
+      const state = shown === false ? "Hidden" : "Shown";
+      return { title, subtitle: `${place} · ${state}`, media };
     },
   },
 });

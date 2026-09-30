@@ -485,44 +485,39 @@ export const treatmentBySlugQuery = defineQuery(
   }`,
 );
 
-export const allBlogPostsQuery = defineQuery(
-  `*[_type == "blogPost"] | order(publishedAt desc) {
+// Visible posts by Position; hidden ones drop out, so the gaps close up.
+// Posts without a Position go last, newest first.
+export const blogPostListQuery = defineQuery(
+  `*[_type == "blogPost" && showOnSite != false && defined(slug.current)]
+    | order(coalesce(position, 1000000) asc, publishedAt desc) {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     excerpt,
     featuredImage,
-    author,
     category,
+    readTime,
+    author,
     publishedAt
   }`,
 );
 
 export const blogPostBySlugQuery = defineQuery(
-  `*[_type == "blogPost" && slug.current == $slug][0] {
+  `*[_type == "blogPost" && showOnSite != false && slug.current == $slug][0] {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     excerpt,
     featuredImage,
-    author,
     category,
-    content,
+    readTime,
+    author,
+    authorRole,
     publishedAt,
+    content,
+    pdf,
+    pdfLabel,
     seo
-  }`,
-);
-
-export const blogPostsByCategoryQuery = defineQuery(
-  `*[_type == "blogPost" && category == $category] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    excerpt,
-    featuredImage,
-    author,
-    category,
-    publishedAt
   }`,
 );
 
