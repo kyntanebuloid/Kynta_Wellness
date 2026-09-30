@@ -5,8 +5,6 @@ import { ExperienceProtocolSection } from "../components/ExperienceProtocolSecti
 import { ExperiencesSection } from "../components/ExperiencesSection";
 import { ExperienceTreatmentsSection } from "../components/ExperienceTreatmentsSection";
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { TopBar } from "../components/TopBar";
 
 export const metadata: Metadata = {
   title: "Experiences | Kynta Wellness Group",
@@ -22,8 +20,6 @@ export default async function ExperiencesPage() {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <ExperiencesSection data={experiences?.hero} />
         <ExperiencePillarsSection data={experiences?.pillars} />

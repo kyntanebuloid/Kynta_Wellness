@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { getLocationsPage, getSiteSettings } from "@/lib/sanity/data";
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
 import { LocationsSection } from "../components/LocationsSection";
 import { SanctuaryCTASection } from "../components/SanctuaryCTASection";
-import { TopBar } from "../components/TopBar";
 
 export const metadata: Metadata = {
   title: "Locations | Kynta Wellness Group",
@@ -20,8 +18,6 @@ export default async function LocationsPage() {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <LocationsSection page={locations} />
         <SanctuaryCTASection data={locations?.ctaSection} />

@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { getBookableExperienceOptions } from "@/lib/actions/bookings";
-import { getHomepage, getSiteSettings, getLocationsPage } from "@/lib/sanity/data";
+import {
+  getHomepage,
+  getLocationsPage,
+  getSiteSettings,
+} from "@/lib/sanity/data";
 import { DestinationsSection } from "./components/DestinationsSection";
 import { Footer } from "./components/Footer";
 import { GuestPathSection } from "./components/GuestPathSection";
-import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { JournalSection } from "./components/JournalSection";
 import { PartnershipSection } from "./components/PartnershipSection";
 import { ReservationSection } from "./components/ReservationSection";
-import { TopBar } from "./components/TopBar";
 import { ServicesSection } from "./components/ServicesSection";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,18 +25,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [siteSettings, homepage, experiencesResult, locationsPage] = await Promise.all([
-    getSiteSettings(),
-    getHomepage(),
-    getBookableExperienceOptions(),
-    getLocationsPage(),
-  ]);
+  const [siteSettings, homepage, experiencesResult, locationsPage] =
+    await Promise.all([
+      getSiteSettings(),
+      getHomepage(),
+      getBookableExperienceOptions(),
+      getLocationsPage(),
+    ]);
   const services = experiencesResult.data ?? [];
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <Hero data={homepage?.hero} />
         <ServicesSection data={homepage?.servicesSection} />

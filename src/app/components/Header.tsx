@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SiteSettings } from "@/types/sanity";
 import { Logo } from "./Logo";
+import { NAVIGATION_EVENT } from "./NavigationProgress";
 
 interface HeaderProps {
   settings?: SiteSettings | null;
@@ -51,8 +52,25 @@ export function Header({ settings }: HeaderProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // The header stays mounted across pages (root layout), so close the phone
+  // menu whenever the page changes.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs on each navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Turn solid as soon as a link is clicked, so the page change (and the
+  // loading bar) happens on the white navbar rather than over the hero blur.
+  const [navigating, setNavigating] = useState(false);
+  useEffect(() => {
+    const onNavigation = (event: Event) =>
+      setNavigating((event as CustomEvent<boolean>).detail);
+    window.addEventListener(NAVIGATION_EVENT, onNavigation);
+    return () => window.removeEventListener(NAVIGATION_EVENT, onNavigation);
+  }, []);
+
   // Only the homepage has a hero image behind the header; elsewhere white text would vanish.
-  const solid = scrolled || mobileMenuOpen || pathname !== "/";
+  const solid = scrolled || mobileMenuOpen || navigating || pathname !== "/";
 
   const navLinks = settings?.navigation?.length
     ? settings.navigation.map((n) => ({ label: n.label, href: n.url }))

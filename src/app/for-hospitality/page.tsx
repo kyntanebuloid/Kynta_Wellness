@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { getHospitalityPage, getSiteSettings } from "@/lib/sanity/data";
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
 import { HospitalityAssuranceSection } from "../components/HospitalityAssuranceSection";
 import { HospitalityHeroSection } from "../components/HospitalityHeroSection";
 import { HospitalityModelsSection } from "../components/HospitalityModelsSection";
 import { HospitalityStatsSection } from "../components/HospitalityStatsSection";
 import { HospitalityTransformationsSection } from "../components/HospitalityTransformationsSection";
 import { HospitalityViabilitySection } from "../components/HospitalityViabilitySection";
-import { TopBar } from "../components/TopBar";
 
 export const metadata: Metadata = {
   title: "For Hospitality | Kynta Wellness Group",
@@ -24,8 +22,6 @@ export default async function ForHospitalityPage() {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <HospitalityHeroSection data={hospitality?.hero} />
         <HospitalityStatsSection data={hospitality?.statsSection} />

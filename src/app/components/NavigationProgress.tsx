@@ -2,14 +2,27 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-// A thin bar under the navbar while a page change is slow: it creeps towards
-// the end while waiting, then completes and fades once the page arrives.
-// Fast navigations never show it.
+// A thin bar along the bottom edge of the navbar while a page change is slow:
+// it creeps towards the end while waiting, then completes and fades once the
+// page arrives. Fast navigations never show it.
+//
+// The bar is rendered inside <header>, so it moves with the navbar (e.g. when
+// the new page opens at the top and the top bar pushes the navbar down).
 
 const SHOW_AFTER_MS = 150;
 const GIVE_UP_MS = 12_000;
 const EXCLUDED_ROUTES = /^\/(studio|admin)(\/|$)/;
+
+/** Fired on window with `detail: true` when a page change starts, `false` when it ends. */
+export const NAVIGATION_EVENT = "kynta:navigation";
+
+function announce(navigating: boolean) {
+  window.dispatchEvent(
+    new CustomEvent<boolean>(NAVIGATION_EVENT, { detail: navigating }),
+  );
+}
 
 // 0 hidden, 1 appear, 2 creeping, 3 finishing
 type Stage = 0 | 1 | 2 | 3;
@@ -63,7 +76,7 @@ const STAGE_STYLE: Record<Exclude<Stage, 0>, React.CSSProperties> = {
 export function NavigationProgress() {
   const pathname = usePathname();
   const [stage, setStage] = useState<Stage>(0);
-  const [top, setTop] = useState(0);
+  const [header, setHeader] = useState<HTMLElement | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const waiting = useRef(false);
 
@@ -72,10 +85,10 @@ export function NavigationProgress() {
       if (!isInternalNavigation(event)) return;
       clearTimers(timers);
       waiting.current = true;
+      announce(true);
       timers.current.push(
         setTimeout(() => {
-          const header = document.querySelector("header");
-          setTop(Math.max(0, header?.getBoundingClientRect().bottom ?? 0));
+          setHeader(document.querySelector("header"));
           setStage(1);
           // Let the starting width paint before the slow creep begins.
           requestAnimationFrame(() =>
@@ -84,6 +97,7 @@ export function NavigationProgress() {
         }, SHOW_AFTER_MS),
         setTimeout(() => {
           waiting.current = false;
+          announce(false);
           setStage(0);
         }, GIVE_UP_MS),
       );
@@ -97,27 +111,27 @@ export function NavigationProgress() {
     };
   }, []);
 
-  // The new page has rendered: finish the bar, or never show it.
+  // The new page has rendered: finish the bar on its navbar, or never show it.
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs on each navigation
   useEffect(() => {
     if (!waiting.current) return;
     waiting.current = false;
     clearTimers(timers);
-    setStage((current) => {
-      if (current === 0) return 0;
-      timers.current.push(setTimeout(() => setStage(0), 500));
-      return 3;
-    });
+    announce(false);
+    setHeader(document.querySelector("header"));
+    setStage((current) => (current === 0 ? 0 : 3));
+    timers.current.push(setTimeout(() => setStage(0), 500));
   }, [pathname]);
 
-  if (stage === 0) return null;
+  if (stage === 0 || !header?.isConnected) return null;
 
-  return (
+  return createPortal(
     <div
       className="nav-progress"
-      style={{ top, ...STAGE_STYLE[stage] }}
+      style={STAGE_STYLE[stage]}
       role="progressbar"
       aria-label="Loading page"
-    />
+    />,
+    header,
   );
 }

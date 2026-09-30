@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-
-import { TopBar } from "@/app/components/TopBar";
-import { Header } from "@/app/components/Header";
+import { Footer } from "@/app/components/Footer";
 import { LocationDetailHero } from "@/app/components/LocationDetailHero";
 import { SanctuaryCTASection } from "@/app/components/SanctuaryCTASection";
-import { Footer } from "@/app/components/Footer";
 import {
   getAllLocationSlugs,
   getLocationBySlug,
@@ -54,8 +51,6 @@ export default async function LocationDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <LocationDetailHero location={location} />
         <SanctuaryCTASection data={locationsPage?.ctaSection} />

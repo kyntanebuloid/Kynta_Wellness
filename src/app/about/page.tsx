@@ -7,8 +7,6 @@ import { AboutStewardshipSection } from "../components/AboutStewardshipSection";
 import { AboutTimelineSection } from "../components/AboutTimelineSection";
 import { AboutTriadSection } from "../components/AboutTriadSection";
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { TopBar } from "../components/TopBar";
 
 export const metadata: Metadata = {
   title: "About | Kynta Wellness Group",
@@ -24,8 +22,6 @@ export default async function AboutPage() {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <AboutHeroSection data={about?.hero} />
         <AboutTriadSection data={about?.triadSection} />

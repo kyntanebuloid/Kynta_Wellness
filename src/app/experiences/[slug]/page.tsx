@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { TopBar } from "@/app/components/TopBar";
-import { Header } from "@/app/components/Header";
 import { ExperienceDetailHero } from "@/app/components/ExperienceDetailHero";
 import { Footer } from "@/app/components/Footer";
 import {
@@ -33,7 +31,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: experience.seo?.title || `${experience.title} | Kynta Wellness Group`,
+    title:
+      experience.seo?.title || `${experience.title} | Kynta Wellness Group`,
     description: experience.seo?.description || experience.description,
   };
 }
@@ -51,8 +50,6 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <ExperienceDetailHero experience={experience} />
       </main>

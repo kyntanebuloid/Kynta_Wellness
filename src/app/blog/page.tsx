@@ -5,8 +5,6 @@ import { BlogHeroSection } from "../components/BlogHeroSection";
 import { BlogInquiriesSection } from "../components/BlogInquiriesSection";
 import { BlogPhilosophySoundSection } from "../components/BlogPhilosophySoundSection";
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { TopBar } from "../components/TopBar";
 
 export const metadata: Metadata = {
   title: "The Gazette & Journal | Kynta Wellness Group",
@@ -23,8 +21,6 @@ export default async function BlogPage() {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <BlogHeroSection data={blog?.hero} />
         <BlogInquiriesSection data={blog?.inquiriesSection} posts={posts} />

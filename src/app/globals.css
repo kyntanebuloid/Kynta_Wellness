@@ -174,11 +174,12 @@ html[data-low-power] #hero .wisp {
 /* ── Navigation progress bar (NavigationProgress.tsx) ──────────────────
    Only transform and opacity change, so it costs next to nothing. */
 .nav-progress {
-  position: fixed;
+  position: absolute; /* inside <header>, on its bottom edge */
   left: 0;
   right: 0;
+  bottom: -1px;
   height: 3px;
-  z-index: 50;
+  z-index: 1;
   pointer-events: none;
   background: var(--kynta-teal);
   box-shadow: 0 0 8px rgba(26, 92, 87, 0.35);

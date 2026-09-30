@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 
 import { BlogArticle } from "@/app/components/BlogArticle";
 import { Footer } from "@/app/components/Footer";
-import { Header } from "@/app/components/Header";
-import { TopBar } from "@/app/components/TopBar";
 import { getBlogPost, getBlogPosts, getSiteSettings } from "@/lib/sanity/data";
 
 interface PageProps {
@@ -63,8 +61,6 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <>
-      <TopBar settings={siteSettings} />
-      <Header settings={siteSettings} />
       <main>
         <BlogArticle post={post} morePosts={others.slice(0, 3)} />
       </main>
