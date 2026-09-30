@@ -7,7 +7,7 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 import {
   getBookingOwnerEmail,
   sendTransactionalEmail,
-} from "../src/lib/email/resend";
+} from "../src/lib/email/mailer";
 import {
   type BookingEmailPayload,
   buildCustomerConfirmationHtml,
@@ -23,12 +23,21 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
+  const resendKey = process.env.RESEND_API_KEY?.trim();
+  const resendOn =
+    Boolean(resendKey) &&
+    resendKey?.toLowerCase() !== "none" &&
+    Boolean(process.env.RESEND_FROM_EMAIL?.trim());
+  const smtpOn = Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
+  if (!resendOn && !smtpOn) {
     console.error(
-      "Missing RESEND_API_KEY or RESEND_FROM_EMAIL. Add them to .env.local first.",
+      "No email service configured. Set SMTP_USER and SMTP_PASS (Gmail), or RESEND_API_KEY and RESEND_FROM_EMAIL, in .env.local.",
     );
     process.exit(1);
   }
+  console.log(
+    `Email services: Resend ${resendOn ? "ON" : "OFF"}, Gmail/SMTP ${smtpOn ? "ON" : "OFF"}`,
+  );
 
   const stamp = Date.now();
   const payload: BookingEmailPayload = {
@@ -62,7 +71,9 @@ async function main() {
 
   console.log(
     "customer:",
-    customer.ok ? `ok id=${customer.id}` : `FAIL ${customer.error}`,
+    customer.ok
+      ? `ok via ${customer.provider} id=${customer.id}`
+      : `FAIL ${customer.error}`,
   );
 
   const owner = getBookingOwnerEmail() || to;
@@ -75,7 +86,9 @@ async function main() {
 
   console.log(
     "owner:",
-    ownerResult.ok ? `ok id=${ownerResult.id}` : `FAIL ${ownerResult.error}`,
+    ownerResult.ok
+      ? `ok via ${ownerResult.provider} id=${ownerResult.id}`
+      : `FAIL ${ownerResult.error}`,
   );
 
   if (!customer.ok || !ownerResult.ok) {

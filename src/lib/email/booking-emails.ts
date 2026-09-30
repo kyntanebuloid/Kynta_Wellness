@@ -1,6 +1,6 @@
 import { getExperiencePricing } from "@/lib/sanity/data";
 import type { Booking, Payment } from "@/types/database";
-import { getBookingOwnerEmail, sendTransactionalEmail } from "./resend";
+import { getBookingOwnerEmail, sendTransactionalEmail } from "./mailer";
 import {
   type BookingEmailPayload,
   buildCustomerConfirmationHtml,
