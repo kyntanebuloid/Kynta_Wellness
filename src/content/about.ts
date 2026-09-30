@@ -1,4 +1,9 @@
-import type { AccentColor, ContentImage, ContentLink } from "./types";
+import type {
+  AccentColor,
+  ContentFile,
+  ContentImage,
+  ContentLink,
+} from "./types";
 
 export type TimelineIcon =
   | "botanical"
@@ -14,7 +19,8 @@ export interface AboutPageContent {
     eyebrow?: string;
     heading?: string;
     description?: string;
-    primaryCta?: ContentLink;
+    philosophyLabel?: string;
+    philosophyPdf?: ContentFile;
     secondaryCta?: ContentLink;
     image?: ContentImage;
     imageCaption?: string;
@@ -88,7 +94,8 @@ export const aboutDefaults = {
     heading: "Ancient Wisdom.\nArchitectural Stillness.",
     description:
       "Kynta was conceived at the quiet crossroads where classical Ayurvedic therapeutics intersect with modern architectural composure. We construct sensory sanctuaries where the nervous system unwinds, breathing life into unhurried restorative traditions within the world's most discerning luxury hospitality environments.",
-    primaryCta: { label: "Explore Our Philosophy", url: "#philosophy" },
+    philosophyLabel: "Explore Our Philosophy",
+
     secondaryCta: { label: "Inquire With Concierge", url: "/contact" },
     image: {
       url: "/about-hero.jpg",

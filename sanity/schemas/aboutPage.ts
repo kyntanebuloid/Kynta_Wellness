@@ -1,4 +1,4 @@
-import { defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 import {
   accentColor,
   choice,
@@ -24,7 +24,18 @@ export default defineType({
         description: "Press Enter to start a new line.",
       }),
       txt("description", "Description", 4),
-      linkObj("primaryCta", "Main Button"),
+      str("philosophyLabel", "Philosophy Button Label", {
+        description: "e.g. Explore Our Philosophy",
+      }),
+      defineField({
+        name: "philosophyPdf",
+        title: "Philosophy PDF",
+        type: "file",
+        description:
+          "Upload a PDF to show the philosophy button. Leave empty to hide it.",
+        options: { accept: ".pdf,application/pdf" },
+      }),
+
       linkObj("secondaryCta", "Second Button"),
       img("image", "Photo"),
       str("imageCaption", "Photo Caption"),
@@ -35,7 +46,11 @@ export default defineType({
         "Numbers",
         "stat",
         "Number",
-        [str("value", "Value"), str("label", "Label"), txt("description", "Description", 2)],
+        [
+          str("value", "Value"),
+          str("label", "Label"),
+          txt("description", "Description", 2),
+        ],
         "label",
       ),
     ]),
@@ -108,7 +123,8 @@ export default defineType({
         txt("description", "Description", 2),
       ]),
       imgList("images", "Photos", {
-        description: "Four photos: top-left, bottom-left, top-right, bottom-right.",
+        description:
+          "Four photos: top-left, bottom-left, top-right, bottom-right.",
       }),
     ]),
     obj("accreditationsSection", "6. Accreditations", [

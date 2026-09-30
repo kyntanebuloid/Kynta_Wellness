@@ -12,7 +12,9 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
   const eyebrow = text(data?.eyebrow, d.eyebrow);
   const heading = text(data?.heading, d.heading);
   const description = text(data?.description, d.description);
-  const primaryCta = link(data?.primaryCta, d.primaryCta);
+  const philosophyLabel = text(data?.philosophyLabel, d.philosophyLabel);
+  const philosophyPdf = data?.philosophyPdf?.url ?? null;
+
   const secondaryCta = link(data?.secondaryCta, d.secondaryCta);
   const photo = imageUrl(data?.image, d.image);
   const photoAlt = imageAlt(data?.image, d.image);
@@ -58,26 +60,30 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href={primaryCta.url}
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
-              >
-                {primaryCta.label}
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
+              {philosophyPdf && (
+                <a
+                  href={philosophyPdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium tracking-wide text-white bg-kynta-teal-dark rounded-full hover:bg-kynta-teal transition-all duration-200"
                 >
-                  <title>Down arrow</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                  />
-                </svg>
-              </Link>
+                  {philosophyLabel}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                  >
+                    <title>Download</title>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                    />
+                  </svg>
+                </a>
+              )}
 
               <Link
                 href={secondaryCta.url}
@@ -161,7 +167,10 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pt-4" data-reveal-stagger>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pt-4"
+          data-reveal-stagger
+        >
           {displayStats.map((s) => (
             <div key={s.label}>
               <p
