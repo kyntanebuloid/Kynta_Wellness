@@ -40,6 +40,7 @@ export interface ContactPageContent {
     eyebrow?: string;
     heading?: string;
     description?: string;
+    /** Two tabs: the guest form first, then the hotel / resort form. */
     tabs?: string[];
     nameLabel?: string;
     namePlaceholder?: string;
@@ -47,18 +48,29 @@ export interface ContactPageContent {
     emailPlaceholder?: string;
     phoneLabel?: string;
     phonePlaceholder?: string;
+    /** Guest form: preferred spa. Options default to the Locations page names. */
     sanctuaryLabel?: string;
     sanctuaryPlaceholder?: string;
     sanctuaries?: string[];
-    intentLabel?: string;
-    intentDefault?: string;
-    datesLabel?: string;
-    datesPlaceholder?: string;
+    /** Hotel form. */
+    propertyLabel?: string;
+    propertyPlaceholder?: string;
+    cityLabel?: string;
+    cityPlaceholder?: string;
+    serviceLabel?: string;
+    servicePlaceholder?: string;
+    /**
+     * In the same order as the For Hotels partnership models, so the links
+     * there (/contact?tier=turnkey, advisory, licensing) pick the right one.
+     */
+    hotelServices?: string[];
     messageLabel?: string;
     messagePlaceholder?: string;
+    hotelMessagePlaceholder?: string;
     privacyNote?: string;
     submitLabel?: string;
     successMessage?: string;
+    errorMessage?: string;
   };
 }
 
@@ -101,43 +113,42 @@ export const contactPageDefaults = {
       "In alignment with ancient chronobiology (Brahma Muhurta through Sandhya), our telephone concierges are accessible from 07:00 to 22:00 IST. Digital dispatches undergo intake around the clock.",
   },
   form: {
-    eyebrow: "CONCIERGE INTAKE",
-    heading: "Initiate Sanctuary Dialogue",
+    eyebrow: "GET IN TOUCH",
+    heading: "Send Us a Message",
     description:
-      "Please share your preferred rhythm, sanctuary location, or operational scope. Our desk curator will review and assemble your customized therapeutic folio.",
-    tabs: [
-      "PRIVATE GUEST BOOKING",
-      "HOSPITALITY & TURNKEY",
-      "VAIDYA CONSULTATION",
+      "Tell us a little about what you need and our team will reply within one working day.",
+    tabs: ["I'M A GUEST", "I'M A HOTEL / RESORT"],
+    nameLabel: "YOUR NAME *",
+    namePlaceholder: "Full name",
+    emailLabel: "EMAIL *",
+    emailPlaceholder: "name@example.com",
+    phoneLabel: "PHONE / WHATSAPP",
+    phonePlaceholder: "+91 98765 43210",
+    sanctuaryLabel: "PREFERRED SPA",
+    sanctuaryPlaceholder: "Any location",
+    sanctuaries: [],
+    propertyLabel: "HOTEL / PROPERTY NAME *",
+    propertyPlaceholder: "e.g. The Lake Palace",
+    cityLabel: "CITY",
+    cityPlaceholder: "e.g. Udaipur",
+    serviceLabel: "WHAT DO YOU NEED?",
+    servicePlaceholder: "Choose one",
+    hotelServices: [
+      "Full spa management (turnkey)",
+      "Spa design & planning",
+      "Kynta products under your brand",
+      "Not sure yet, let's talk",
     ],
-    nameLabel: "PRINCIPAL GUEST / EXECUTIVE NAME *",
-    namePlaceholder: "e.g. Lady Anya Vardhan",
-    emailLabel: "CONFIDENTIAL EMAIL ADDRESS *",
-    emailPlaceholder: "name@domain.com",
-    phoneLabel: "DIRECT TELEPHONE / WHATSAPP",
-    phonePlaceholder: "+91 / +44 / +1 ...",
-    sanctuaryLabel: "SANCTUARY OF RESONANCE *",
-    sanctuaryPlaceholder: "Select an Estate",
-    sanctuaries: [
-      "Kumarakom Retreat, Kerala",
-      "Udaipur Lake Sanctuary, Rajasthan",
-      "Himalayan High Sanctuaries, Shimla",
-      "Mandrem Coconut Grove, North Goa",
-      "Bhanjwar Estate, Kangra Valley",
-      "Multiple Sanctuaries / Institutional Scope",
-    ],
-    intentLabel: "PRIMARY THERAPEUTIC INTENT",
-    intentDefault: "14–21 Day Classical Panchakarma",
-    datesLabel: "ANTICIPATED SEASON / DATES",
-    datesPlaceholder: "e.g. October 2025 / Flexible",
-    messageLabel:
-      "SOMATIC SENSITIVITIES, DIETARY PRINCIPLES, OR PROJECT SPECIFICATIONS",
+    messageLabel: "MESSAGE",
     messagePlaceholder:
-      "Detail any existing medical protocols, sleep rhythms, botanical allergies, or institutional hotel scale requirements...",
-    privacyNote:
-      "All intakes are bound by statutory Ayush and GDPR confidential protocols.",
-    submitLabel: "TRANSMIT CONCIERGE FOLIO",
+      "Preferred dates, treatments you are interested in, or anything we should know.",
+    hotelMessagePlaceholder:
+      "Number of rooms, spa size, opening timeline, or anything else that helps.",
+    privacyNote: "We only use your details to reply to you.",
+    submitLabel: "SEND MESSAGE",
     successMessage:
-      "Thank you. Your concierge intake folio has been securely transmitted. A sanctuary curator will contact you promptly.",
+      "Thank you, your message has been sent. We will get back to you within one working day.",
+    errorMessage:
+      "Sorry, your message could not be sent. Please call or WhatsApp us instead.",
   },
 } satisfies Required<ContactPageContent>;

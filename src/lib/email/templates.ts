@@ -64,7 +64,10 @@ const COLORS = {
   gold: "#a16207",
 };
 
-function shell(body: string): string {
+function shell(
+  body: string,
+  footer = "This is a transactional message regarding your reservation.",
+): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +95,7 @@ function shell(body: string): string {
             <td style="padding:20px 32px 28px;border-top:1px solid ${COLORS.border};">
               <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:${COLORS.muted};">
                 Kynta Wellness Private Limited<br />
-                This is a transactional message regarding your reservation.
+                ${escapeHtml(footer)}
               </p>
             </td>
           </tr>
@@ -225,4 +228,52 @@ export function buildOwnerNotificationHtml(
   `;
 
   return shell(body);
+}
+
+export type ContactEnquiryPayload = {
+  type: "guest" | "hotel";
+  name: string;
+  email: string;
+  phone: string;
+  /** Guest: preferred spa. */
+  location: string;
+  /** Hotel: property name, city and the service they want. */
+  property: string;
+  city: string;
+  service: string;
+  message: string;
+};
+
+/** Sent to the team when someone uses the Contact page form. */
+export function buildContactEnquiryHtml(
+  payload: ContactEnquiryPayload,
+): string {
+  const isHotel = payload.type === "hotel";
+  const message = payload.message
+    ? escapeHtml(payload.message).replace(/\r?\n/g, "<br />")
+    : "<em>No message</em>";
+
+  const body = `
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:${COLORS.gold};margin-bottom:12px;">${isHotel ? "Hotel partnership enquiry" : "Guest enquiry"}</div>
+    <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;font-weight:normal;color:${COLORS.ink};">${escapeHtml(isHotel ? payload.property || payload.name : payload.name)}</h1>
+    <p style="margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.muted};">
+      Sent from the Contact page. Reply to this email to answer ${escapeHtml(payload.name)} directly.
+    </p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:24px;">
+      ${detailRow("Name", payload.name)}
+      ${detailRow("Email", payload.email)}
+      ${detailRow("Phone / WhatsApp", payload.phone || "Not provided")}
+      ${isHotel ? detailRow("Hotel / property", payload.property) : ""}
+      ${isHotel ? detailRow("City", payload.city) : ""}
+      ${isHotel ? detailRow("Looking for", payload.service) : ""}
+      ${isHotel ? "" : detailRow("Preferred spa", payload.location || "Any")}
+    </table>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${COLORS.muted};margin-bottom:8px;">Message</div>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.ink};background:${COLORS.background};border-radius:12px;padding:16px;">${message}</div>
+  `;
+
+  return shell(
+    body,
+    "Sent automatically from the Kynta Wellness website contact form.",
+  );
 }

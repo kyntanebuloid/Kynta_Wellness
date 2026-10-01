@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   type ContactPageContent,
   type ContactPhone,
@@ -9,10 +9,16 @@ import {
   type LegacyContactPhones,
 } from "@/content/contact";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
+import { sendContactEnquiry } from "@/lib/actions/contact";
 
 interface ContactSectionProps {
   data?: ContactPageContent;
+  /** Spa names from the Locations page, for the guest form. */
+  locationNames?: string[];
 }
+
+// For Hotels page buttons link to /contact?tier=…; same order as hotelServices.
+const HOTEL_TIERS = ["turnkey", "advisory", "licensing"];
 
 /**
  * Phone rows to show. Uses Sanity's Phone Numbers list; before that list
@@ -67,9 +73,60 @@ const inputClass =
 const labelClass =
   "text-[9px] sm:text-[9.5px] font-semibold tracking-[0.14em] uppercase text-kynta-charcoal block mb-1.5";
 
-export function ContactSection({ data }: ContactSectionProps) {
-  const [activeTab, setActiveTab] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+function SelectBox({
+  children,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <div className="relative">
+      <select
+        {...props}
+        className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] pl-3.5 pr-9 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal appearance-none cursor-pointer outline-none"
+      >
+        {children}
+      </select>
+      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-kynta-warm-gray">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+export function ContactSection({
+  data,
+  locationNames = [],
+}: ContactSectionProps) {
+  const [mode, setMode] = useState<"guest" | "hotel">("guest");
+  const [serviceIndex, setServiceIndex] = useState<number | null>(null);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
+  const [errorText, setErrorText] = useState("");
+  const startedAt = useRef(0);
+
+  // Remember when the form appeared (spam check), and open the hotel form
+  // with the right service when coming from a For Hotels page button.
+  useEffect(() => {
+    startedAt.current = Date.now();
+    const tier = new URLSearchParams(window.location.search).get("tier");
+    const index = tier ? HOTEL_TIERS.indexOf(tier) : -1;
+    if (index >= 0) {
+      setMode("hotel");
+      setServiceIndex(index);
+    }
+  }, []);
 
   const d = contactPageDefaults;
   const hero = {
@@ -100,7 +157,8 @@ export function ContactSection({ data }: ContactSectionProps) {
     eyebrow: text(f?.eyebrow, d.form.eyebrow),
     heading: text(f?.heading, d.form.heading),
     description: text(f?.description, d.form.description),
-    tabs: list(f?.tabs, d.form.tabs),
+    guestTab: text(f?.tabs?.[0], d.form.tabs[0]),
+    hotelTab: text(f?.tabs?.[1], d.form.tabs[1]),
     nameLabel: text(f?.nameLabel, d.form.nameLabel),
     namePlaceholder: text(f?.namePlaceholder, d.form.namePlaceholder),
     emailLabel: text(f?.emailLabel, d.form.emailLabel),
@@ -112,22 +170,60 @@ export function ContactSection({ data }: ContactSectionProps) {
       f?.sanctuaryPlaceholder,
       d.form.sanctuaryPlaceholder,
     ),
-    sanctuaries: list(f?.sanctuaries, d.form.sanctuaries),
-    intentLabel: text(f?.intentLabel, d.form.intentLabel),
-    intentDefault: text(f?.intentDefault, d.form.intentDefault),
-    datesLabel: text(f?.datesLabel, d.form.datesLabel),
-    datesPlaceholder: text(f?.datesPlaceholder, d.form.datesPlaceholder),
+    // Typed-in options win; otherwise the spas on the Locations page.
+    sanctuaries: [...new Set(list(f?.sanctuaries, locationNames))],
+    propertyLabel: text(f?.propertyLabel, d.form.propertyLabel),
+    propertyPlaceholder: text(
+      f?.propertyPlaceholder,
+      d.form.propertyPlaceholder,
+    ),
+    cityLabel: text(f?.cityLabel, d.form.cityLabel),
+    cityPlaceholder: text(f?.cityPlaceholder, d.form.cityPlaceholder),
+    serviceLabel: text(f?.serviceLabel, d.form.serviceLabel),
+    servicePlaceholder: text(f?.servicePlaceholder, d.form.servicePlaceholder),
+    hotelServices: [...new Set(list(f?.hotelServices, d.form.hotelServices))],
     messageLabel: text(f?.messageLabel, d.form.messageLabel),
     messagePlaceholder: text(f?.messagePlaceholder, d.form.messagePlaceholder),
+    hotelMessagePlaceholder: text(
+      f?.hotelMessagePlaceholder,
+      d.form.hotelMessagePlaceholder,
+    ),
     privacyNote: text(f?.privacyNote, d.form.privacyNote),
     submitLabel: text(f?.submitLabel, d.form.submitLabel),
     successMessage: text(f?.successMessage, d.form.successMessage),
+    errorMessage: text(f?.errorMessage, d.form.errorMessage),
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formEl = event.currentTarget;
+    const formData = new FormData(formEl);
+    formData.set("type", mode);
+    formData.set("startedAt", String(startedAt.current));
+    if (mode === "hotel") {
+      formData.set(
+        "service",
+        serviceIndex === null ? "" : (form.hotelServices[serviceIndex] ?? ""),
+      );
+    }
+
+    setStatus("sending");
+    try {
+      const result = await sendContactEnquiry(formData);
+      if (result.ok) {
+        setStatus("sent");
+        formEl.reset();
+        setServiceIndex(null);
+      } else {
+        setStatus("error");
+        setErrorText(
+          result.error === "send" ? form.errorMessage : result.error,
+        );
+      }
+    } catch {
+      setStatus("error");
+      setErrorText(form.errorMessage);
+    }
   };
 
   return (
@@ -287,6 +383,7 @@ export function ContactSection({ data }: ContactSectionProps) {
             >
               <div className="flex items-center gap-2 mb-2 text-kynta-teal-dark">
                 <svg
+                  aria-hidden="true"
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
@@ -320,133 +417,174 @@ export function ContactSection({ data }: ContactSectionProps) {
               {form.description}
             </p>
 
-            <div className="bg-[#eceeeb] p-1 rounded-[8px] flex items-center gap-1 mb-6 overflow-x-auto">
-              {form.tabs.map((tab, index) => (
+            <fieldset className="m-0 min-w-0 border-0 bg-[#eceeeb] p-1 rounded-[8px] grid grid-cols-2 gap-1 mb-6">
+              <legend className="sr-only">Who is getting in touch</legend>
+              {(["guest", "hotel"] as const).map((value) => (
                 <button
-                  key={`${tab}-${index}`}
+                  key={value}
                   type="button"
-                  onClick={() => setActiveTab(index)}
-                  className={`flex-1 py-2 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all whitespace-nowrap text-center ${
-                    activeTab === index
+                  aria-pressed={mode === value}
+                  onClick={() => setMode(value)}
+                  className={`py-2.5 px-3 text-[9.5px] sm:text-[10px] tracking-[0.12em] uppercase font-semibold rounded-[6px] transition-all text-center ${
+                    mode === value
                       ? "bg-kynta-teal-dark text-white shadow-sm"
                       : "text-kynta-warm-gray hover:text-kynta-charcoal"
                   }`}
                 >
-                  {tab}
+                  {value === "guest" ? form.guestTab : form.hotelTab}
                 </button>
               ))}
-            </div>
+            </fieldset>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="relative space-y-4">
+              {/* Hidden from people; bots that fill it in are ignored. */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[10000px] h-px w-px overflow-hidden"
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="guest-name" className={labelClass}>
+                  <label htmlFor="contact-name" className={labelClass}>
                     {form.nameLabel}
                   </label>
                   <input
-                    id="guest-name"
+                    id="contact-name"
+                    name="name"
                     type="text"
                     required
+                    maxLength={120}
+                    autoComplete="name"
                     placeholder={form.namePlaceholder}
                     className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="guest-email" className={labelClass}>
+                  <label htmlFor="contact-email" className={labelClass}>
                     {form.emailLabel}
                   </label>
                   <input
-                    id="guest-email"
+                    id="contact-email"
+                    name="email"
                     type="email"
                     required
+                    maxLength={200}
+                    autoComplete="email"
                     placeholder={form.emailPlaceholder}
                     className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="guest-phone" className={labelClass}>
+                  <label htmlFor="contact-phone" className={labelClass}>
                     {form.phoneLabel}
                   </label>
                   <input
-                    id="guest-phone"
+                    id="contact-phone"
+                    name="phone"
                     type="tel"
+                    maxLength={40}
+                    autoComplete="tel"
                     placeholder={form.phonePlaceholder}
                     className={inputClass}
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="sanctuary-select" className={labelClass}>
-                    {form.sanctuaryLabel}
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="sanctuary-select"
-                      required
-                      defaultValue=""
-                      className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] px-3.5 py-2.5 text-[12px] sm:text-[12.5px] text-kynta-charcoal appearance-none cursor-pointer outline-none"
-                    >
-                      <option value="" disabled>
-                        {form.sanctuaryPlaceholder}
-                      </option>
-                      {form.sanctuaries.map((option, index) => (
-                        <option key={`${option}-${index}`} value={option}>
+                {mode === "guest" ? (
+                  <div>
+                    <label htmlFor="contact-location" className={labelClass}>
+                      {form.sanctuaryLabel}
+                    </label>
+                    <SelectBox id="contact-location" name="location">
+                      <option value="">{form.sanctuaryPlaceholder}</option>
+                      {form.sanctuaries.map((option) => (
+                        <option key={option} value={option}>
                           {option}
                         </option>
                       ))}
-                    </select>
-                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-kynta-warm-gray">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
-                    </div>
+                    </SelectBox>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div>
+                      <label htmlFor="contact-property" className={labelClass}>
+                        {form.propertyLabel}
+                      </label>
+                      <input
+                        id="contact-property"
+                        name="property"
+                        type="text"
+                        required
+                        maxLength={160}
+                        autoComplete="organization"
+                        placeholder={form.propertyPlaceholder}
+                        className={inputClass}
+                      />
+                    </div>
 
-                <div>
-                  <label htmlFor="therapeutic-intent" className={labelClass}>
-                    {form.intentLabel}
-                  </label>
-                  <input
-                    id="therapeutic-intent"
-                    type="text"
-                    defaultValue={form.intentDefault}
-                    className={inputClass}
-                  />
-                </div>
+                    <div>
+                      <label htmlFor="contact-city" className={labelClass}>
+                        {form.cityLabel}
+                      </label>
+                      <input
+                        id="contact-city"
+                        name="city"
+                        type="text"
+                        maxLength={80}
+                        autoComplete="address-level2"
+                        placeholder={form.cityPlaceholder}
+                        className={inputClass}
+                      />
+                    </div>
 
-                <div>
-                  <label htmlFor="anticipated-dates" className={labelClass}>
-                    {form.datesLabel}
-                  </label>
-                  <input
-                    id="anticipated-dates"
-                    type="text"
-                    placeholder={form.datesPlaceholder}
-                    className={inputClass}
-                  />
-                </div>
+                    <div>
+                      <label htmlFor="contact-service" className={labelClass}>
+                        {form.serviceLabel}
+                      </label>
+                      <SelectBox
+                        id="contact-service"
+                        value={
+                          serviceIndex === null ? "" : String(serviceIndex)
+                        }
+                        onChange={(event) =>
+                          setServiceIndex(
+                            event.target.value === ""
+                              ? null
+                              : Number(event.target.value),
+                          )
+                        }
+                      >
+                        <option value="">{form.servicePlaceholder}</option>
+                        {form.hotelServices.map((option, index) => (
+                          <option key={option} value={index}>
+                            {option}
+                          </option>
+                        ))}
+                      </SelectBox>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div>
-                <label htmlFor="project-specifications" className={labelClass}>
+                <label htmlFor="contact-message" className={labelClass}>
                   {form.messageLabel}
                 </label>
                 <textarea
-                  id="project-specifications"
+                  id="contact-message"
+                  name="message"
                   rows={4}
-                  placeholder={form.messagePlaceholder}
+                  maxLength={4000}
+                  placeholder={
+                    mode === "hotel"
+                      ? form.hotelMessagePlaceholder
+                      : form.messagePlaceholder
+                  }
                   className="w-full bg-[#f0f2f0] border border-transparent focus:border-kynta-teal focus:bg-white transition-all rounded-[6px] p-3.5 text-[12px] leading-[1.6] text-kynta-charcoal placeholder:text-kynta-warm-gray/70 outline-none resize-none"
                 />
               </div>
@@ -463,6 +601,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="flex-shrink-0"
+                    aria-hidden="true"
                   >
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -474,17 +613,25 @@ export function ContactSection({ data }: ContactSectionProps) {
 
                 <button
                   type="submit"
-                  className="bg-kynta-teal-dark hover:bg-kynta-teal text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase px-7 py-3.5 rounded-[6px] transition-all duration-200 shadow-sm whitespace-nowrap active:scale-[0.98] self-start sm:self-auto"
+                  disabled={status === "sending"}
+                  className="bg-kynta-teal-dark hover:bg-kynta-teal disabled:opacity-60 disabled:cursor-wait text-white text-[10px] sm:text-[10.5px] font-semibold tracking-[0.16em] uppercase px-7 py-3.5 rounded-[6px] transition-all duration-200 shadow-sm whitespace-nowrap active:scale-[0.98] self-start sm:self-auto"
                 >
-                  {form.submitLabel}
+                  {status === "sending" ? "SENDING…" : form.submitLabel}
                 </button>
               </div>
 
-              {submitted && (
-                <div className="mt-3 p-3 rounded-[6px] bg-[#eef4f1] border border-[#d2e2db] text-[11.5px] text-kynta-teal-dark text-center font-medium transition-opacity duration-300">
-                  {form.successMessage}
-                </div>
-              )}
+              <div aria-live="polite">
+                {status === "sent" && (
+                  <div className="mt-3 p-3 rounded-[6px] bg-[#eef4f1] border border-[#d2e2db] text-[11.5px] text-kynta-teal-dark text-center font-medium">
+                    {form.successMessage}
+                  </div>
+                )}
+                {status === "error" && (
+                  <div className="mt-3 p-3 rounded-[6px] bg-[#fdf0ec] border border-[#f3d5c8] text-[11.5px] text-kynta-rust text-center font-medium">
+                    {errorText}
+                  </div>
+                )}
+              </div>
             </form>
           </div>
         </div>
