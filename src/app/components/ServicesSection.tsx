@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
+import { useCarousel } from "./useCarousel";
 import type { Homepage } from "@/types/sanity";
+import { NoPhoto } from "./NoPhoto";
 
 interface ServicesSectionProps {
   data?: Homepage["servicesSection"];
@@ -39,15 +40,19 @@ const defaultServices = [
 ];
 
 export function ServicesSection({ data }: ServicesSectionProps) {
-  const scrollContainer = useRef<HTMLDivElement>(null);
+  const { trackRef, scrollable, next, prev } = useCarousel({
+    autoplayMs: 2000,
+  });
 
   const eyebrow = data?.eyebrow || "OUR SERVICES";
   const heading = data?.heading || "What We Offer";
+  const noPhotoText = data?.noPhotoText || "Photo coming soon";
   const services = data?.services?.length
-    ? data.services.map((s, i) => ({
+    ? data.services.map((s) => ({
         name: s.name,
         description: s.description,
-        image: s.image?.url || defaultServices[i % defaultServices.length].image,
+        // No photo in Sanity: the card shows a NoPhoto panel instead.
+        image: s.image?.url || null,
         alt: s.image?.alt || s.name,
         buttonLabel: s.buttonLabel || "Book Now",
         buttonUrl: s.buttonUrl || "/book",
@@ -58,17 +63,6 @@ export function ServicesSection({ data }: ServicesSectionProps) {
         buttonLabel: "Book Now",
         buttonUrl: "/book",
       }));
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainer.current) {
-      const card = scrollContainer.current.firstElementChild as HTMLElement | null;
-      const scrollAmount = card ? card.offsetWidth + 24 : 340;
-      scrollContainer.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <section className="w-full bg-kynta-section-bg pt-20 pb-10 md:pt-24 md:pb-12">
@@ -84,9 +78,12 @@ export function ServicesSection({ data }: ServicesSectionProps) {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center gap-3">
+          <div
+            className={`flex items-center gap-3 ${scrollable ? "" : "invisible"}`}
+          >
             <button
-              onClick={() => scroll("left")}
+              type="button"
+              onClick={prev}
               className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
               aria-label="Scroll left"
             >
@@ -106,7 +103,8 @@ export function ServicesSection({ data }: ServicesSectionProps) {
               </svg>
             </button>
             <button
-              onClick={() => scroll("right")}
+              type="button"
+              onClick={next}
               className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
               aria-label="Scroll right"
             >
@@ -130,9 +128,9 @@ export function ServicesSection({ data }: ServicesSectionProps) {
 
         {/* Carousel */}
         <div
-          ref={scrollContainer}
+          ref={trackRef}
           data-reveal-stagger
-          className="no-scrollbar flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth"
+          className="relative no-scrollbar flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth"
           style={{ scrollBehavior: "smooth" }}
         >
           {services.map((service, index) => (
@@ -141,13 +139,17 @@ export function ServicesSection({ data }: ServicesSectionProps) {
               className="snap-start flex-shrink-0 w-full md:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] flex flex-col bg-white rounded-lg overflow-hidden border border-kynta-border/40 group"
             >
               <div className="relative w-full h-48 overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw, 33vw"
-                />
+                {service.image ? (
+                  <Image
+                    src={service.image}
+                    alt={service.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw, 33vw"
+                  />
+                ) : (
+                  <NoPhoto title={service.name} label={noPhotoText} />
+                )}
               </div>
               <div className="flex flex-col flex-1 p-6">
                 <h3 className="font-serif text-xl text-kynta-charcoal mb-3 truncate">

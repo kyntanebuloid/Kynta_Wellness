@@ -83,6 +83,13 @@ export default defineType({
         defineField({ name: "eyebrow", title: "Small Label", type: "string" }),
         defineField({ name: "heading", title: "Heading", type: "string" }),
         defineField({
+          name: "noPhotoText",
+          title: "No-photo Label",
+          type: "string",
+          description:
+            "Service cards without a photo show their name on a teal panel with this small label underneath. Defaults to PHOTO COMING SOON.",
+        }),
+        defineField({
           name: "services",
           title: "Service Cards",
           type: "array",
@@ -134,6 +141,13 @@ export default defineType({
           title: "Description",
           type: "text",
           rows: 2,
+        }),
+        defineField({
+          name: "noPhotoText",
+          title: "No-photo Label",
+          type: "string",
+          description:
+            "Spa cards without a photo show their name on a teal panel with this small label underneath. Defaults to PHOTO COMING SOON.",
         }),
       ],
     }),

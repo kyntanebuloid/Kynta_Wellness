@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useCarousel } from "./useCarousel";
 import type { LocationContent } from "@/content/locations";
 import type { Homepage } from "@/types/sanity";
+import { NoPhoto } from "./NoPhoto";
 
 interface DestinationsSectionProps {
   data?: Homepage["destinationsSection"];
@@ -20,7 +21,12 @@ const defaultDestinations = [
     address: "Amer Palace Road, Kukas Valley, Jaipur 302028",
     description:
       "A spa inside an old stepwell courtyard, around 300 years old. Enjoy royal Rajasthani treatments and private rooms next to fruit gardens.",
-    tags: ["Cold Water Pool", "Herbal Steam Room", "Couples Room", "Foot Massage Path"],
+    tags: [
+      "Cold Water Pool",
+      "Herbal Steam Room",
+      "Couples Room",
+      "Foot Massage Path",
+    ],
     detailsHref: "/locations/heritage-retreat",
   },
   {
@@ -31,7 +37,12 @@ const defaultDestinations = [
     address: "Mashobra Ridge Forest Reserve, Shimla 171007",
     description:
       "A spa high up in the mountains, inside a pine forest. Try hot water baths, warm stone massages and natural flower oils.",
-    tags: ["Hot Tub With Forest View", "Pine Wood Sauna", "Breathing Deck", "Warm Stone Beds"],
+    tags: [
+      "Hot Tub With Forest View",
+      "Pine Wood Sauna",
+      "Breathing Deck",
+      "Warm Stone Beds",
+    ],
     detailsHref: "/locations/glenwood-manor",
   },
 ];
@@ -41,30 +52,37 @@ function DestinationCard({
   locationPill,
   hours,
   title,
-  address,
   description,
   tags,
   detailsHref,
+  noPhotoText,
 }: {
-  image: string;
+  image: string | null;
+  noPhotoText: string;
   locationPill: string;
   hours: string;
   title: string;
-  address: string;
   description: string;
   tags: string[];
   detailsHref: string;
 }) {
   return (
     <div className="flex flex-col bg-white rounded-md overflow-hidden border border-kynta-border/40 group">
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "310 / 165" }}>
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
+      <div
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: "310 / 165" }}
+      >
+        {image ? (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        ) : (
+          <NoPhoto title={title} label={noPhotoText} />
+        )}
         <span className="absolute top-3 left-3 text-[11px] font-medium tracking-wide text-kynta-charcoal bg-white/85 backdrop-blur-sm px-2.5 py-1 rounded">
           {locationPill}
         </span>
@@ -134,53 +152,24 @@ function DestinationCard({
   );
 }
 
-function CircleArrowButton({ direction }: { direction: "left" | "right" }) {
-  return (
-    <button
-      type="button"
-      className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
-      aria-label={`Scroll ${direction}`}
-    >
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={2.5}
-        stroke="currentColor"
-      >
-        <title>{direction === "left" ? "Previous" : "Next"}</title>
-        {direction === "left" ? (
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-          />
-        ) : (
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-          />
-        )}
-      </svg>
-    </button>
-  );
-}
-
 export function DestinationsSection({
   data,
   locations,
 }: DestinationsSectionProps) {
-  const scrollContainer = useRef<HTMLDivElement>(null);
+  const { trackRef, scrollable, next, prev } = useCarousel({
+    autoplayMs: 2000,
+  });
   const eyebrow = data?.eyebrow || "Our Spa Locations";
   const heading = data?.heading || "Our spas across India.";
   const description =
     data?.description ||
     "Find us in the hills of Rajasthan, the mountains of Himachal, and other beautiful places in India.";
+  const noPhotoText = data?.noPhotoText || "Photo coming soon";
 
   const destinations =
     locations?.map((d) => ({
-      image: d.image?.url || d.imagePath || "/destination-heritage.jpg",
+      // No photo in Sanity: the card shows a NoPhoto panel instead.
+      image: d.image?.url || d.imagePath || null,
       locationPill: d.address || "",
       hours: d.hours || "08:00 – 21:00 Daily",
       title: d.name,
@@ -190,17 +179,6 @@ export function DestinationsSection({
       detailsHref:
         d.detailsUrl || (d.slug ? `/locations/${d.slug}` : "/locations"),
     })) || defaultDestinations;
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainer.current) {
-      const card = scrollContainer.current.firstElementChild as HTMLElement | null;
-      const scrollAmount = card ? card.offsetWidth + 18 : 500;
-      scrollContainer.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <section className="w-full bg-kynta-section-bg pt-10 pb-16 md:pt-12 md:pb-24">
@@ -218,9 +196,12 @@ export function DestinationsSection({
             </p>
           </div>
           <div className="flex items-end justify-start md:justify-end">
-            <div className="flex items-center gap-3">
+            <div
+              className={`flex items-center gap-3 ${scrollable ? "" : "invisible"}`}
+            >
               <button
-                onClick={() => scroll("left")}
+                type="button"
+                onClick={prev}
                 className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
                 aria-label="Scroll left"
               >
@@ -240,7 +221,8 @@ export function DestinationsSection({
                 </svg>
               </button>
               <button
-                onClick={() => scroll("right")}
+                type="button"
+                onClick={next}
                 className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
                 aria-label="Scroll right"
               >
@@ -265,14 +247,17 @@ export function DestinationsSection({
 
         {/* Carousel - 2 items visible */}
         <div
-          ref={scrollContainer}
+          ref={trackRef}
           data-reveal-stagger
-          className="no-scrollbar flex gap-[18px] overflow-x-auto snap-x snap-mandatory scroll-smooth"
+          className="relative no-scrollbar flex gap-[18px] overflow-x-auto snap-x snap-mandatory scroll-smooth"
           style={{ scrollBehavior: "smooth" }}
         >
           {destinations.map((d) => (
-            <div key={d.title} className="snap-start flex-shrink-0 w-full md:w-[calc((100%-18px)/2)]">
-              <DestinationCard {...d} />
+            <div
+              key={d.title}
+              className="snap-start flex-shrink-0 w-full md:w-[calc((100%-18px)/2)]"
+            >
+              <DestinationCard {...d} noPhotoText={noPhotoText} />
             </div>
           ))}
         </div>

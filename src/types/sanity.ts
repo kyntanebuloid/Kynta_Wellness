@@ -79,6 +79,8 @@ export interface Homepage {
   servicesSection?: {
     eyebrow?: string;
     heading?: string;
+    /** Label under the name on cards without a photo. */
+    noPhotoText?: string;
     services?: {
       name: string;
       description: string;
@@ -91,6 +93,8 @@ export interface Homepage {
     eyebrow?: string;
     heading?: string;
     description?: string;
+    /** Label under the name on cards without a photo. */
+    noPhotoText?: string;
   };
   guestPathSection?: {
     eyebrow?: string;

@@ -33,6 +33,7 @@ export const homepageQuery = defineQuery(`*[_type == "homepage"][0]{
   servicesSection{
     eyebrow,
     heading,
+    noPhotoText,
     services[]{
       name,
       description,
@@ -41,7 +42,7 @@ export const homepageQuery = defineQuery(`*[_type == "homepage"][0]{
       buttonUrl
     }
   },
-  destinationsSection{ eyebrow, heading, description },
+  destinationsSection{ eyebrow, heading, description, noPhotoText },
   guestPathSection{
     eyebrow,
     heading,
