@@ -238,10 +238,14 @@ export default defineType({
           title: "Hotel Names",
           type: "array",
           of: [{ type: "string" }],
+          // The strip lists the hotels on the Locations page automatically.
+          hidden: true,
         }),
         defineField({
           name: "testimonials",
           title: "Guest Reviews",
+          description:
+            "Real reviews only, with the guest's or manager's permission. The reviews block is hidden when this is empty. The hotel names above it come from the Locations page.",
           type: "array",
           of: [
             defineField({

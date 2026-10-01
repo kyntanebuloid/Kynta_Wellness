@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { getBookableExperienceOptions } from "@/lib/actions/bookings";
+import { locationsPageDefaults } from "@/content/locations";
+import { list } from "@/content/types";
 import {
+  getBlogPosts,
   getHomepage,
   getLocationsPage,
   getSiteSettings,
@@ -25,14 +28,20 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [siteSettings, homepage, experiencesResult, locationsPage] =
+  const [siteSettings, homepage, experiencesResult, locationsPage, posts] =
     await Promise.all([
       getSiteSettings(),
       getHomepage(),
       getBookableExperienceOptions(),
       getLocationsPage(),
+      getBlogPosts(),
     ]);
   const services = experiencesResult.data ?? [];
+  // The hotels Kynta works with, as listed on the Locations page.
+  const hotelNames = list(
+    locationsPage?.locations,
+    locationsPageDefaults.locations,
+  ).map((location) => location.name);
 
   return (
     <>
@@ -43,9 +52,12 @@ export default async function Home() {
           data={homepage?.destinationsSection}
           locations={locationsPage?.locations}
         />
-        <GuestPathSection data={homepage?.guestPathSection} />
+        <GuestPathSection
+          data={homepage?.guestPathSection}
+          hotelNames={hotelNames}
+        />
         <PartnershipSection data={homepage?.partnershipSection} />
-        <JournalSection data={homepage?.journalSection} />
+        <JournalSection data={homepage?.journalSection} posts={posts} />
         <ReservationSection
           data={homepage?.reservationSection}
           services={services}

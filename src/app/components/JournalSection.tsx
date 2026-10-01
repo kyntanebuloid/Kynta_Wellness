@@ -1,10 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  type BlogPostSummary,
+  blogPageDefaults,
+  blogPostMeta,
+} from "@/content/blog";
+import { imageUrl } from "@/content/types";
 import type { Homepage } from "@/types/sanity";
 
 interface JournalSectionProps {
   data?: Homepage["journalSection"];
+  /** Visible blog posts in blog order; the first three are shown. */
+  posts?: BlogPostSummary[];
 }
+
+// The same stand-in photo the blog page uses for a post without one.
+const blogFallbackImage = blogPageDefaults.inquiriesSection.articles[0].image;
 
 const defaultArticles = [
   {
@@ -100,24 +111,37 @@ function ArticleCard({
   );
 }
 
-export function JournalSection({ data }: JournalSectionProps) {
+export function JournalSection({ data, posts = [] }: JournalSectionProps) {
   const eyebrow = data?.eyebrow || "Kynta Blog";
   const heading =
     data?.heading || "Read about herbs, spa design and hotel business.";
   const allArticlesLabel = data?.allArticlesLink?.label || "Read All Articles";
   const allArticlesUrl = data?.allArticlesLink?.url || "/blog";
 
-  const articles = data?.articles?.length
-    ? data.articles.map((a, i) => ({
-        image:
-          a.image?.url || defaultArticles[i % defaultArticles.length].image,
-        category: a.category || "Wellness",
-        meta: [a.readTime || "5 Min Read", a.topic].filter(Boolean).join(" • "),
-        title: a.title,
-        description: a.excerpt,
-        href: a.url || "/blog",
+  // Real blog posts first (same order and photos as /blog); the typed-in
+  // cards are only used while there are no posts.
+  const articles = posts.length
+    ? posts.slice(0, 3).map((post) => ({
+        image: imageUrl(post.featuredImage, blogFallbackImage),
+        category: post.category || "Journal",
+        meta: blogPostMeta(post),
+        title: post.title,
+        description: post.excerpt ?? "",
+        href: `/blog/${post.slug}`,
       }))
-    : defaultArticles;
+    : data?.articles?.length
+      ? data.articles.map((a, i) => ({
+          image:
+            a.image?.url || defaultArticles[i % defaultArticles.length].image,
+          category: a.category || "Wellness",
+          meta: [a.readTime || "5 Min Read", a.topic]
+            .filter(Boolean)
+            .join(" • "),
+          title: a.title,
+          description: a.excerpt,
+          href: a.url || "/blog",
+        }))
+      : defaultArticles;
 
   return (
     <section className="w-full bg-kynta-section-bg py-16 md:py-20 lg:py-24">

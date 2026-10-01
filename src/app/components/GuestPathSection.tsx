@@ -2,6 +2,8 @@ import type { Homepage } from "@/types/sanity";
 
 interface GuestPathSectionProps {
   data?: Homepage["guestPathSection"];
+  /** Hotel names from the Locations page, shown in the "Trusted by" strip. */
+  hotelNames?: string[];
 }
 
 const defaultGuestSteps = [
@@ -29,8 +31,7 @@ const defaultGuestSteps = [
   {
     number: "04",
     title: "REST",
-    description:
-      "Rest in a quiet room with hot Kashmiri tea and dry fruits.",
+    description: "Rest in a quiet room with hot Kashmiri tea and dry fruits.",
     icon: "cup",
   },
   {
@@ -48,34 +49,6 @@ const defaultStats = [
   { value: "140+", label: "Trained Therapists" },
   { value: "85k+", label: "Treatments Given" },
   { value: "98.4%", label: "Happy Guests", highlight: true },
-];
-
-const defaultHotelNames = [
-  "THE GLENWOOD MANOR",
-  "HERITAGE RETREATS",
-  "PALMS MORJIM",
-  "METROPOLITAN HOTELS",
-];
-
-const defaultTestimonials = [
-  {
-    quote:
-      "\u201CThe Kynta herbal massage fixed my tired body after weeks of work travel. The therapist was very skilled and the oil smelled lovely. One of the best spas in Asia.\u201D",
-    name: "Ananya Singhania",
-    affiliation: "Stayed at Glenwood Manor, Shimla",
-  },
-  {
-    quote:
-      "\u201CLetting Kynta run our spa was our best business decision of 2024. Our spa income went up by 38%, and twice as many guests talked about our spa.\u201D",
-    name: "Vikramjit Oberoi-Mehra",
-    affiliation: "Owner, Heritage Palace Hotels",
-  },
-  {
-    quote:
-      "\u201CThe Kumkumadi facial made my skin glow for days. It felt warm and caring, not like a normal hotel spa.\u201D",
-    name: "Claire Beauchamp",
-    affiliation: "Guest at Kynta Palms Resort, Goa",
-  },
 ];
 
 function StepIcon({ type }: { type: string }) {
@@ -189,7 +162,10 @@ function RustStars() {
 
 const iconTypes = ["footbath", "clipboard", "hands", "cup", "infinity"];
 
-export function GuestPathSection({ data }: GuestPathSectionProps) {
+export function GuestPathSection({
+  data,
+  hotelNames: locationHotelNames = [],
+}: GuestPathSectionProps) {
   const eyebrow = data?.eyebrow || "Your Visit in 5 Steps";
   const heading = data?.heading || "A calm visit, from start to finish.";
   const description =
@@ -208,12 +184,14 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
   const stats = data?.stats?.length ? data.stats : defaultStats;
   const trustedByHeading =
     data?.trustedByHeading || "Trusted by Top Hotels in India";
-  const hotelNames = data?.hotelNames?.length
-    ? data.hotelNames
-    : defaultHotelNames;
-  const testimonials = data?.testimonials?.length
-    ? data.testimonials
-    : defaultTestimonials;
+  // The real partner hotels (Locations page) always win over typed names.
+  const hotelNames = locationHotelNames.length
+    ? locationHotelNames
+    : (data?.hotelNames ?? []);
+  // Only real reviews entered in Sanity; the block hides when there are none.
+  const testimonials = (data?.testimonials ?? []).filter(
+    (t) => t.quote?.trim() && t.name?.trim(),
+  );
 
   return (
     <>
@@ -266,51 +244,58 @@ export function GuestPathSection({ data }: GuestPathSectionProps) {
         </div>
       </section>
 
-      <section className="w-full bg-kynta-section-bg py-12 md:py-16">
-        <div className="container-site text-center">
-          <p className="text-[13px] text-kynta-warm-gray tracking-wide mb-8">
-            {trustedByHeading}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
-            {hotelNames.map((name, index) => (
-              <div key={name} className="flex items-center gap-6 md:gap-8">
-                <span className="font-serif text-lg md:text-xl lg:text-2xl tracking-[0.08em] text-kynta-charcoal">
-                  {name}
-                </span>
-                {index < hotelNames.length - 1 && (
-                  <span className="text-kynta-border">|</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="w-full bg-kynta-section-bg pb-16 md:pb-20">
-        <div className="container-site">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-reveal-stagger>
-            {testimonials.map((t) => (
-              <div
-                key={t.name}
-                className="flex flex-col bg-white rounded-md p-6 border border-kynta-border/30"
-              >
-                <RustStars />
-                <p className="font-serif text-[14px] italic leading-[1.7] text-kynta-charcoal mb-5 flex-1">
-                  {t.quote}
-                </p>
-                <div>
-                  <p className="text-[13px] font-semibold text-kynta-charcoal">
-                    {t.name}
-                  </p>
-                  <p className="text-[11px] text-kynta-warm-gray">
-                    {t.affiliation}
-                  </p>
+      {hotelNames.length > 0 && (
+        <section className="w-full bg-kynta-section-bg py-12 md:py-16">
+          <div className="container-site text-center">
+            <p className="text-[13px] text-kynta-warm-gray tracking-wide mb-8">
+              {trustedByHeading}
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+              {hotelNames.map((name, index) => (
+                <div key={name} className="flex items-center gap-6 md:gap-8">
+                  <span className="font-serif text-lg md:text-xl lg:text-2xl tracking-[0.08em] text-kynta-charcoal">
+                    {name}
+                  </span>
+                  {index < hotelNames.length - 1 && (
+                    <span className="text-kynta-border">|</span>
+                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {testimonials.length > 0 && (
+        <section className="w-full bg-kynta-section-bg pb-16 md:pb-20">
+          <div className="container-site">
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              data-reveal-stagger
+            >
+              {testimonials.map((t) => (
+                <div
+                  key={t.name}
+                  className="flex flex-col bg-white rounded-md p-6 border border-kynta-border/30"
+                >
+                  <RustStars />
+                  <p className="font-serif text-[14px] italic leading-[1.7] text-kynta-charcoal mb-5 flex-1">
+                    {t.quote}
+                  </p>
+                  <div>
+                    <p className="text-[13px] font-semibold text-kynta-charcoal">
+                      {t.name}
+                    </p>
+                    <p className="text-[11px] text-kynta-warm-gray">
+                      {t.affiliation}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

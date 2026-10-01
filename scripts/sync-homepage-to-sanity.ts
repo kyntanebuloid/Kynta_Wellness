@@ -94,11 +94,31 @@ async function buildHomepage(current: Doc): Promise<Doc> {
   const booking = current.reservationSection ?? {};
 
   const serviceCards = [
-    ["Massages", "Healing massages that relax your body and take away pain.", "/treatment-massage.jpg"],
-    ["Beauty Care", "Face and skin care made with natural plants and herbs.", "/treatment-glamour-glow.jpg"],
-    ["Couple Massage", "A relaxing massage for two people, side by side.", "/treatment-spa-sojourns.jpg"],
-    ["Quick Treatments", "Short treatments for when you do not have much time.", "/treatment-massage.jpg"],
-    ["Full Spa Day", "Long spa sessions that mix old Indian healing with modern comfort.", "/treatment-spa-sojourns.jpg"],
+    [
+      "Massages",
+      "Healing massages that relax your body and take away pain.",
+      "/treatment-massage.jpg",
+    ],
+    [
+      "Beauty Care",
+      "Face and skin care made with natural plants and herbs.",
+      "/treatment-glamour-glow.jpg",
+    ],
+    [
+      "Couple Massage",
+      "A relaxing massage for two people, side by side.",
+      "/treatment-spa-sojourns.jpg",
+    ],
+    [
+      "Quick Treatments",
+      "Short treatments for when you do not have much time.",
+      "/treatment-massage.jpg",
+    ],
+    [
+      "Full Spa Day",
+      "Long spa sessions that mix old Indian healing with modern comfort.",
+      "/treatment-spa-sojourns.jpg",
+    ],
   ];
 
   const articleImages = [
@@ -107,33 +127,86 @@ async function buildHomepage(current: Doc): Promise<Doc> {
     "/article-revpash.jpg",
   ];
   const defaultArticles = [
-    { category: "Health", readTime: "6 Min Read", topic: "Ayurveda", title: "How Warm Herbal Bags Help You Recover From Stress", excerpt: "Warm bags filled with herbs relax deep muscles and help lower stress in your body.", url: "/blog" },
-    { category: "Spa Design", readTime: "8 Min Read", topic: "Design", title: "How to Build a Calm Spa With Nature and Ayurveda", excerpt: "How stone, quiet rooms and natural light help your body relax on its own.", url: "/blog" },
-    { category: "Hotel Business", readTime: "5 Min Read", topic: "Hotels", title: "How a Good Spa Helps a Hotel Earn More", excerpt: "Why smart hotel owners turn empty spa space into busy spas that bring in more money.", url: "/blog" },
+    {
+      category: "Health",
+      readTime: "6 Min Read",
+      topic: "Ayurveda",
+      title: "How Warm Herbal Bags Help You Recover From Stress",
+      excerpt:
+        "Warm bags filled with herbs relax deep muscles and help lower stress in your body.",
+      url: "/blog",
+    },
+    {
+      category: "Spa Design",
+      readTime: "8 Min Read",
+      topic: "Design",
+      title: "How to Build a Calm Spa With Nature and Ayurveda",
+      excerpt:
+        "How stone, quiet rooms and natural light help your body relax on its own.",
+      url: "/blog",
+    },
+    {
+      category: "Hotel Business",
+      readTime: "5 Min Read",
+      topic: "Hotels",
+      title: "How a Good Spa Helps a Hotel Earn More",
+      excerpt:
+        "Why smart hotel owners turn empty spa space into busy spas that bring in more money.",
+      url: "/blog",
+    },
   ];
   // The page showed "<readTime> • <author>" for Sanity articles; author becomes the topic.
-  const articleSource: Doc[] = Array.isArray(journal.articles) && journal.articles.length > 0
-    ? journal.articles.map((a: Doc) => ({
-        category: pick(a.category, "Wellness"),
-        readTime: pick(a.readTime, "5 Min Read"),
-        topic: pick(a.author, "Kynta Wellness"),
-        title: a.title,
-        excerpt: a.excerpt,
-        url: "/blog",
-      }))
-    : defaultArticles;
+  const articleSource: Doc[] =
+    Array.isArray(journal.articles) && journal.articles.length > 0
+      ? journal.articles.map((a: Doc) => ({
+          category: pick(a.category, "Wellness"),
+          readTime: pick(a.readTime, "5 Min Read"),
+          topic: pick(a.author, "Kynta Wellness"),
+          title: a.title,
+          excerpt: a.excerpt,
+          url: "/blog",
+        }))
+      : defaultArticles;
 
   const stepIcons = ["footbath", "clipboard", "hands", "cup", "infinity"];
   const defaultSteps = [
-    { number: "01", title: "ARRIVE & RELAX", description: "We wash your feet in warm flower water and give you a cool herbal drink." },
-    { number: "02", title: "CHECK-UP", description: "We talk with you about your body, your stress, where it hurts, and the smells you like." },
-    { number: "03", title: "MASSAGE", description: "Natural oils, warmed just right, used by gentle and skilled hands." },
-    { number: "04", title: "REST", description: "Rest in a quiet room with hot Kashmiri tea and dry fruits." },
-    { number: "05", title: "CARE AT HOME", description: "We give you simple tips, breathing exercises, and oils to use at home." },
+    {
+      number: "01",
+      title: "ARRIVE & RELAX",
+      description:
+        "We wash your feet in warm flower water and give you a cool herbal drink.",
+    },
+    {
+      number: "02",
+      title: "CHECK-UP",
+      description:
+        "We talk with you about your body, your stress, where it hurts, and the smells you like.",
+    },
+    {
+      number: "03",
+      title: "MASSAGE",
+      description:
+        "Natural oils, warmed just right, used by gentle and skilled hands.",
+    },
+    {
+      number: "04",
+      title: "REST",
+      description: "Rest in a quiet room with hot Kashmiri tea and dry fruits.",
+    },
+    {
+      number: "05",
+      title: "CARE AT HOME",
+      description:
+        "We give you simple tips, breathing exercises, and oils to use at home.",
+    },
   ];
   const hasSanityStats = Array.isArray(guest.stats) && guest.stats.length > 0;
   const stats: Doc[] = hasSanityStats
-    ? guest.stats.map((s: Doc) => ({ value: s.value, label: s.label, highlight: false }))
+    ? guest.stats.map((s: Doc) => ({
+        value: s.value,
+        label: s.label,
+        highlight: false,
+      }))
     : [
         { value: "18+", label: "Spas", highlight: false },
         { value: "9", label: "Cities in India", highlight: false },
@@ -153,9 +226,15 @@ async function buildHomepage(current: Doc): Promise<Doc> {
         hero.subtitle,
         "Relaxing Ayurvedic spa treatments inside the best hotels, palaces and nature resorts in India.",
       ),
-      primaryCta: link(pick(hero.ctaText, "See Our Treatments"), pick(hero.ctaUrl, "/experiences")),
+      primaryCta: link(
+        pick(hero.ctaText, "See Our Treatments"),
+        pick(hero.ctaUrl, "/experiences"),
+      ),
       secondaryCta: link("Partner With Kynta", "/partner"),
-      image: await image("/hero-bg.jpg", "Luxurious Indian heritage spa courtyard with lotus pool"),
+      image: await image(
+        "/hero-bg.jpg",
+        "Luxurious Indian heritage spa courtyard with lotus pool",
+      ),
     },
     servicesSection: {
       eyebrow: "OUR SERVICES",
@@ -186,33 +265,20 @@ async function buildHomepage(current: Doc): Promise<Doc> {
         "From the moment you arrive until after you go home, we take care of every small detail.",
       steps: keyed(
         "step",
-        pickList(guest.steps as Doc[], defaultSteps).map((s: Doc, i: number) => ({
-          number: s.number,
-          title: s.title,
-          description: s.description,
-          icon: stepIcons[i % stepIcons.length],
-        })),
+        pickList(guest.steps as Doc[], defaultSteps).map(
+          (s: Doc, i: number) => ({
+            number: s.number,
+            title: s.title,
+            description: s.description,
+            icon: stepIcons[i % stepIcons.length],
+          }),
+        ),
       ),
       stats: keyed("stat", stats),
       trustedByHeading: "Trusted by Top Hotels in India",
-      hotelNames: ["THE GLENWOOD MANOR", "HERITAGE RETREATS", "PALMS MORJIM", "METROPOLITAN HOTELS"],
-      testimonials: keyed("review", [
-        {
-          quote: "“The Kynta herbal massage fixed my tired body after weeks of work travel. The therapist was very skilled and the oil smelled lovely. One of the best spas in Asia.”",
-          name: "Ananya Singhania",
-          affiliation: "Stayed at Glenwood Manor, Shimla",
-        },
-        {
-          quote: "“Letting Kynta run our spa was our best business decision of 2024. Our spa income went up by 38%, and twice as many guests talked about our spa.”",
-          name: "Vikramjit Oberoi-Mehra",
-          affiliation: "Owner, Heritage Palace Hotels",
-        },
-        {
-          quote: "“The Kumkumadi facial made my skin glow for days. It felt warm and caring, not like a normal hotel spa.”",
-          name: "Claire Beauchamp",
-          affiliation: "Guest at Kynta Palms Resort, Goa",
-        },
-      ]),
+      // Reviews are added in Studio (real ones only); hotel names come from
+      // the Locations page.
+      testimonials: [],
     },
     partnershipSection: {
       eyebrow: pick(partner.eyebrow, "For Hotel Owners"),
@@ -224,12 +290,42 @@ async function buildHomepage(current: Doc): Promise<Doc> {
       services: keyed(
         "homepageServiceItem",
         pickList(partner.services as Doc[], [
-          { icon: "spatial", title: "Spa Design & Planning", description: "We help you plan the spa rooms, water areas, quiet spaces and the full layout." },
-          { icon: "management", title: "We Run Your Spa Daily", description: "We do everything: bookings, guest service, supplies, towels and safety checks." },
-          { icon: "sourcing", title: "Trained Therapists", description: "We hire and train the therapists. We pay them and take care of all their paperwork." },
-          { icon: "formulation", title: "Our Own Herbal Products", description: "Pure herbal oils and products, even with your hotel's name on them, in eco-friendly glass bottles." },
-          { icon: "revpash", title: "More Spa Income", description: "Smart booking keeps your spa rooms busy at all hours, so your hotel earns more money." },
-          { icon: "brand", title: "Better Hotel Reviews", description: "A great spa makes your hotel look better. Our partner hotels get higher ratings on sites like TripAdvisor." },
+          {
+            icon: "spatial",
+            title: "Spa Design & Planning",
+            description:
+              "We help you plan the spa rooms, water areas, quiet spaces and the full layout.",
+          },
+          {
+            icon: "management",
+            title: "We Run Your Spa Daily",
+            description:
+              "We do everything: bookings, guest service, supplies, towels and safety checks.",
+          },
+          {
+            icon: "sourcing",
+            title: "Trained Therapists",
+            description:
+              "We hire and train the therapists. We pay them and take care of all their paperwork.",
+          },
+          {
+            icon: "formulation",
+            title: "Our Own Herbal Products",
+            description:
+              "Pure herbal oils and products, even with your hotel's name on them, in eco-friendly glass bottles.",
+          },
+          {
+            icon: "revpash",
+            title: "More Spa Income",
+            description:
+              "Smart booking keeps your spa rooms busy at all hours, so your hotel earns more money.",
+          },
+          {
+            icon: "brand",
+            title: "Better Hotel Reviews",
+            description:
+              "A great spa makes your hotel look better. Our partner hotels get higher ratings on sites like TripAdvisor.",
+          },
         ]).map((s: Doc) => ({
           icon: pick(s.icon, "spatial"),
           title: s.title,
@@ -239,14 +335,20 @@ async function buildHomepage(current: Doc): Promise<Doc> {
     },
     journalSection: {
       eyebrow: pick(journal.eyebrow, "Kynta Blog"),
-      heading: pick(journal.heading, "Read about herbs, spa design and hotel business."),
+      heading: pick(
+        journal.heading,
+        "Read about herbs, spa design and hotel business.",
+      ),
       allArticlesLink: link("Read All Articles", "/blog"),
       articles: keyed(
         "article",
         await Promise.all(
           articleSource.map(async (a, i) => ({
             ...a,
-            image: await image(articleImages[i % articleImages.length], a.title),
+            image: await image(
+              articleImages[i % articleImages.length],
+              a.title,
+            ),
           })),
         ),
       ),
@@ -261,8 +363,18 @@ async function buildHomepage(current: Doc): Promise<Doc> {
       infoCards: keyed(
         "infoCard",
         pickList(booking.infoCards as Doc[], [
-          { icon: "clock", title: "No Rush, No Crowds", description: "We take only a few bookings each day, so the spa always stays quiet and calm." },
-          { icon: "shield", title: "Your Privacy Matters", description: "Tell us about food needs, private travel or a private room. We keep it all private." },
+          {
+            icon: "clock",
+            title: "No Rush, No Crowds",
+            description:
+              "We take only a few bookings each day, so the spa always stays quiet and calm.",
+          },
+          {
+            icon: "shield",
+            title: "Your Privacy Matters",
+            description:
+              "Tell us about food needs, private travel or a private room. We keep it all private.",
+          },
         ]).map((c: Doc) => ({
           icon: c.icon === "shield" ? "shield" : "clock",
           title: c.title,
@@ -278,7 +390,10 @@ async function buildHomepage(current: Doc): Promise<Doc> {
       formHeading: "Your Booking Details",
     },
     seo: {
-      title: pick(current.seo?.title, "Kynta Wellness Group | Premium Spa & Wellness Hospitality"),
+      title: pick(
+        current.seo?.title,
+        "Kynta Wellness Group | Premium Spa & Wellness Hospitality",
+      ),
       description: pick(
         current.seo?.description,
         "Premium restorative sanctuaries and turnkey spa operations crafted exclusively for India's most exceptional hotels, heritage palaces, and boutique wilderness retreats.",
@@ -294,7 +409,10 @@ async function buildSiteSettings(current: Doc): Promise<Doc> {
     _type: "siteSettings",
     title: pick(current.title, "Kynta Wellness"),
     topBar: {
-      partnerText: pick(current.topBar?.partnerText, "Trusted Spa Partner for 5-Star Hotels"),
+      partnerText: pick(
+        current.topBar?.partnerText,
+        "Trusted Spa Partner for 5-Star Hotels",
+      ),
       phone: pick(current.topBar?.phone, "+91 7250333494"),
     },
     logo: await image("/kynta-logo-full.png", "Kynta Wellness Group"),
@@ -322,7 +440,10 @@ async function buildSiteSettings(current: Doc): Promise<Doc> {
         footer.newsletterDescription,
         "Get news about our spas, special offers and health tips.",
       ),
-      newsletterPlaceholder: pick(footer.newsletterPlaceholder, "Your email address"),
+      newsletterPlaceholder: pick(
+        footer.newsletterPlaceholder,
+        "Your email address",
+      ),
       newsletterButtonLabel: "Subscribe",
       legalLinks: keyed("footerLink", [
         link("Privacy Policy", "/privacy"),
@@ -341,14 +462,20 @@ async function buildSiteSettings(current: Doc): Promise<Doc> {
 }
 
 async function main() {
-  const current = await client.fetch<{ homepage: Doc | null; siteSettings: Doc | null }>(
+  const current = await client.fetch<{
+    homepage: Doc | null;
+    siteSettings: Doc | null;
+  }>(
     `{"homepage": *[_id == "homepage"][0], "siteSettings": *[_id == "siteSettings"][0]}`,
   );
 
   const backupDir = path.join(process.cwd(), "sanity", "backups");
   mkdirSync(backupDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const backupFile = path.join(backupDir, `homepage-sitesettings-${stamp}.json`);
+  const backupFile = path.join(
+    backupDir,
+    `homepage-sitesettings-${stamp}.json`,
+  );
   writeFileSync(backupFile, JSON.stringify(current, null, 2));
   console.log(`Backup written: ${path.relative(process.cwd(), backupFile)}`);
 
@@ -363,8 +490,13 @@ async function main() {
 
   if (dryRun) {
     const planFile = path.join(backupDir, `planned-${stamp}.json`);
-    writeFileSync(planFile, JSON.stringify({ homepage, siteSettings }, null, 2));
-    console.log(`Dry run: planned documents written to ${path.relative(process.cwd(), planFile)}`);
+    writeFileSync(
+      planFile,
+      JSON.stringify({ homepage, siteSettings }, null, 2),
+    );
+    console.log(
+      `Dry run: planned documents written to ${path.relative(process.cwd(), planFile)}`,
+    );
     return;
   }
 
