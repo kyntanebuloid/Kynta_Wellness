@@ -257,7 +257,9 @@ async function main() {
       ),
     );
 
-    let tx = client.patch(id).setIfMissing({ gstPercent: 18 });
+    let tx = client
+      .patch(id)
+      .setIfMissing({ gstPercent: 5, advancePercent: 25 });
     for (const menu of targets) {
       if (!slugs.has(menu.slug)) {
         console.warn(

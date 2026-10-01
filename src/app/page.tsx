@@ -59,6 +59,7 @@ export default async function Home() {
           data={homepage?.reservationSection}
           locations={locations}
           gstPercent={locationsPage?.gstPercent}
+          advancePercent={locationsPage?.advancePercent}
           fallbackPhone={siteSettings?.topBar?.phone}
         />
       </main>

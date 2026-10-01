@@ -18,9 +18,12 @@ import {
 } from "@/content/locations";
 import { imageUrl, link, list, text } from "@/content/types";
 import {
+  advancePercentOrDefault,
   gstPercentOrDefault,
+  type PaymentPlan,
   parseMenuRef,
   quoteMenuItem,
+  splitPayment,
 } from "@/lib/booking/menu";
 import type {
   Experience,
@@ -736,8 +739,22 @@ export async function getExperiencePricing(experienceId: string): Promise<{
   }
 }
 
+/** What create-order charges and the booking emails show. */
+export type BookingPricing = {
+  id: string;
+  title: string;
+  /** Charged online now (the advance, or the full amount). */
+  priceAmount: number;
+  currency: string;
+  /** Full price incl. GST, and what is left to pay at the spa. */
+  totalAmount?: number;
+  balanceAmount?: number;
+  plan?: PaymentPlan;
+};
+
 type MenuPricingResult = {
   gstPercent?: number | null;
+  advancePercent?: number | null;
   location?: {
     name?: string;
     item?: {
@@ -753,12 +770,9 @@ type MenuPricingResult = {
  * Price for a spa-menu booking (see src/lib/booking/menu.ts), read fresh from
  * Sanity: menu price × guests (couples: × 2 when priced "each") + GST.
  */
-export async function getMenuPricing(ref: string): Promise<{
-  id: string;
-  title: string;
-  priceAmount: number;
-  currency: string;
-} | null> {
+export async function getMenuPricing(
+  ref: string,
+): Promise<BookingPricing | null> {
   const parsed = parseMenuRef(ref);
   if (!parsed) {
     console.warn(`[pricing] invalid menu ref: ${ref}`);
@@ -770,6 +784,7 @@ export async function getMenuPricing(ref: string): Promise<{
       sanityNoCdnClient().fetch<MenuPricingResult>(
         `*[_type == "locationsPage"][0]{
           gstPercent,
+          advancePercent,
           "location": locations[slug == $slug][0]{
             name,
             "item": menu[_key == $itemKey][0]{
@@ -807,11 +822,22 @@ export async function getMenuPricing(ref: string): Promise<{
         ? "couple"
         : `${parsed.guests} guest${parsed.guests > 1 ? "s" : ""}`;
 
+    const payment = splitPayment(
+      quote.totalPaise,
+      parsed.plan,
+      advancePercentOrDefault(result?.advancePercent),
+    );
+
     return {
       id: ref,
-      title: `${item.name} (${parsed.minutes} min, ${people}) · ${result?.location?.name ?? parsed.slug}`,
-      priceAmount: quote.totalPaise / 100,
+      title: `${item.name} (${parsed.minutes} min, ${people}) · ${result?.location?.name ?? parsed.slug}${
+        payment.plan === "advance" ? " · advance" : ""
+      }`,
+      priceAmount: payment.dueNowPaise / 100,
       currency: "INR",
+      totalAmount: quote.totalPaise / 100,
+      balanceAmount: payment.balancePaise / 100,
+      plan: payment.plan,
     };
   } catch (err) {
     console.error(
@@ -823,7 +849,9 @@ export async function getMenuPricing(ref: string): Promise<{
 }
 
 /** Price for any booking: a spa-menu treatment or an older experience. */
-export async function getBookingPricing(experienceId: string) {
+export async function getBookingPricing(
+  experienceId: string,
+): Promise<BookingPricing | null> {
   return experienceId.startsWith("menu:")
     ? getMenuPricing(experienceId)
     : getExperiencePricing(experienceId);

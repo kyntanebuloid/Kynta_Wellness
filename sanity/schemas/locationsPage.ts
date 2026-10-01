@@ -264,6 +264,14 @@ export default defineType({
       validation: (rule) => rule.min(0).max(28),
     }),
     defineField({
+      name: "advancePercent",
+      title: "Booking – Advance (token) %",
+      description:
+        "Guests can pay this % of the total online and the rest at the spa, or pay in full. Use 0 to allow full payment only. Empty = 25.",
+      type: "number",
+      validation: (rule) => rule.min(0).max(99),
+    }),
+    defineField({
       name: "locations",
       title: "3. Locations",
       type: "array",

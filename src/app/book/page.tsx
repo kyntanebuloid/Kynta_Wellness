@@ -32,6 +32,7 @@ export default async function BookPage() {
             locationsPageDefaults.locations,
           )}
           gstPercent={locationsPage?.gstPercent}
+          advancePercent={locationsPage?.advancePercent}
           fallbackPhone={siteSettings?.topBar?.phone}
         />
       </main>

@@ -122,6 +122,9 @@ export type BookingEmailPayload = {
   experienceName: string;
   amountCents: number;
   currency: string;
+  /** Set for advance payments: what is still to be paid at the spa. */
+  balanceCents?: number;
+  totalCents?: number;
   sanctuary: string;
   bookingDate: string;
   startTime: string;
@@ -157,7 +160,9 @@ export function buildCustomerConfirmationHtml(
     </div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:24px;">
       ${detailRow("Experience", payload.experienceName)}
-      ${detailRow("Price paid", formatAmount(payload.amountCents, payload.currency))}
+      ${detailRow(payload.balanceCents ? "Advance paid online" : "Price paid", formatAmount(payload.amountCents, payload.currency))}
+      ${payload.balanceCents ? detailRow("Balance to pay at the spa", formatAmount(payload.balanceCents, payload.currency)) : ""}
+      ${payload.balanceCents && payload.totalCents ? detailRow("Total (incl. GST)", formatAmount(payload.totalCents, payload.currency)) : ""}
       ${detailRow("Currency", payload.currency)}
       ${detailRow("Sanctuary destination", payload.sanctuary)}
       ${detailRow("Target date", formatDate(payload.bookingDate))}
@@ -209,7 +214,9 @@ export function buildOwnerNotificationHtml(
       ${detailRow("Guest phone / WhatsApp", payload.guestPhone || "Not provided")}
       ${detailRow("Sanctuary destination", payload.sanctuary)}
       ${detailRow("Experience", payload.experienceName)}
-      ${detailRow("Amount charged", formatAmount(payload.amountCents, payload.currency))}
+      ${detailRow(payload.balanceCents ? "Advance charged online" : "Amount charged", formatAmount(payload.amountCents, payload.currency))}
+      ${payload.balanceCents ? detailRow("Balance to collect at the spa", formatAmount(payload.balanceCents, payload.currency)) : ""}
+      ${payload.balanceCents && payload.totalCents ? detailRow("Total (incl. GST)", formatAmount(payload.totalCents, payload.currency)) : ""}
       ${detailRow("Currency", payload.currency)}
       ${detailRow("Target date", formatDate(payload.bookingDate))}
       ${detailRow("Time slot", timeSlot)}

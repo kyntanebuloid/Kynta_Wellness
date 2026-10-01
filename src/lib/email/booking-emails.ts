@@ -64,31 +64,30 @@ function parseBookingNotes(notes: string | null): {
   };
 }
 
-async function resolveExperienceName(
+/** The treatment name, and the full price for advance (token) bookings. */
+async function resolveExperience(
   booking: BookingConfirmationEmailInput["booking"],
   fallback?: string | null,
-): Promise<string> {
-  if (fallback?.trim()) {
-    return fallback.trim();
-  }
+): Promise<{ name: string; totalCents?: number }> {
+  let name = fallback?.trim() || "";
+  let totalCents: number | undefined;
 
-  if (!booking.experience_id) {
-    return "Kynta Experience";
-  }
-
-  try {
-    const pricing = await getBookingPricing(booking.experience_id);
-    if (pricing?.title) {
-      return pricing.title;
+  if (booking.experience_id) {
+    try {
+      const pricing = await getBookingPricing(booking.experience_id);
+      name ||= pricing?.title ?? "";
+      if (pricing?.plan === "advance" && pricing.totalAmount) {
+        totalCents = Math.round(pricing.totalAmount * 100);
+      }
+    } catch (err) {
+      console.warn(
+        "[booking-emails] experience lookup failed:",
+        err instanceof Error ? err.message : err,
+      );
     }
-  } catch (err) {
-    console.warn(
-      "[booking-emails] experience title lookup failed:",
-      err instanceof Error ? err.message : err,
-    );
   }
 
-  return "Kynta Experience";
+  return { name: name || "Kynta Experience", totalCents };
 }
 
 export async function sendBookingConfirmationEmails(
@@ -112,10 +111,13 @@ export async function sendBookingConfirmationEmails(
     }
 
     const parsed = parseBookingNotes(booking.notes);
-    const experienceName = await resolveExperienceName(
-      booking,
-      input.experienceName,
-    );
+    const experience = await resolveExperience(booking, input.experienceName);
+    const experienceName = experience.name;
+    // Advance bookings: the rest of the total is paid at the spa.
+    const balanceCents =
+      experience.totalCents && experience.totalCents > payment.amount_cents
+        ? experience.totalCents - payment.amount_cents
+        : undefined;
 
     const payload: BookingEmailPayload = {
       guestName: booking.guest_name?.trim() || "Guest",
@@ -124,6 +126,8 @@ export async function sendBookingConfirmationEmails(
       experienceName,
       amountCents: payment.amount_cents,
       currency: payment.currency,
+      balanceCents,
+      totalCents: balanceCents ? experience.totalCents : undefined,
       sanctuary: parsed.sanctuary,
       bookingDate: booking.booking_date,
       startTime: booking.start_time,

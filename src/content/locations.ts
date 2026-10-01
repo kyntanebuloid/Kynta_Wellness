@@ -109,6 +109,8 @@ export interface LocationsPageContent {
   glanceHeading?: string;
   /** GST % added to menu prices at online checkout. */
   gstPercent?: number;
+  /** % of the total paid online for the advance option (0 = full only). */
+  advancePercent?: number;
   locations?: LocationContent[];
   ctaSection?: {
     badge?: string;
@@ -136,7 +138,9 @@ export const locationsPageDefaults = {
   detailsLabel: "Details",
   glanceHeading: "Sanctuary at a Glance",
   // Menus say "taxes extra"; change in Sanity (0 if prices include tax).
-  gstPercent: 18,
+  gstPercent: 5,
+  // Pay 25% online and the rest at the spa, or pay in full.
+  advancePercent: 25,
   locations: [
     {
       name: "Indraprastha Resort Dharamshala",

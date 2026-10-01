@@ -6,12 +6,15 @@ import type { SpaMenuItem } from "@/content/locations";
 import { sendBookingRequest } from "@/lib/actions/booking-request";
 import { createBooking } from "@/lib/actions/bookings";
 import {
+  advancePercentOrDefault,
   gstPercentOrDefault,
   locationSlugOf,
   MAX_GUESTS,
   MENU_CATEGORY_LABELS,
   menuRef,
+  type PaymentPlan,
   quoteMenuItem,
+  splitPayment,
 } from "@/lib/booking/menu";
 import type { Homepage } from "@/types/sanity";
 
@@ -30,6 +33,8 @@ interface ReservationSectionProps {
   gstPercent?: number;
   /** Used for "Call to book" when a location has no phone of its own. */
   fallbackPhone?: string;
+  /** % paid online for the advance (token) option; 0 = full payment only. */
+  advancePercent?: number;
 }
 
 declare global {
@@ -299,6 +304,7 @@ export function ReservationSection({
   locations = [],
   gstPercent: gstSetting,
   fallbackPhone,
+  advancePercent: advanceSetting,
 }: ReservationSectionProps) {
   const eyebrow = data?.eyebrow || "Book Your Spa Visit";
   const heading = data?.heading || "Book a Treatment";
@@ -319,6 +325,7 @@ export function ReservationSection({
   const whatsappUrl = data?.whatsapp?.url || DEFAULT_WHATSAPP_URL;
   const formHeading = data?.formHeading || "Your Booking Details";
   const gstPercent = gstPercentOrDefault(gstSetting);
+  const advancePercent = advancePercentOrDefault(advanceSetting);
 
   const [status, setStatus] = useState<
     | { kind: "idle" }
@@ -334,6 +341,7 @@ export function ReservationSection({
   const [itemKey, setItemKey] = useState("");
   const [minutes, setMinutes] = useState(0);
   const [guests, setGuests] = useState(1);
+  const [plan, setPlan] = useState<PaymentPlan>("full");
   const [minDate, setMinDate] = useState<string>();
   const startedAt = useRef(0);
 
@@ -362,6 +370,9 @@ export function ReservationSection({
         })
       : null;
   const canBookOnline = Boolean(location) && menu.length > 0;
+  const payment = quote
+    ? splitPayment(quote.totalPaise, plan, advancePercent)
+    : null;
 
   const chooseLocation = (value: string) => {
     setSlug(value);
@@ -507,6 +518,7 @@ export function ReservationSection({
           item._key,
           option.minutes,
           partySize,
+          payment?.plan ?? "full",
         ),
         treatment_id: null,
         booking_date: bookingDate,
@@ -610,12 +622,15 @@ export function ReservationSection({
             setStatus({
               kind: "success",
               message:
-                "Payment done. Your booking is confirmed. We will contact you soon.",
+                payment && payment.balancePaise > 0
+                  ? `Advance paid. Your booking is confirmed. Please pay the balance of ${formatInr(payment.balancePaise)} at the spa.`
+                  : "Payment done. Your booking is confirmed. We will contact you soon.",
             });
             form.reset();
             setItemKey("");
             setMinutes(0);
             setGuests(1);
+            setPlan("full");
           } catch {
             submittingRef.current = false;
             setStatus({
@@ -976,14 +991,68 @@ export function ReservationSection({
                       </div>
                       {quote.taxPaise > 0 && (
                         <div className="flex justify-between gap-3 text-kynta-warm-gray mt-1">
-                          <span>GST ({gstPercent}%)</span>
+                          <span>+ GST ({gstPercent}%)</span>
                           <span>{formatInr(quote.taxPaise)}</span>
                         </div>
                       )}
                       <div className="flex justify-between gap-3 font-semibold border-t border-kynta-border/50 mt-2 pt-2">
-                        <span>Total to pay</span>
+                        <span>
+                          Total
+                          {gstPercent > 0 &&
+                            ` (price + ${gstPercent}% GST = ${100 + gstPercent}%)`}
+                        </span>
                         <span>{formatInr(quote.totalPaise)}</span>
                       </div>
+
+                      {advancePercent > 0 && payment && (
+                        <fieldset className="m-0 min-w-0 border-0 p-0 mt-4 flex flex-col gap-2">
+                          <legend className="text-[10px] font-bold tracking-[0.12em] uppercase text-kynta-charcoal mb-2">
+                            How would you like to pay?
+                          </legend>
+                          {(["full", "advance"] as const).map((value) => {
+                            const option = splitPayment(
+                              quote.totalPaise,
+                              value,
+                              advancePercent,
+                            );
+                            return (
+                              <label
+                                key={value}
+                                className={`flex items-start gap-3 rounded-md border bg-white px-3 py-2.5 cursor-pointer transition-colors ${
+                                  plan === value
+                                    ? "border-kynta-teal"
+                                    : "border-kynta-border/50 hover:border-kynta-border"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="payment-plan"
+                                  value={value}
+                                  checked={plan === value}
+                                  onChange={() => setPlan(value)}
+                                  disabled={isLoading}
+                                  className="mt-0.5 accent-kynta-teal-dark"
+                                />
+                                <span className="flex-1">
+                                  <span className="flex justify-between gap-3 font-semibold">
+                                    <span>
+                                      {value === "full"
+                                        ? "Pay in full now"
+                                        : `Pay ${advancePercent}% advance now`}
+                                    </span>
+                                    <span>{formatInr(option.dueNowPaise)}</span>
+                                  </span>
+                                  <span className="block text-[11.5px] text-kynta-warm-gray">
+                                    {value === "full"
+                                      ? "Nothing to pay at the spa."
+                                      : `Pay the remaining ${formatInr(option.balancePaise)} at the spa.`}
+                                  </span>
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </fieldset>
+                      )}
                     </div>
                   )}
                 </>
@@ -1030,7 +1099,7 @@ export function ReservationSection({
                     : !canBookOnline && location
                       ? "Send Booking Request"
                       : quote
-                        ? `Pay ${formatInr(quote.totalPaise)}`
+                        ? `Pay ${formatInr(payment?.dueNowPaise ?? quote.totalPaise)}`
                         : "Book Now"}
                 </button>
               </div>
