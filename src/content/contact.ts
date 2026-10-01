@@ -76,41 +76,43 @@ export interface ContactPageContent {
 
 export const contactPageDefaults = {
   hero: {
-    eyebrow: "SANCTUARY LIAISON & CONCIERGE",
-    heading: "Connect With Our Sanctuary Desks",
+    eyebrow: "CONTACT US",
+    heading: "Get in Touch with Kynta Wellness",
     subheading:
-      "Connect with our sanctuary curators for retreat reservations, clinical Vaidya consultations, and institutional advisory. Our team responds with ancestral precision and unyielding discretion.",
+      "Whether you are planning a visit to one of our spas or exploring a spa partnership for your hotel, our team is here to help. We usually reply within one working day.",
   },
   desks: {
-    eyebrow: "DIRECT COMMUNICATION PORTALS",
-    heading: "Sanctuary Desks",
-    description:
-      "Our stewards oversee limited correspondence streams to preserve the sanctity and deep attention owed to every guest and institutional patron.",
+    eyebrow: "CONTACT DETAILS",
+    heading: "Speak to Our Team",
+    description: "Call, message or email us, whichever is easiest for you.",
     phones: [
       {
         kind: "phone",
-        label: "PRIVATE GUEST CONCIERGE",
+        label: "BOOKINGS & ENQUIRIES",
         number: "+91 7250333494",
         note: "07:00 – 22:00 IST",
       },
       {
         kind: "whatsapp",
-        label: "ENCRYPTED SANCTUARY WHATSAPP",
+        label: "WHATSAPP",
         number: "+91 98200 48300",
-        note: "INSTANT",
+        note: "QUICK REPLY",
       },
     ] satisfies ContactPhone[],
-    emailHeading: "SPECIALIZED EMAIL DESKS",
+    emailHeading: "EMAIL",
     emails: [
-      { label: "Official email address", email: "info@kyntawellness.com" },
-      { label: "Official email address", email: "bussinss@kyntawellness.com" },
+      { label: "General enquiries", email: "info@kyntawellness.com" },
+      { label: "Business & partnerships", email: "bussinss@kyntawellness.com" },
     ],
-    image: { url: "/contact-chamber.png", alt: "Kynta Treatment Chambers" },
-    imageLabel: "THERAPEUTIC ARCHITECTURE",
-    imageCaption: "Kynta Treatment Chambers • Udaipur, Shimla & Mandrem",
-    hoursHeading: "CIRCADIAN RECEPTION HOURS",
+    image: {
+      url: "/contact-chamber.png",
+      alt: "A Kynta Wellness treatment room",
+    },
+    imageLabel: "OUR SPAS",
+    imageCaption: "A Kynta Wellness treatment room",
+    hoursHeading: "OPENING HOURS",
     hoursText:
-      "In alignment with ancient chronobiology (Brahma Muhurta through Sandhya), our telephone concierges are accessible from 07:00 to 22:00 IST. Digital dispatches undergo intake around the clock.",
+      "Our team is available by phone from 07:00 to 22:00 IST, seven days a week. Emails and messages sent through this page are answered within one working day.",
   },
   form: {
     eyebrow: "GET IN TOUCH",

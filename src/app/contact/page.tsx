@@ -10,9 +10,9 @@ import { ContactSection } from "../components/ContactSection";
 import { Footer } from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Contact & Concierge Liaison | Kynta Wellness Group",
+  title: "Contact Us | Kynta Wellness Group",
   description:
-    "Connect with our sanctuary curators for retreat reservations, clinical Vaidya consultations, and institutional advisory. Our team responds with ancestral precision and unyielding discretion.",
+    "Contact Kynta Wellness for spa bookings, general enquiries and hotel spa partnerships. Call, WhatsApp, email or send us a message.",
 };
 
 export default async function ContactPage() {
