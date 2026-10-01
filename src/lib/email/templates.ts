@@ -329,3 +329,32 @@ export function buildBookingRequestHtml(
     "Sent automatically from the Kynta Wellness website booking form.",
   );
 }
+
+/** Short "we've got it" email to a guest after a booking request or message. */
+export function buildGuestAcknowledgementHtml(payload: {
+  name: string;
+  heading: string;
+  intro: string;
+  rows: [label: string, value: string][];
+}): string {
+  const body = `
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:${COLORS.gold};margin-bottom:12px;">Kynta Wellness</div>
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:normal;color:${COLORS.ink};">${escapeHtml(payload.heading)}</h1>
+    <p style="margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.muted};">
+      Dear ${escapeHtml(payload.name)}, ${escapeHtml(payload.intro)}
+    </p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:24px;">
+      ${payload.rows.map(([label, value]) => detailRow(label, value)).join("")}
+    </table>
+    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.ink};">
+      If anything changes, just reply to this email.
+    </p>
+    <p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:${COLORS.accent};font-weight:bold;">
+      Kynta Wellness Team
+    </p>
+  `;
+  return shell(
+    body,
+    "You are receiving this because you contacted Kynta Wellness through our website.",
+  );
+}

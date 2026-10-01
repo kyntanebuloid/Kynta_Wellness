@@ -6,6 +6,7 @@ import {
 } from "@/lib/email/mailer";
 import {
   buildContactEnquiryHtml,
+  buildGuestAcknowledgementHtml,
   type ContactEnquiryPayload,
 } from "@/lib/email/templates";
 
@@ -86,6 +87,30 @@ export async function sendContactEnquiry(
   if (!result.ok) {
     console.error(`[contact] email failed: ${result.error}`);
     return { ok: false, error: "send" };
+  }
+
+  // Let the sender know it arrived. Best effort only: the team already has it.
+  const isHotel = payload.type === "hotel";
+  const senderCopy = await sendTransactionalEmail({
+    to: payload.email,
+    subject: "We received your message – Kynta Wellness",
+    html: buildGuestAcknowledgementHtml({
+      name: payload.name,
+      heading: "We received your message",
+      intro:
+        "thank you for contacting Kynta Wellness. Our team will reply within one working day.",
+      rows: isHotel
+        ? [
+            ["Hotel / property", payload.property],
+            ["City", payload.city],
+            ["Looking for", payload.service],
+          ]
+        : [["Preferred spa", payload.location || "Any"]],
+    }),
+    replyTo: to,
+  });
+  if (!senderCopy.ok) {
+    console.warn(`[contact] sender copy failed: ${senderCopy.error}`);
   }
   return { ok: true };
 }

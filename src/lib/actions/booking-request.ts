@@ -7,7 +7,10 @@ import {
   getBookingOwnerEmail,
   sendTransactionalEmail,
 } from "@/lib/email/mailer";
-import { buildBookingRequestHtml } from "@/lib/email/templates";
+import {
+  buildBookingRequestHtml,
+  buildGuestAcknowledgementHtml,
+} from "@/lib/email/templates";
 import { getLocationsPage } from "@/lib/sanity/data";
 
 // For spas without online prices: the guest's request is emailed to that
@@ -76,25 +79,51 @@ export async function sendBookingRequest(
     return { ok: false, error: "send" };
   }
 
+  const request = {
+    locationName: location.name,
+    name,
+    email,
+    phone,
+    treatment: field(formData, "request-treatment", 160),
+    date: field(formData, "target-date", 10),
+    time: field(formData, "time-slot", 8),
+    guests: field(formData, "party-size", 2) || "1",
+    message: field(formData, "special-requests", 4000),
+  };
+
   const result = await sendTransactionalEmail({
     to,
     subject: `Booking request: ${location.name} (${name})`,
-    html: buildBookingRequestHtml({
-      locationName: location.name,
-      name,
-      email,
-      phone,
-      treatment: field(formData, "request-treatment", 160),
-      date: field(formData, "target-date", 10),
-      time: field(formData, "time-slot", 8),
-      guests: field(formData, "party-size", 2) || "1",
-      message: field(formData, "special-requests", 4000),
-    }),
+    html: buildBookingRequestHtml(request),
     replyTo: email,
   });
   if (!result.ok) {
     console.error(`[booking-request] email failed: ${result.error}`);
     return { ok: false, error: "send" };
+  }
+
+  // Let the guest know it arrived; replies go to the spa. Best effort only:
+  // the spa already has the request.
+  const guestCopy = await sendTransactionalEmail({
+    to: email,
+    subject: `We received your booking request – ${location.name}`,
+    html: buildGuestAcknowledgementHtml({
+      name,
+      heading: "We received your booking request",
+      intro: `thank you for your request to visit ${location.name}. Nothing has been paid yet. The spa team will call or email you soon to confirm the treatment, time and price.`,
+      rows: [
+        ["Spa", location.name],
+        ["Treatment wanted", request.treatment || "Not specified"],
+        ["Preferred date", request.date || "Flexible"],
+        ["Preferred time", request.time || "Flexible"],
+        ["Guests", request.guests],
+        ["Your phone", phone],
+      ],
+    }),
+    replyTo: to[0],
+  });
+  if (!guestCopy.ok) {
+    console.warn(`[booking-request] guest copy failed: ${guestCopy.error}`);
   }
   return { ok: true };
 }
