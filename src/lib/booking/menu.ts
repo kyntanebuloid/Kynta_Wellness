@@ -91,3 +91,17 @@ export function gstPercentOrDefault(value: unknown): number {
     ? value
     : DEFAULT_GST_PERCENT;
 }
+
+/** A location's slug, or one made from its name (form and server agree). */
+export function locationSlugOf(location: {
+  slug?: string | null;
+  name: string;
+}): string {
+  return (
+    location.slug ||
+    location.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+  );
+}

@@ -277,3 +277,48 @@ export function buildContactEnquiryHtml(
     "Sent automatically from the Kynta Wellness website contact form.",
   );
 }
+
+export type BookingRequestPayload = {
+  locationName: string;
+  name: string;
+  email: string;
+  phone: string;
+  treatment: string;
+  date: string;
+  time: string;
+  guests: string;
+  message: string;
+};
+
+/** Sent to a spa (and Kynta) when a guest asks to book a spa without online prices. */
+export function buildBookingRequestHtml(
+  payload: BookingRequestPayload,
+): string {
+  const message = payload.message
+    ? escapeHtml(payload.message).replace(/\r?\n/g, "<br />")
+    : "<em>No message</em>";
+
+  const body = `
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:${COLORS.gold};margin-bottom:12px;">Booking request</div>
+    <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;font-weight:normal;color:${COLORS.ink};">${escapeHtml(payload.locationName)}</h1>
+    <p style="margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.muted};">
+      ${escapeHtml(payload.name)} would like to book. Nothing has been paid yet. Please call or reply to this email to confirm the treatment, time and price.
+    </p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:24px;">
+      ${detailRow("Name", payload.name)}
+      ${detailRow("Phone / WhatsApp", payload.phone)}
+      ${detailRow("Email", payload.email)}
+      ${detailRow("Treatment wanted", payload.treatment || "Not specified")}
+      ${detailRow("Preferred date", payload.date ? formatDate(payload.date) : "Flexible")}
+      ${detailRow("Preferred time", payload.time ? formatTime(payload.time) : "Flexible")}
+      ${detailRow("Guests", payload.guests)}
+    </table>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${COLORS.muted};margin-bottom:8px;">Message</div>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${COLORS.ink};background:${COLORS.background};border-radius:12px;padding:16px;">${message}</div>
+  `;
+
+  return shell(
+    body,
+    "Sent automatically from the Kynta Wellness website booking form.",
+  );
+}
