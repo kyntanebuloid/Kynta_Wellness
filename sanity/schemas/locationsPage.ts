@@ -13,6 +13,82 @@ const galleryCard = (name: string, title: string, withBadge: boolean) =>
     txt("subtitle", "Subtitle", 2),
   ]);
 
+// One bookable treatment at a spa, with a price per duration. The booking
+// form lists these for the chosen spa; the server charges these prices.
+export const MENU_CATEGORIES: [value: string, label: string][] = [
+  ["sojourn", "Spa Sojourns"],
+  ["couple", "Couple Spa"],
+  ["massage", "Massage Selections"],
+  ["glamour", "Glamour Glow"],
+  ["rapid", "Rapid Relax"],
+];
+
+const menuItem = defineField({
+  name: "menuItem",
+  title: "Treatment",
+  type: "object",
+  fields: [
+    str("name", "Treatment Name"),
+    choice("category", "Category", MENU_CATEGORIES),
+    defineField({
+      name: "perPerson",
+      title: "Price is per person",
+      description:
+        'Turn on for couple treatments priced "each": the price is charged for both guests.',
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
+      name: "options",
+      title: "Durations & Prices",
+      description:
+        "One row per duration, e.g. 60 min ₹3,900 and 90 min ₹5,850.",
+      type: "array",
+      of: [
+        defineField({
+          name: "menuOption",
+          title: "Duration",
+          type: "object",
+          fields: [
+            defineField({
+              name: "minutes",
+              title: "Minutes",
+              type: "number",
+              validation: (rule) => rule.required().integer().min(5),
+            }),
+            defineField({
+              name: "price",
+              title: "Price (₹, before tax)",
+              type: "number",
+              validation: (rule) => rule.required().min(1),
+            }),
+          ],
+          preview: {
+            select: { minutes: "minutes", price: "price" },
+            prepare: ({ minutes, price }) => ({
+              title: `${minutes ?? "?"} min · ₹${price ?? "?"}`,
+            }),
+          },
+        }),
+      ],
+    }),
+  ],
+  preview: {
+    select: { title: "name", category: "category", options: "options" },
+    prepare: ({ title, category, options }) => ({
+      title,
+      subtitle: [
+        MENU_CATEGORIES.find(([value]) => value === category)?.[1],
+        (options as { minutes?: number; price?: number }[] | undefined)
+          ?.map((o) => `${o.minutes} min ₹${o.price}`)
+          .join(" · "),
+      ]
+        .filter(Boolean)
+        .join(" — "),
+    }),
+  },
+});
+
 const location = defineField({
   name: "location",
   title: "Location",
@@ -20,6 +96,7 @@ const location = defineField({
   groups: [
     { name: "card", title: "Card", default: true },
     { name: "detail", title: "Detail Page" },
+    { name: "booking", title: "Booking Menu" },
   ],
   fields: [
     str("name", "Name", { group: "card" }),
@@ -52,7 +129,11 @@ const location = defineField({
       description: "Leave empty to link to /locations/<slug>.",
     }),
     str("hours", "Opening Hours", { group: "card" }),
-    str("phone", "Phone", { group: "card" }),
+    str("phone", "Phone", {
+      group: "card",
+      description:
+        'Reservation number. Also used for the "Call to book" button on the booking form.',
+    }),
     str("email", "Email", { group: "card" }),
     defineField({
       name: "services",
@@ -137,6 +218,15 @@ const location = defineField({
       "title",
       { group: "detail" },
     ),
+    defineField({
+      name: "menu",
+      title: "Treatments & Prices",
+      description:
+        "What guests can book online at this spa. Leave empty and the booking form shows Call / WhatsApp to book instead.",
+      type: "array",
+      group: "booking",
+      of: [menuItem],
+    }),
   ],
   preview: { select: { title: "name", subtitle: "address", media: "image" } },
 });
@@ -165,6 +255,14 @@ export default defineType({
     ),
     str("detailsLabel", "Card Link Label"),
     str("glanceHeading", "Detail Page – “At a Glance” Heading"),
+    defineField({
+      name: "gstPercent",
+      title: "Booking – GST % added at checkout",
+      description:
+        'Added on top of the menu prices when guests pay online (menus say "taxes extra"). Use 0 if prices already include tax.',
+      type: "number",
+      validation: (rule) => rule.min(0).max(28),
+    }),
     defineField({
       name: "locations",
       title: "3. Locations",

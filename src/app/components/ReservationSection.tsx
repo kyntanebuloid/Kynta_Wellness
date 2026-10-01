@@ -1,30 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { SpaMenuItem } from "@/content/locations";
 import { createBooking } from "@/lib/actions/bookings";
+import {
+  gstPercentOrDefault,
+  MAX_GUESTS,
+  MENU_CATEGORY_LABELS,
+  menuRef,
+  quoteMenuItem,
+} from "@/lib/booking/menu";
 import type { Homepage } from "@/types/sanity";
 
-interface BookableService {
-  id: string;
-  name: string;
-  description: string | null;
-  duration_minutes: number;
-  price_cents: number;
-  currency: string;
-  price?: string | null;
-  duration?: string | null;
-}
-
-interface Location {
+interface BookingLocation {
   name: string;
   slug?: string;
+  phone?: string;
+  /** Treatments bookable online; empty means call / WhatsApp to book. */
+  menu?: SpaMenuItem[];
 }
 
 interface ReservationSectionProps {
   data?: Homepage["reservationSection"];
-  services?: BookableService[];
-  locations?: Location[];
+  locations?: BookingLocation[];
+  /** GST % added at checkout (Locations page in Sanity). */
+  gstPercent?: number;
+  /** Used for "Call to book" when a location has no phone of its own. */
+  fallbackPhone?: string;
 }
 
 declare global {
@@ -203,10 +206,107 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 
+const inputClass =
+  "w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60";
+
+const DEFAULT_PHONE = "+91 7250333494";
+
+function locationSlug(location: BookingLocation): string {
+  return (
+    location.slug ||
+    location.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+  );
+}
+
+/** Treatments that can actually be booked: named, with at least one price. */
+function bookableMenu(location?: BookingLocation): SpaMenuItem[] {
+  return (location?.menu ?? [])
+    .map((item) => ({
+      ...item,
+      options: (item.options ?? []).filter(
+        (o) => Number(o.minutes) > 0 && Number(o.price) > 0,
+      ),
+    }))
+    .filter((item) => item._key && item.name?.trim() && item.options.length);
+}
+
+function CallToBook({
+  locationName,
+  phone,
+  compact = false,
+}: {
+  locationName?: string;
+  phone: string;
+  compact?: boolean;
+}) {
+  const digits = phone.replace(/[^\d+]/g, "");
+  const whatsapp = `https://wa.me/${digits.replace(/^\+/, "")}?text=${encodeURIComponent(
+    `Hello Kynta Wellness, I would like to book a treatment${
+      locationName ? ` at ${locationName}` : ""
+    }.`,
+  )}`;
+
+  if (compact) {
+    return (
+      <p className="text-[11px] leading-[1.5] text-kynta-warm-gray">
+        Prefer to talk?{" "}
+        <a
+          href={`tel:${digits}`}
+          className="font-semibold text-kynta-teal-dark hover:underline"
+        >
+          Call {phone}
+        </a>{" "}
+        or{" "}
+        <a
+          href={whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-kynta-teal-dark hover:underline"
+        >
+          WhatsApp us
+        </a>
+        .
+      </p>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border border-kynta-border/50 bg-kynta-section-bg p-5">
+      <p className="font-serif text-[17px] text-kynta-charcoal mb-1">
+        Book by phone{locationName ? ` at ${locationName}` : ""}
+      </p>
+      <p className="text-[12px] leading-[1.6] text-kynta-warm-gray mb-4">
+        Online booking isn&apos;t open for this spa yet. Call or WhatsApp us and
+        we will book your treatment for you.
+      </p>
+      <div className="flex flex-wrap gap-2.5">
+        <a
+          href={`tel:${digits}`}
+          className="px-5 py-2.5 text-[11px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-teal-dark rounded-md hover:bg-kynta-teal transition-colors"
+        >
+          Call {phone}
+        </a>
+        <a
+          href={whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-5 py-2.5 text-[11px] font-bold tracking-[0.1em] uppercase text-white bg-[#25D366] rounded-md hover:bg-[#1fb855] transition-colors"
+        >
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export function ReservationSection({
   data,
-  services,
-  locations,
+  locations = [],
+  gstPercent: gstSetting,
+  fallbackPhone,
 }: ReservationSectionProps) {
   const eyebrow = data?.eyebrow || "Book Your Spa Visit";
   const heading = data?.heading || "Book a Treatment";
@@ -226,6 +326,7 @@ export function ReservationSection({
   const whatsappButton = data?.whatsapp?.buttonLabel || "WhatsApp";
   const whatsappUrl = data?.whatsapp?.url || DEFAULT_WHATSAPP_URL;
   const formHeading = data?.formHeading || "Your Booking Details";
+  const gstPercent = gstPercentOrDefault(gstSetting);
 
   const [status, setStatus] = useState<
     | { kind: "idle" }
@@ -234,8 +335,61 @@ export function ReservationSection({
     | { kind: "success"; message: string }
   >({ kind: "idle" });
   const submittingRef = useRef(false);
-
   const isLoading = status.kind === "loading";
+
+  // Location → treatment → duration → guests.
+  const [slug, setSlug] = useState("");
+  const [itemKey, setItemKey] = useState("");
+  const [minutes, setMinutes] = useState(0);
+  const [guests, setGuests] = useState(1);
+  const [minDate, setMinDate] = useState<string>();
+
+  useEffect(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    setMinDate(now.toISOString().slice(0, 10));
+  }, []);
+
+  const location = locations.find((l) => locationSlug(l) === slug);
+  const menu = bookableMenu(location);
+  const item = menu.find((m) => m._key === itemKey);
+  const option = item?.options?.find((o) => o.minutes === minutes);
+  const isCouple = item?.category === "couple";
+  const phone =
+    location?.phone?.trim() || fallbackPhone?.trim() || DEFAULT_PHONE;
+  const quote =
+    item && option
+      ? quoteMenuItem({
+          price: option.price,
+          category: item.category,
+          perPerson: item.perPerson,
+          guests: isCouple ? 2 : guests,
+          gstPercent,
+        })
+      : null;
+  const canBookOnline = Boolean(location) && menu.length > 0;
+
+  const chooseLocation = (value: string) => {
+    setSlug(value);
+    setItemKey("");
+    setMinutes(0);
+    setStatus({ kind: "idle" });
+  };
+
+  const chooseItem = (key: string) => {
+    const next = menu.find((m) => m._key === key);
+    setItemKey(key);
+    setMinutes(next?.options?.[0]?.minutes ?? 0);
+    if (next?.category === "couple") setGuests(2);
+  };
+
+  // Group the treatments by category, in menu order.
+  const groups = Object.entries(MENU_CATEGORY_LABELS)
+    .map(([category, label]) => ({
+      label,
+      items: menu.filter((m) => (m.category ?? "massage") === category),
+    }))
+    .filter((group) => group.items.length > 0);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -250,25 +404,24 @@ export function ReservationSection({
     const guestName = String(formData.get("guest-name") ?? "").trim();
     const guestEmail = String(formData.get("guest-email") ?? "").trim();
     const guestPhone = String(formData.get("phone") ?? "").trim();
-    const serviceId = String(formData.get("service-id") ?? "").trim();
     const bookingDate = String(formData.get("target-date") ?? "").trim();
     const startTimeRaw = String(formData.get("time-slot") ?? "").trim();
-    const destination = String(formData.get("destination") ?? "").trim();
-    const partySize = String(formData.get("party-size") ?? "").trim();
     const specialRequests = String(
       formData.get("special-requests") ?? "",
     ).trim();
 
-    if (
-      !guestName ||
-      !guestEmail ||
-      !serviceId ||
-      !bookingDate ||
-      !startTimeRaw
-    ) {
+    if (!location || !item || !option) {
       setStatus({
         kind: "error",
-        message: "Please fill in name, email, service, date, and time.",
+        message: "Please choose a spa, a treatment and its duration.",
+      });
+      return;
+    }
+
+    if (!guestName || !guestEmail || !bookingDate || !startTimeRaw) {
+      setStatus({
+        kind: "error",
+        message: "Please fill in name, email, date, and time.",
       });
       return;
     }
@@ -281,16 +434,6 @@ export function ReservationSection({
       return;
     }
 
-    const selectedService = services?.find((s) => s.id === serviceId);
-    if (!selectedService) {
-      setStatus({ kind: "error", message: "Please select a valid service." });
-      return;
-    }
-
-    console.log(
-      `[ReservationSection] selected experience id=${selectedService.id} name=${selectedService.name}`,
-    );
-
     const startTime = startTimeRaw.includes(":")
       ? startTimeRaw.length === 5
         ? `${startTimeRaw}:00`
@@ -302,14 +445,13 @@ export function ReservationSection({
       return;
     }
 
-    const endTime = addMinutesToTime(
-      startTime,
-      selectedService.duration_minutes,
-    );
+    const partySize = isCouple ? 2 : guests;
+    const endTime = addMinutesToTime(startTime, option.minutes);
 
     const noteLines = [
-      destination && `Destination: ${destination}`,
-      partySize && `Party size: ${partySize}`,
+      `Destination: ${location.name}`,
+      `Treatment: ${item.name} (${option.minutes} min)`,
+      `Party size: ${isCouple ? "2 (couple)" : partySize}`,
       guestPhone && `Phone: ${guestPhone}`,
       specialRequests && `Notes: ${specialRequests}`,
     ].filter(Boolean);
@@ -321,13 +463,19 @@ export function ReservationSection({
       const bookingResult = await createBooking({
         profile_id: null,
         service_id: null,
-        experience_id: serviceId,
+        // The server reads the price for this choice from Sanity.
+        experience_id: menuRef(
+          locationSlug(location),
+          item._key,
+          option.minutes,
+          partySize,
+        ),
         treatment_id: null,
         booking_date: bookingDate,
         start_time: startTime,
         end_time: endTime,
         status: "pending",
-        notes: noteLines.length > 0 ? noteLines.join("\n") : null,
+        notes: noteLines.join("\n"),
         guest_name: guestName,
         guest_email: guestEmail,
         guest_phone: guestPhone || null,
@@ -427,6 +575,9 @@ export function ReservationSection({
                 "Payment done. Your booking is confirmed. We will contact you soon.",
             });
             form.reset();
+            setItemKey("");
+            setMinutes(0);
+            setGuests(1);
           } catch {
             submittingRef.current = false;
             setStatus({
@@ -472,7 +623,6 @@ export function ReservationSection({
       submittingRef.current = false;
     }
   }
-  const serviceOptions = services && services.length > 0 ? services : [];
 
   return (
     <section className="w-full bg-kynta-section-bg py-16 md:py-20 lg:py-24">
@@ -528,155 +678,230 @@ export function ReservationSection({
               {formHeading}
             </h3>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <FieldLabel htmlFor="guest-name" required>
-                    Full Name
-                  </FieldLabel>
-                  <input
-                    id="guest-name"
-                    name="guest-name"
-                    type="text"
-                    required
-                    disabled={isLoading}
-                    placeholder="e.g. Priya Sharma"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="guest-email" required>
-                    Email
-                  </FieldLabel>
-                  <input
-                    id="guest-email"
-                    name="guest-email"
-                    type="email"
-                    required
-                    disabled={isLoading}
-                    placeholder="you@example.com"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <FieldLabel htmlFor="phone">Phone / WhatsApp</FieldLabel>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    disabled={isLoading}
-                    placeholder="+91(0) 98765 43210"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="destination" required>
-                    Spa Location
-                  </FieldLabel>
-                  <select
-                    id="destination"
-                    name="destination"
-                    required
-                    disabled={isLoading}
-                    defaultValue=""
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  >
-                    <option value="" disabled>
-                      Choose a location
-                    </option>
-                    {(locations || []).map((location) => (
-                      <option key={location.name} value={location.name}>
-                        {location.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
               <div>
-                <FieldLabel htmlFor="service-id" required>
-                  Treatment
+                <FieldLabel htmlFor="destination" required>
+                  Spa Location
                 </FieldLabel>
                 <select
-                  id="service-id"
-                  name="service-id"
+                  id="destination"
+                  name="destination"
                   required
-                  disabled={isLoading || serviceOptions.length === 0}
-                  defaultValue=""
-                  className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
+                  disabled={isLoading}
+                  value={slug}
+                  onChange={(event) => chooseLocation(event.target.value)}
+                  className={inputClass}
                 >
                   <option value="" disabled>
-                    {serviceOptions.length === 0
-                      ? "No treatments available"
-                      : "Choose a treatment"}
+                    Choose a location
                   </option>
-                  {serviceOptions.map((service) => (
-                    <option key={service.id} value={service.id}>
-                      {service.name} · {service.duration_minutes} min ·{" "}
-                      {formatInr(service.price_cents)}
+                  {locations.map((l) => (
+                    <option key={locationSlug(l)} value={locationSlug(l)}>
+                      {l.name}
                     </option>
                   ))}
                 </select>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <FieldLabel htmlFor="target-date" required>
-                    Date
-                  </FieldLabel>
-                  <input
-                    id="target-date"
-                    name="target-date"
-                    type="date"
-                    required
-                    disabled={isLoading}
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="time-slot" required>
-                    Time
-                  </FieldLabel>
-                  <input
-                    id="time-slot"
-                    name="time-slot"
-                    type="time"
-                    required
-                    disabled={isLoading}
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="party-size">Number of Guests</FieldLabel>
-                  <select
-                    id="party-size"
-                    name="party-size"
-                    disabled={isLoading}
-                    defaultValue="1"
-                    className="w-full h-10 px-3 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                  >
-                    <option value="1">1 Guest</option>
-                    <option value="2">2 Guests</option>
-                    <option value="3">3 Guests</option>
-                    <option value="4">4 Guests</option>
-                    <option value="5">5 Guests</option>
-                    <option value="6">6 Guests</option>
-                    <option value="other">More Than 6 (Contact Us)</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <FieldLabel htmlFor="special-requests">
-                  Anything We Should Know?
-                </FieldLabel>
-                <textarea
-                  id="special-requests"
-                  name="special-requests"
-                  rows={3}
-                  disabled={isLoading}
-                  placeholder="Tell us about body pain, allergies, smells you do not like, or if you like hot or cool water..."
-                  className="w-full px-3 py-2.5 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 resize-none focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
-                />
-              </div>
+
+              {location && !canBookOnline && (
+                <CallToBook locationName={location.name} phone={phone} />
+              )}
+
+              {canBookOnline && (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+                    <div>
+                      <FieldLabel htmlFor="treatment" required>
+                        Treatment
+                      </FieldLabel>
+                      <select
+                        id="treatment"
+                        required
+                        disabled={isLoading}
+                        value={itemKey}
+                        onChange={(event) => chooseItem(event.target.value)}
+                        className={inputClass}
+                      >
+                        <option value="" disabled>
+                          Choose a treatment
+                        </option>
+                        {groups.map((group) => (
+                          <optgroup key={group.label} label={group.label}>
+                            {group.items.map((m) => (
+                              <option key={m._key} value={m._key}>
+                                {m.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="sm:w-40">
+                      <FieldLabel htmlFor="duration" required>
+                        Duration
+                      </FieldLabel>
+                      <select
+                        id="duration"
+                        required
+                        disabled={isLoading || !item}
+                        value={minutes || ""}
+                        onChange={(event) =>
+                          setMinutes(Number(event.target.value))
+                        }
+                        className={inputClass}
+                      >
+                        {!item && <option value="">—</option>}
+                        {item?.options?.map((o) => (
+                          <option key={o.minutes} value={o.minutes}>
+                            {o.minutes} min · {formatInr(o.price * 100)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="guest-name" required>
+                        Full Name
+                      </FieldLabel>
+                      <input
+                        id="guest-name"
+                        name="guest-name"
+                        type="text"
+                        required
+                        disabled={isLoading}
+                        placeholder="e.g. Priya Sharma"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="guest-email" required>
+                        Email
+                      </FieldLabel>
+                      <input
+                        id="guest-email"
+                        name="guest-email"
+                        type="email"
+                        required
+                        disabled={isLoading}
+                        placeholder="you@example.com"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="phone">Phone / WhatsApp</FieldLabel>
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        disabled={isLoading}
+                        placeholder="+91 98765 43210"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="party-size">Guests</FieldLabel>
+                      {isCouple ? (
+                        <p
+                          id="party-size"
+                          className="h-10 px-3 flex items-center text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md"
+                        >
+                          2 guests (couple)
+                        </p>
+                      ) : (
+                        <select
+                          id="party-size"
+                          disabled={isLoading}
+                          value={guests}
+                          onChange={(event) =>
+                            setGuests(Number(event.target.value))
+                          }
+                          className={inputClass}
+                        >
+                          {Array.from(
+                            { length: MAX_GUESTS },
+                            (_, i) => i + 1,
+                          ).map((n) => (
+                            <option key={n} value={n}>
+                              {n} {n === 1 ? "Guest" : "Guests"}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="target-date" required>
+                        Date
+                      </FieldLabel>
+                      <input
+                        id="target-date"
+                        name="target-date"
+                        type="date"
+                        required
+                        min={minDate}
+                        disabled={isLoading}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="time-slot" required>
+                        Time
+                      </FieldLabel>
+                      <input
+                        id="time-slot"
+                        name="time-slot"
+                        type="time"
+                        required
+                        disabled={isLoading}
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <FieldLabel htmlFor="special-requests">
+                      Anything We Should Know?
+                    </FieldLabel>
+                    <textarea
+                      id="special-requests"
+                      name="special-requests"
+                      rows={3}
+                      disabled={isLoading}
+                      placeholder="Tell us about body pain, allergies, smells you do not like, or if you like hot or cool water..."
+                      className="w-full px-3 py-2.5 text-[13px] text-kynta-charcoal bg-kynta-section-bg border border-kynta-border/40 rounded-md placeholder:text-kynta-warm-gray/50 resize-none focus:outline-none focus:border-kynta-teal transition-colors disabled:opacity-60"
+                    />
+                  </div>
+
+                  {item && option && quote && (
+                    <div className="rounded-md border border-kynta-border/50 bg-kynta-section-bg px-4 py-3 text-[12.5px] text-kynta-charcoal">
+                      <div className="flex justify-between gap-3">
+                        <span>
+                          {item.name} · {option.minutes} min
+                          {quote.quantity > 1 &&
+                            ` · ${formatInr(option.price * 100)} × ${quote.quantity}`}
+                        </span>
+                        <span>{formatInr(quote.subtotalPaise)}</span>
+                      </div>
+                      {quote.taxPaise > 0 && (
+                        <div className="flex justify-between gap-3 text-kynta-warm-gray mt-1">
+                          <span>GST ({gstPercent}%)</span>
+                          <span>{formatInr(quote.taxPaise)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between gap-3 font-semibold border-t border-kynta-border/50 mt-2 pt-2">
+                        <span>Total to pay</span>
+                        <span>{formatInr(quote.totalPaise)}</span>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
 
               {status.kind === "error" && (
                 <p
@@ -692,24 +917,39 @@ export function ReservationSection({
                 </output>
               )}
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pt-1">
-                <p className="text-[11px] leading-[1.5] text-kynta-warm-gray max-w-[200px]">
-                  We will confirm your booking within 2 working
-                  hours.
-                </p>
-                <button
-                  type="submit"
-                  disabled={isLoading || serviceOptions.length === 0}
-                  aria-busy={isLoading}
-                  className="px-6 py-3 text-[11px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-teal-dark rounded-md hover:bg-kynta-teal transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isLoading
-                    ? status.kind === "loading"
-                      ? status.label
-                      : "Processing…"
-                    : "Book Now"}
-                </button>
-              </div>
+              {canBookOnline && (
+                <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pt-1">
+                  <div className="flex flex-col gap-1.5 max-w-[260px]">
+                    <p className="text-[11px] leading-[1.5] text-kynta-warm-gray">
+                      Please arrive 15 minutes early. Cancel at least 4 working
+                      hours before; late cancellations are charged 50%.
+                    </p>
+                    <CallToBook
+                      compact
+                      locationName={location?.name}
+                      phone={phone}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isLoading || !quote}
+                    aria-busy={isLoading}
+                    className="px-6 py-3 text-[11px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-teal-dark rounded-md hover:bg-kynta-teal transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isLoading
+                      ? status.kind === "loading"
+                        ? status.label
+                        : "Processing…"
+                      : quote
+                        ? `Pay ${formatInr(quote.totalPaise)}`
+                        : "Book Now"}
+                  </button>
+                </div>
+              )}
+
+              {!location && (
+                <CallToBook compact phone={fallbackPhone || DEFAULT_PHONE} />
+              )}
             </form>
           </div>
         </div>

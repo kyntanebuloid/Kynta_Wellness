@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getBookableExperienceOptions } from "@/lib/actions/bookings";
+import { locationsPageDefaults } from "@/content/locations";
+import { list } from "@/content/types";
 import {
   getHomepage,
   getLocationsPage,
@@ -15,21 +16,23 @@ export const metadata: Metadata = {
 };
 
 export default async function BookPage() {
-  const [siteSettings, homepage, experiencesResult, locationsPage] =
-    await Promise.all([
-      getSiteSettings(),
-      getHomepage(),
-      getBookableExperienceOptions(),
-      getLocationsPage(),
-    ]);
+  const [siteSettings, homepage, locationsPage] = await Promise.all([
+    getSiteSettings(),
+    getHomepage(),
+    getLocationsPage(),
+  ]);
 
   return (
     <>
       <main>
         <ReservationSection
           data={homepage?.reservationSection}
-          services={experiencesResult.data ?? []}
-          locations={locationsPage?.locations}
+          locations={list(
+            locationsPage?.locations,
+            locationsPageDefaults.locations,
+          )}
+          gstPercent={locationsPage?.gstPercent}
+          fallbackPhone={siteSettings?.topBar?.phone}
         />
       </main>
       <Footer settings={siteSettings} />

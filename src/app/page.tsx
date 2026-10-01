@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getBookableExperienceOptions } from "@/lib/actions/bookings";
 import { locationsPageDefaults } from "@/content/locations";
 import { list } from "@/content/types";
 import {
@@ -28,20 +27,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [siteSettings, homepage, experiencesResult, locationsPage, posts] =
-    await Promise.all([
-      getSiteSettings(),
-      getHomepage(),
-      getBookableExperienceOptions(),
-      getLocationsPage(),
-      getBlogPosts(),
-    ]);
-  const services = experiencesResult.data ?? [];
-  // The hotels Kynta works with, as listed on the Locations page.
-  const hotelNames = list(
+  const [siteSettings, homepage, locationsPage, posts] = await Promise.all([
+    getSiteSettings(),
+    getHomepage(),
+    getLocationsPage(),
+    getBlogPosts(),
+  ]);
+  const locations = list(
     locationsPage?.locations,
     locationsPageDefaults.locations,
-  ).map((location) => location.name);
+  );
+  // The hotels Kynta works with, as listed on the Locations page.
+  const hotelNames = locations.map((location) => location.name);
 
   return (
     <>
@@ -60,8 +57,9 @@ export default async function Home() {
         <JournalSection data={homepage?.journalSection} posts={posts} />
         <ReservationSection
           data={homepage?.reservationSection}
-          services={services}
-          locations={locationsPage?.locations}
+          locations={locations}
+          gstPercent={locationsPage?.gstPercent}
+          fallbackPhone={siteSettings?.topBar?.phone}
         />
       </main>
       <Footer settings={siteSettings} />

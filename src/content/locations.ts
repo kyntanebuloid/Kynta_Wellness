@@ -1,4 +1,15 @@
+import type { MenuCategory } from "@/lib/booking/menu";
 import type { ContentFile, ContentImage, ContentLink } from "./types";
+
+/** A treatment on a spa's booking menu, with a price per duration. */
+export interface SpaMenuItem {
+  _key: string;
+  name: string;
+  category?: MenuCategory;
+  /** Couple treatments priced "each": charged for both guests. */
+  perPerson?: boolean;
+  options?: { _key?: string; minutes: number; price: number }[];
+}
 
 export type LocationRegion = "himalayan" | "rajasthan";
 export type LocationService = "spa" | "dining" | "pool" | "wifi" | "suite";
@@ -37,6 +48,8 @@ export interface LocationContent {
   dossier?: ContentFile;
   mapUrl?: string;
   mapEmbedUrl?: string;
+  /** Treatments bookable online here; empty means call / WhatsApp to book. */
+  menu?: SpaMenuItem[];
 
   gallery?: {
     mainCard?: GalleryCardContent;
@@ -94,6 +107,8 @@ export interface LocationsPageContent {
   };
   detailsLabel?: string;
   glanceHeading?: string;
+  /** GST % added to menu prices at online checkout. */
+  gstPercent?: number;
   locations?: LocationContent[];
   ctaSection?: {
     badge?: string;
@@ -120,6 +135,8 @@ export const locationsPageDefaults = {
   },
   detailsLabel: "Details",
   glanceHeading: "Sanctuary at a Glance",
+  // Menus say "taxes extra"; change in Sanity (0 if prices include tax).
+  gstPercent: 18,
   locations: [
     {
       name: "Indraprastha Resort Dharamshala",

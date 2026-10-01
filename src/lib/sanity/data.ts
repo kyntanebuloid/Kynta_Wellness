@@ -17,6 +17,11 @@ import {
   locationsPageDefaults,
 } from "@/content/locations";
 import { imageUrl, link, list, text } from "@/content/types";
+import {
+  gstPercentOrDefault,
+  parseMenuRef,
+  quoteMenuItem,
+} from "@/lib/booking/menu";
 import type {
   Experience,
   Faq,
@@ -729,6 +734,99 @@ export async function getExperiencePricing(experienceId: string): Promise<{
     );
     return null;
   }
+}
+
+type MenuPricingResult = {
+  gstPercent?: number | null;
+  location?: {
+    name?: string;
+    item?: {
+      name?: string;
+      category?: string;
+      perPerson?: boolean;
+      price?: number;
+    } | null;
+  } | null;
+} | null;
+
+/**
+ * Price for a spa-menu booking (see src/lib/booking/menu.ts), read fresh from
+ * Sanity: menu price × guests (couples: × 2 when priced "each") + GST.
+ */
+export async function getMenuPricing(ref: string): Promise<{
+  id: string;
+  title: string;
+  priceAmount: number;
+  currency: string;
+} | null> {
+  const parsed = parseMenuRef(ref);
+  if (!parsed) {
+    console.warn(`[pricing] invalid menu ref: ${ref}`);
+    return null;
+  }
+
+  try {
+    const result = await withTimeout(
+      sanityNoCdnClient().fetch<MenuPricingResult>(
+        `*[_type == "locationsPage"][0]{
+          gstPercent,
+          "location": locations[slug == $slug][0]{
+            name,
+            "item": menu[_key == $itemKey][0]{
+              name,
+              category,
+              perPerson,
+              "price": options[minutes == $minutes][0].price
+            }
+          }
+        }`,
+        {
+          slug: parsed.slug,
+          itemKey: parsed.itemKey,
+          minutes: parsed.minutes,
+        },
+      ),
+      PRICING_TIMEOUT_MS,
+    );
+
+    const item = result?.location?.item;
+    if (!item?.name || typeof item.price !== "number" || !(item.price > 0)) {
+      console.warn(`[pricing] menu item not found or unpriced: ${ref}`);
+      return null;
+    }
+
+    const quote = quoteMenuItem({
+      price: item.price,
+      category: item.category,
+      perPerson: item.perPerson,
+      guests: parsed.guests,
+      gstPercent: gstPercentOrDefault(result?.gstPercent),
+    });
+    const people =
+      item.category === "couple"
+        ? "couple"
+        : `${parsed.guests} guest${parsed.guests > 1 ? "s" : ""}`;
+
+    return {
+      id: ref,
+      title: `${item.name} (${parsed.minutes} min, ${people}) · ${result?.location?.name ?? parsed.slug}`,
+      priceAmount: quote.totalPaise / 100,
+      currency: "INR",
+    };
+  } catch (err) {
+    console.error(
+      `[pricing] getMenuPricing failed for ${ref}:`,
+      err instanceof Error ? err.message : err,
+    );
+    return null;
+  }
+}
+
+/** Price for any booking: a spa-menu treatment or an older experience. */
+export async function getBookingPricing(experienceId: string) {
+  return experienceId.startsWith("menu:")
+    ? getMenuPricing(experienceId)
+    : getExperiencePricing(experienceId);
 }
 
 // ─── Location Detail ───

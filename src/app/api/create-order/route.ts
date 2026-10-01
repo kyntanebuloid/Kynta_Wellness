@@ -4,7 +4,7 @@ import {
   getRazorpayCredentials,
   isValidInrAmountPaise,
 } from "@/lib/razorpay";
-import { getExperiencePricing } from "@/lib/sanity/data";
+import { getBookingPricing } from "@/lib/sanity/data";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       `[create-order] bookingId=${booking.id} experience_id=${booking.experience_id} status=${booking.status}`,
     );
 
-    const pricing = await getExperiencePricing(booking.experience_id);
+    const pricing = await getBookingPricing(booking.experience_id);
 
     if (!pricing) {
       console.warn(

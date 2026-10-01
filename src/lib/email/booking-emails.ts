@@ -1,4 +1,4 @@
-import { getExperiencePricing } from "@/lib/sanity/data";
+import { getBookingPricing } from "@/lib/sanity/data";
 import type { Booking, Payment } from "@/types/database";
 import { getBookingOwnerEmail, sendTransactionalEmail } from "./mailer";
 import {
@@ -77,7 +77,7 @@ async function resolveExperienceName(
   }
 
   try {
-    const pricing = await getExperiencePricing(booking.experience_id);
+    const pricing = await getBookingPricing(booking.experience_id);
     if (pricing?.title) {
       return pricing.title;
     }
