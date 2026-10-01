@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCarousel } from "./useCarousel";
 
 import {
   type ExperiencesPageContent,
@@ -91,18 +91,15 @@ function TreatmentCard({
 function CircleArrowButton({
   direction,
   onClick,
-  disabled,
 }: {
   direction: "left" | "right";
   onClick?: () => void;
-  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors disabled:opacity-35 disabled:cursor-default disabled:hover:bg-kynta-teal-dark"
+      className="w-10 h-10 rounded-full bg-kynta-teal-dark text-white flex items-center justify-center hover:bg-kynta-teal transition-colors"
       aria-label={`Scroll ${direction}`}
     >
       <svg
@@ -134,34 +131,11 @@ function CircleArrowButton({
 export function ExperienceTreatmentsSection({
   data,
 }: ExperienceTreatmentsSectionProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const updateArrows = useCallback(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    updateArrows();
-    window.addEventListener("resize", updateArrows);
-    return () => window.removeEventListener("resize", updateArrows);
-  }, [updateArrows]);
-
-  // Moves exactly one card (card width + gap) per click.
-  const scroll = (direction: "left" | "right") => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const card = el.firstElementChild as HTMLElement | null;
-    const step = card ? card.offsetWidth + 16 : el.clientWidth;
-    el.scrollBy({
-      left: direction === "left" ? -step : step,
-      behavior: "smooth",
-    });
-  };
+  // Same carousel as the home page: a half-shown card is brought fully into
+  // view, it loops at both ends, and it moves on its own every 2 seconds.
+  const { trackRef, scrollable, next, prev } = useCarousel({
+    autoplayMs: 2000,
+  });
 
   const d = experiencesPageDefaults.treatmentsSection;
   const eyebrow = text(data?.eyebrow, d.eyebrow);
@@ -208,26 +182,19 @@ export function ExperienceTreatmentsSection({
             <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-sm">
               {description}
             </p>
-            {treatments.length> 3 &&(
-            <div className="flex items-center gap-3 mt-6 md:mt-0 md:justify-end">
-              <CircleArrowButton
-                direction="left"
-                onClick={() => scroll("left")}
-                disabled={!canScrollLeft}
-              />
-              <CircleArrowButton
-                direction="right"
-                onClick={() => scroll("right")}
-                disabled={!canScrollRight}
-              />
+            <div
+              className={`flex items-center gap-3 mt-6 md:mt-0 md:justify-end ${
+                scrollable ? "" : "invisible"
+              }`}
+            >
+              <CircleArrowButton direction="left" onClick={prev} />
+              <CircleArrowButton direction="right" onClick={next} />
             </div>
-            )}
           </div>
         </div>
         <div
-          ref={carouselRef}
-          onScroll={updateArrows}
-          className="no-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
+          ref={trackRef}
+          className="relative no-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
         >
           {treatments.map((t, index) => (
             <div
