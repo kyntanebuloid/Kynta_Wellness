@@ -113,6 +113,11 @@ export interface LocationDetail {
     bottomRightCard: LocationGalleryCard;
   };
   facilities: { icon: LocationFacilityIcon; title: string; subtitle: string }[];
+  /** This spa's own treatments and prices (empty = call to book). */
+  menu: SpaMenuItem[];
+  /** This spa's own Kynta Revibe plans. */
+  membership: MembershipPlan[];
+  membershipBasePrice?: number;
 }
 
 export interface LocationsPageContent {

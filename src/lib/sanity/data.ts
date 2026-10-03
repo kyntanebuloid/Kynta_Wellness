@@ -669,12 +669,51 @@ function toLocationDetail(
         f.gallery?.bottomRightCard,
       ),
     },
-    facilities: list(s.facilities, f.facilities ?? []).map((facility) => ({
-      icon: facility.icon ?? "sun",
-      title: facility.title,
-      subtitle: facility.subtitle ?? "",
-    })),
+    facilities:
+      spaHighlights(s.menu) ??
+      list(s.facilities, f.facilities ?? []).map((facility) => ({
+        icon: facility.icon ?? "sun",
+        title: facility.title,
+        subtitle: facility.subtitle ?? "",
+      })),
+    menu: s.menu ?? [],
+    membership: s.membership ?? [],
+    membershipBasePrice: s.membershipBasePrice,
   };
+}
+
+/**
+ * The highlights strip on a spa's page, from that spa's own menu: each main
+ * category with its lowest price there. Null when the spa has no menu yet.
+ */
+function spaHighlights(
+  menu: LocationContent["menu"],
+): LocationDetail["facilities"] | null {
+  if (!menu?.length) return null;
+  const rows: [string, LocationDetail["facilities"][number]["icon"], string][] =
+    [
+      ["massage", "flower", "Massage Selections"],
+      ["sojourn", "sun", "Spa Sojourns"],
+      ["couple", "mountain", "Couple Spa"],
+      ["glamour", "car", "Glamour Glow"],
+    ];
+  const out = rows.flatMap(([category, icon, title]) => {
+    const items = menu.filter((item) => item.category === category);
+    const prices = items.flatMap((item) =>
+      (item.options ?? []).map((o) => o.price).filter((p) => p > 0),
+    );
+    if (prices.length === 0) return [];
+    const from = Math.min(...prices);
+    const perPerson = items.some((item) => item.perPerson);
+    return [
+      {
+        icon,
+        title,
+        subtitle: `${items.length} treatment${items.length > 1 ? "s" : ""} · from ₹${from.toLocaleString("en-IN")}${perPerson ? " each" : ""}`,
+      },
+    ];
+  });
+  return out.length ? out : null;
 }
 
 export async function getLocationBySlug(
