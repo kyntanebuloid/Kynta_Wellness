@@ -181,6 +181,42 @@ export default defineType({
       of: [{ type: "string" }],
     }),
     defineField({
+      name: "treatments",
+      title: "Treatments in this Category",
+      description:
+        "Shown as a list on this page. Prices come from the spa menus (Pages → Locations → Booking Menu) by matching the treatment name exactly.",
+      type: "array",
+      of: [
+        defineField({
+          name: "experienceTreatment",
+          title: "Treatment",
+          type: "object",
+          fields: [
+            defineField({ name: "name", title: "Name", type: "string" }),
+            defineField({
+              name: "duration",
+              title: "Duration",
+              type: "string",
+              description: "e.g. 60 / 90 min",
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 4,
+            }),
+            defineField({
+              name: "inclusions",
+              title: "Package Inclusions",
+              type: "array",
+              of: [{ type: "string" }],
+            }),
+          ],
+          preview: { select: { title: "name", subtitle: "duration" } },
+        }),
+      ],
+    }),
+    defineField({
       name: "seo",
       title: "SEO",
       type: "object",

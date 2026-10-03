@@ -7,39 +7,36 @@ export interface ExperienceGalleryImages {
   bottomRight: string;
 }
 
-export const experienceGalleryDefaults: Record<string, ExperienceGalleryImages> =
-  {
-    "spa-sojourns": {
-      main: "/exp-spa-sojourns-main.png",
-      topRight: "/exp-spa-sojourns-potli.png",
-      bottomRight: "/exp-spa-sojourns-pavilion.png",
-    },
-    "massage-selections": {
-      main: "/treatment-massage.jpg",
-      topRight: "/article-herbal-compress.jpg",
-      bottomRight: "/destination-glenwood.jpg",
-    },
-    "glamour-glow": {
-      main: "/treatment-glamour-glow.jpg",
-      topRight: "/triad-touch.jpg",
-      bottomRight: "/hospitality-chamber.jpg",
-    },
-    "hydrotherapy-plunge": {
-      main: "/experience-hydro-colonnade.jpg",
-      topRight: "/inquiry-hydrotherapy.jpg",
-      bottomRight: "/destination-heritage.jpg",
-    },
-    "couples-sanctuary": {
-      main: "/destination-glenwood.jpg",
-      topRight: "/triad-spatial.jpg",
-      bottomRight: "/location-rawai-tents.jpg",
-    },
-    "sound-immersion": {
-      main: "/triad-vedic.jpg",
-      topRight: "/inquiry-architecture.jpg",
-      bottomRight: "/timeline-alpine.jpg",
-    },
-  };
+export const experienceGalleryDefaults: Record<
+  string,
+  ExperienceGalleryImages
+> = {
+  "spa-sojourns": {
+    main: "/exp-spa-sojourns-main.png",
+    topRight: "/exp-spa-sojourns-potli.png",
+    bottomRight: "/exp-spa-sojourns-pavilion.png",
+  },
+  "massage-selections": {
+    main: "/treatment-massage.jpg",
+    topRight: "/article-herbal-compress.jpg",
+    bottomRight: "/destination-glenwood.jpg",
+  },
+  "glamour-glow": {
+    main: "/treatment-glamour-glow.jpg",
+    topRight: "/triad-touch.jpg",
+    bottomRight: "/hospitality-chamber.jpg",
+  },
+  "couple-spa": {
+    main: "/destination-glenwood.jpg",
+    topRight: "/triad-spatial.jpg",
+    bottomRight: "/location-rawai-tents.jpg",
+  },
+  "rapid-relax": {
+    main: "/triad-touch.jpg",
+    topRight: "/article-herbal-compress.jpg",
+    bottomRight: "/hospitality-chamber.jpg",
+  },
+};
 
 export function experienceGalleryFor(slug: string): ExperienceGalleryImages {
   return (

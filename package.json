@@ -22,7 +22,8 @@
     "sync:blog": "npx tsx scripts/sync-content-to-sanity.ts --only=blogPage",
     "sync:contact": "npx tsx scripts/sync-content-to-sanity.ts --only=contactPage",
     "blog:delete": "npx tsx scripts/delete-blog-post.ts",
-    "seed:menus": "npx tsx scripts/seed-spa-menus.ts"
+    "seed:menus": "npx tsx scripts/seed-spa-menus.ts",
+    "seed:experiences": "npx tsx scripts/seed-real-experiences.ts"
   },
   "dependencies": {
     "@sanity/client": "^8.6.1",

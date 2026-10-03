@@ -149,6 +149,31 @@ const MENUS: { slug: string; label: string; phone: string; prices: Prices }[] =
       },
     },
     {
+      // Asia Spa & Resort, Dharamshala: billed the same as Indraprastha
+      // Dharamshala (as instructed; its own printed menu is Eva Spa's).
+      slug: "asia-spa-dharamshala",
+      label: "Asia Spa & Resort, Dharamshala",
+      phone: "+91 7250333494",
+      prices: {
+        deepSleep: 6750,
+        nourish: 5850,
+        royalRenewal: 14625,
+        coupleRetreat: 10350,
+        coupleBliss: 6900,
+        swedish: [3900, 5850],
+        deepTissue: [4600, 6900],
+        aroma: [5100, 7200],
+        abhyanga: [3900, 5850],
+        potli: [4600, 6900],
+        signature: 6830,
+        signatureName: "Kynta Signature Therapy",
+        bodyTreatment: 2500,
+        cleansingFacial: 2000,
+        facial60: 3000,
+        rapid: 2100,
+      },
+    },
+    {
       // Bundla Tea Estate, Chopati, Palampur. Its printed menu has the same
       // prices as Dharamshala.
       slug: "infinitea-palampur",

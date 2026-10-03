@@ -637,6 +637,13 @@ export interface Experience {
   };
   footerNote?: string;
   highlights?: string[];
+  treatments?: {
+    _key: string;
+    name?: string;
+    duration?: string;
+    description?: string;
+    inclusions?: string[];
+  }[];
   seo?: {
     title?: string;
     description?: string;

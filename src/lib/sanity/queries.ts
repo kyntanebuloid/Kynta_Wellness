@@ -638,6 +638,7 @@ export const experienceBySlugQuery = defineQuery(
     gallery,
     footerNote,
     highlights,
+    treatments,
     seo
   }`,
 );

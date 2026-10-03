@@ -66,263 +66,250 @@ export interface ExperiencesPageContent {
   };
 }
 
-const extraTreatmentCards = [
-  {
-    image: { url: "/experience-hydro-colonnade.jpg", alt: "Hydrotherapy Plunge" },
-    label: "Hydrothermal & Thermal Baths",
-    duration: "45 Mins",
-    title: "HYDROTHERAPY PLUNGE",
-    slug: "hydrotherapy-plunge",
-    description:
-      "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration. Our hydrotherapy protocols combine heated mineral pools with cold plunge immersion for maximum therapeutic benefit.",
-    sensoryNote: "Eucalyptus • Sea Salt • Mountain Pine",
-  },
-  {
-    image: { url: "/destination-glenwood.jpg", alt: "Couples Sanctuary" },
-    label: "Couples & Duets",
-    duration: "120 Mins",
-    title: "COUPLES SANCTUARY",
-    slug: "couples-sanctuary",
-    description:
-      "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals. Designed for partners seeking a communal path to deep relaxation and cellular renewal.",
-    sensoryNote: "White Lotus • Rose Absolute • Cardamom",
-  },
-  {
-    image: { url: "/triad-vedic.jpg", alt: "Sound Immersion" },
-    label: "Sound & Meditative Immersion",
-    duration: "60 Mins",
-    title: "SOUND IMMERSION",
-    slug: "sound-immersion",
-    description:
-      "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states. Experience the resonant frequencies of Tibetan singing bowls, crystal bowls, and traditional Rudra Veena harmonics.",
-    sensoryNote: "Frankincense • Myrrh • Himalayan Sandalwood",
-  },
-];
-
+// Everything below comes from the printed Kynta spa menus (same treatments at
+// every spa; prices vary by spa and live in Pages → Locations → Booking Menu).
 export const experiencesPageDefaults = {
   hero: {
-    eyebrow:
-      "Curated Experiences & Restorative Rituals  ·  Vedic Medicine & Hydrotherapy",
-    headingItalic: "Transformative Journeys",
+    eyebrow: "Spa Treatments & Rituals  ·  Rooted in Ayurveda",
+    headingItalic: "Healing Treatments",
     heading: "Crafted",
     headingLine2: "for Body & Mind.",
     description:
-      "From single bespoke somatic rituals to multi-day immersive detox retreats across India's most extraordinary palace hotels and secluded eco-resorts.",
+      "Therapeutic massages, facials and spa journeys rooted in Ayurvedic wisdom, designed to balance the body, calm the mind and restore inner harmony. Offered at Kynta spas across India.",
     categories: [
       {
-        label: "All Experiences",
+        label: "All Treatments",
         image: {
-          url: "/experience-hydro-colonnade.jpg",
-          alt: "The Royal Stepped Hydro-Colonnade",
+          url: "/exp-spa-sojourns-main.jpg",
+          alt: "Kynta Wellness treatment room",
         },
-        tags: ["Acoustic Silence < 24dB", "Single-Batch Cold Pressed Herbals"],
-        eyebrow: "Spatial Architecture",
-        title: "The Royal Stepped Hydro-Colonnade",
+        tags: ["Rooted in Ayurveda", "Skilled Therapists"],
+        eyebrow: "Balance · Healing · Inner Peace · Harmony · Vitality",
+        title: "Five Ways to Unwind",
         description:
-          "Natural sandstone pavilions calibrated with thermostatic plunge chambers and sound-dampened lime plaster vaults.",
-        buttonLabel: "Book an Immersion",
+          "Kynta Wellness is a luxury wellness and spa brand dedicated to holistic healing and deep relaxation. Every treatment is thoughtfully curated to promote well-being, relaxation and renewal.",
+        buttonLabel: "Book a Treatment",
         buttonUrl: "/book",
       },
       {
-        label: "Signature Rituals",
+        label: "Spa Sojourns",
         image: {
-          url: "/exp-spa-sojourns-main.png",
-          alt: "Spa Sojourns treatment pavilion",
+          url: "/treatment-spa-sojourns.jpg",
+          alt: "Spa Sojourns treatment",
         },
-        tags: ["Tailored Pressure", "Aroma Elixirs"],
-        eyebrow: "Signature Bodywork · 75 / 90 Mins",
+        tags: ["Deep Sleep", "Nourish", "Royal Renewal"],
+        eyebrow: "Spa Sojourns · 120 – 300 Min",
         title: "Spa Sojourns",
         description:
-          "Immersive wellness journeys that blend therapeutic touch with deep relaxation, crafted to rejuvenate from head to toe.",
-        buttonLabel: "Explore Ritual",
+          "Immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe, these rituals leave you feeling renewed, centred and completely at ease.",
+        buttonLabel: "Explore Spa Sojourns",
         buttonUrl: "/experiences/spa-sojourns",
       },
       {
-        label: "Hydrothermal & Thermal Baths",
-        image: {
-          url: "/inquiry-hydrotherapy.jpg",
-          alt: "Stone thermal hydro plunge pool",
-        },
-        tags: ["Thermal Shock", "Saline Flotation"],
-        eyebrow: "Hydrothermal & Thermal Baths · 45 Mins",
-        title: "Hydrotherapy Plunge",
-        description:
-          "Alternating thermal circuits designed to stimulate lymphatic flow and deepen somatic restoration.",
-        buttonLabel: "Explore Ritual",
-        buttonUrl: "/experiences/hydrotherapy-plunge",
-      },
-      {
-        label: "Multi-Day Retreats",
-        image: {
-          url: "/destination-heritage.jpg",
-          alt: "Heritage retreat courtyard",
-        },
-        tags: ["Personalised Programme", "Resident Vaidyas"],
-        eyebrow: "Multi-Day Retreats",
-        title: "Immersive Restorative Retreats",
-        description:
-          "Multi-day programmes combining daily rituals, Ayurvedic consultations and nourishing cuisine at our partner sanctuaries.",
-        buttonLabel: "Plan a Retreat",
-        buttonUrl: "/contact",
-      },
-      {
-        label: "Couples & Duets",
+        label: "Couple Spa",
         image: {
           url: "/destination-glenwood.jpg",
-          alt: "Couples treatment pavilion",
+          alt: "Couple's treatment suite",
         },
-        tags: ["Synchronized Touch", "Dual Teak Beds"],
-        eyebrow: "Couples & Duets · 120 Mins",
-        title: "Couples Sanctuary",
+        tags: ["Couple's Retreat", "Couple's Bliss"],
+        eyebrow: "Couple Spa · 60 / 90 Min",
+        title: "Couple Spa",
         description:
-          "A shared journey of restoration in our private couples pavilion with dual treatment beds and synchronized botanical rituals.",
-        buttonLabel: "Explore Ritual",
-        buttonUrl: "/experiences/couples-sanctuary",
+          "Unwind side by side with your partner in the privacy of our couple's suite, with a full-body Swedish or Deep Tissue massage designed for deep relaxation and meaningful connection.",
+        buttonLabel: "Explore Couple Spa",
+        buttonUrl: "/experiences/couple-spa",
       },
       {
-        label: "Sound & Meditative Immersion",
+        label: "Massage Selections",
         image: {
-          url: "/triad-vedic.jpg",
-          alt: "Sound and meditation chamber",
+          url: "/treatment-massage.jpg",
+          alt: "Full-body massage",
         },
-        tags: ["Theta Harmonics", "Tibetan Bells"],
-        eyebrow: "Sound & Meditative Immersion · 60 Mins",
-        title: "Sound Immersion",
+        tags: ["Swedish", "Deep Tissue", "Abhyanga"],
+        eyebrow: "Massage Selections · 60 / 90 Min",
+        title: "Massage Selections",
         description:
-          "Acoustic healing through traditional Indian instruments calibrated for deep theta meditation states.",
-        buttonLabel: "Explore Ritual",
-        buttonUrl: "/experiences/sound-immersion",
+          "Curated full-body massages, each designed to release tension, improve circulation and restore inner harmony. Surrender to skilled hands and experience complete mind–body renewal.",
+        buttonLabel: "Explore Massages",
+        buttonUrl: "/experiences/massage-selections",
+      },
+      {
+        label: "Glamour Glow",
+        image: {
+          url: "/treatment-glamour-glow.jpg",
+          alt: "Facial treatment",
+        },
+        tags: ["Body Scrubs", "Facials"],
+        eyebrow: "Glamour Glow · 30 – 60 Min",
+        title: "Glamour Glow",
+        description:
+          "Facials and body treatments that gently exfoliate, deeply nourish and revive dull skin, leaving it smooth, refreshed and glowing. Perfect before special occasions.",
+        buttonLabel: "Explore Glamour Glow",
+        buttonUrl: "/experiences/glamour-glow",
+      },
+      {
+        label: "Rapid Relax",
+        image: {
+          url: "/triad-touch.jpg",
+          alt: "Focused head and foot massage",
+        },
+        tags: ["Head", "Face", "Feet", "Back"],
+        eyebrow: "Rapid Relax · 30 Min",
+        title: "Rapid Relax",
+        description:
+          "Focused 30-minute therapies for the head, face, feet and back. Enjoy one on its own or add it to any treatment.",
+        buttonLabel: "Explore Rapid Relax",
+        buttonUrl: "/experiences/rapid-relax",
       },
     ],
   },
   pillars: {
-    eyebrow: "Foundational Methodology",
-    heading: "The Four Pillars of the Kynta Experience",
+    eyebrow: "Our Approach",
+    heading: "What Makes a Kynta Treatment",
     description:
-      "Where sacred Vedic therapeutic canons intersect with precise clinical physiology to induce total restorative harmony.",
+      "Balance, healing, inner peace, harmony and vitality: every treatment is designed around these five.",
     cards: [
       {
         number: "01",
         icon: "flask",
-        title: "Botanical Sourcing",
+        title: "Rooted in Ayurveda",
         description:
-          "Single-estate hand-pressed oils, wild-harvested Himalayan cedar, high-altitude saffron, and sacred white lotus distilled under lunar cycles.",
-        footerLabel: "Pure Botanical Potency",
+          "Therapies based on traditional Indian techniques such as Abhyanga and herbal Potli compresses, using warm herbal and essential oils.",
+        footerLabel: "Ayurvedic Wisdom",
         footerIcon: "leaf",
       },
       {
         number: "02",
         icon: "pulse",
-        title: "Precision Diagnostics",
+        title: "Skilled Therapists",
         description:
-          "Comprehensive Nadi Pariksha (pulse assessment), somatic tissue mapping, and doshic constitutional calibration before ritual touch initiates.",
-        footerLabel: "Doshic Tri-Balance",
+          "Expert hands tailor the pressure and technique of every treatment to what your body needs that day.",
+        footerLabel: "Tailored to You",
         footerIcon: "target",
       },
       {
         number: "03",
         icon: "building",
-        title: "Hydrothermal Architecture",
+        title: "Privacy & Comfort",
         description:
-          "Hyper-dilute magnesium saline flotation pools, herb-infused steam grottos, and stepped thermal plunge baths designed with acoustic isolation.",
-        footerLabel: "Somatic Hydro-Plunges",
+          "Professional draping throughout every treatment, disposable undergarments provided, and a calm, quiet setting.",
+        footerLabel: "Your Privacy First",
         footerIcon: "droplet",
       },
       {
         number: "04",
         icon: "hourglass",
-        title: "Unhurried Cadence",
+        title: "Time to Unwind",
         description:
-          "A minimum 90-minute immersion window ensuring full parasympathetic nervous down-regulation, zero transition rush, and profound cellular stillness.",
-        footerLabel: "Parasympathetic Shift",
+          "From 30-minute Rapid Relax therapies to a five-session Royal Renewal, choose the time that suits you.",
+        footerLabel: "No Rush",
         footerIcon: "moon",
       },
     ],
   },
   treatmentsSection: {
-    eyebrow: "Apothecary & Therapies",
-    heading: "Signature rituals conceived for deep restorative release.",
+    eyebrow: "Our Menu",
+    heading: "Five treatment categories, one calm experience.",
     description:
-      "Formulated with single-estate botanical extracts, warm Himalayan stone compresses, and ancient marma touch.",
+      "Every Kynta spa offers the same menu. Prices vary by location; you see the exact price for your spa when you book.",
     linkLabel: "Explore",
     cards: [
       {
         image: { url: "/treatment-spa-sojourns.jpg", alt: "Spa Sojourns" },
-        label: "Signature Bodywork",
-        duration: "75 / 90 Mins",
+        label: "Spa Sojourns",
+        duration: "120 – 300 Min",
         title: "SPA SOJOURNS",
         slug: "spa-sojourns",
         description:
-          "Spa Sojourns are immersive wellness journeys that blend therapeutic touch with deep relaxation. Crafted to rejuvenate from head to toe, these rituals leave you feeling renewed, centered, and completely at ease.",
-        sensoryNote: "Cedarwood • Ginger Root • Smoky Vetiver",
+          "Immersive journeys that combine several treatments: Deep Sleep for restful sleep, Nourish (massage and facial) and the five-massage Royal Renewal.",
+        sensoryNote: "Deep Sleep • Nourish • Royal Renewal",
+      },
+      {
+        image: { url: "/destination-glenwood.jpg", alt: "Couple Spa" },
+        label: "Couple Spa",
+        duration: "60 / 90 Min",
+        title: "COUPLE SPA",
+        slug: "couple-spa",
+        description:
+          "A synchronized full-body Swedish or Deep Tissue massage for two in our private couple's suite. Room decoration on request.",
+        sensoryNote: "Couple's Retreat • Couple's Bliss",
       },
       {
         image: { url: "/treatment-massage.jpg", alt: "Massage Selections" },
-        label: "Signature Bodywork",
-        duration: "60 / 90 Mins",
+        label: "Massage Selections",
+        duration: "60 / 90 Min",
         title: "MASSAGE SELECTIONS",
         slug: "massage-selections",
         description:
-          "Step into a world of deep relaxation with our curated Full Body Massage selections. Each therapy is thoughtfully designed to release tension, improve circulation, and restore inner harmony. Surrender to skilled hands and experience complete mind-body renewal.",
-        sensoryNote: "Brahmi • Ashwagandha • Sandalwood",
+          "Swedish, Deep Tissue, Aroma, Indian Abhyanga, Ayurvedic Potli and the Kynta Signature Therapy, each tailored to release tension and restore balance.",
+        sensoryNote: "Swedish • Deep Tissue • Abhyanga • Potli",
       },
       {
         image: { url: "/treatment-glamour-glow.jpg", alt: "Glamour Glow" },
-        label: "Signature Bodywork",
-        duration: "60 Mins",
+        label: "Glamour Glow",
+        duration: "30 – 60 Min",
         title: "GLAMOUR GLOW",
         slug: "glamour-glow",
         description:
-          "Indulge in our Glamour Glow ritual, a luxurious facial or body scrub designed to gently exfoliate, deeply nourish, and revive dull skin. Enriched with skin-loving ingredients, this treatment removes impurities, enhances natural radiance, and leaves your skin smooth, refreshed, and beautifully glowing. Perfect before special occasions or whenever your skin needs a luminous boost.",
-        sensoryNote: "Floral Jasmine • Mineral Crisp • Sweet Neroli",
+          "Body scrubs, polishers and masques, plus Cleansing, Shine and Young & Radiant facials for smooth, refreshed and glowing skin.",
+        sensoryNote: "Body Scrub • Shine Facial • Young & Radiant",
       },
-      ...extraTreatmentCards,
+      {
+        image: { url: "/triad-touch.jpg", alt: "Rapid Relax" },
+        label: "Rapid Relax",
+        duration: "30 Min",
+        title: "RAPID RELAX",
+        slug: "rapid-relax",
+        description:
+          "Focused 30-minute therapies: Marma head massage, Kansa face and foot massages, Foot to Knee Bliss and back massage.",
+        sensoryNote: "Head • Face • Feet • Back",
+      },
     ],
   },
   protocolSection: {
-    eyebrow: "Somatic Ritual Sequence",
-    heading: "The Five-Step Experience Protocol",
+    eyebrow: "Your Visit",
+    heading: "What to Expect",
     description:
-      "Every visit at a Kynta sanctuary follows a rigorous ritual protocol engineered to guide the physiology effortlessly from beta-stress states into parasympathetic renewal.",
+      "A few simple steps from booking your treatment to leaving refreshed.",
     steps: [
       {
         number: "01",
-        title: "Arrival & Unclutter",
+        title: "Book Your Treatment",
         description:
-          "Warm botanical foot soak with freshly crushed marigold, rock salt, and cardamom infusion to ground bodily static.",
-        duration: "15 Minutes",
+          "Book online and pay in full or a 25% advance, or call us on +91 7250333494.",
+        duration: "Online or by Phone",
         color: "teal",
       },
       {
         number: "02",
-        title: "Diagnostic Consultation",
+        title: "Arrive Early",
         description:
-          "Pulse reading by Vaidya, thermal chamber calibration, and bespoke botanical scent harmonization for your bio-energy.",
+          "Please arrive 15 minutes before your session so you can settle in calmly.",
         duration: "15 Minutes",
         color: "teal",
       },
       {
         number: "03",
-        title: "Therapeutic Core Touch",
+        title: "Your Treatment",
         description:
-          "Customized rhythmic strokes, heated river stone gliding, and single-estate cold-pressed oil absorption.",
-        duration: "60 – 90 Minutes",
+          "Your therapist tailors the treatment to you, with professional draping throughout to respect your privacy.",
+        duration: "30 – 120 Minutes",
         color: "rust",
       },
       {
         number: "04",
-        title: "Stillness Lounge",
+        title: "Unwind",
         description:
-          "Acoustic relaxation in sound-dampened lime plaster grottos with restorative warm herbal tonics and organic dry fruits.",
-        duration: "30 Minutes",
+          "Keep phones silent and speak softly so everyone can relax, then leave refreshed and renewed.",
+        duration: "After Your Session",
         color: "teal",
       },
       {
         number: "05",
-        title: "Home Integration",
+        title: "Change of Plans",
         description:
-          "Custom apothecary formulations, dosha-specific nutrition guidelines, and circadian sleep rituals sent to your private portal.",
-        duration: "Post-Care Protocol",
+          "Let us know at least 4 working hours before your appointment if you need to cancel. Late cancellations are charged 50%.",
+        duration: "4 Working Hours",
         color: "teal",
       },
     ],
