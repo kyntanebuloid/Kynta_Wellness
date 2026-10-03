@@ -27,7 +27,17 @@ type SpaFacts = {
   hours?: string;
   /** Lowest treatment price on this spa's menu (before tax). */
   fromPrice: number;
+  /** Captions for the three photos on this spa's page. */
+  gallery: {
+    mainCard: GalleryCardContent;
+    topRightCard: GalleryCardContent;
+    bottomRightCard: GalleryCardContent;
+  };
 };
+
+// Photo captions: each spa's own menu, plus what its hotel listing confirms
+// (setting, nearby landmarks). Sources: Trip.com, Hotels.com and Expedia
+// listings for each property, checked October 2026.
 
 const SPAS: Record<string, SpaFacts> = {
   "indraprastha-dharamshala": {
@@ -38,6 +48,27 @@ const SPAS: Record<string, SpaFacts> = {
     address:
       "Strawberry Hills, Satobari, near Dal Lake – McLeod Ganj, Dharamshala, Dhial, Himachal Pradesh 176216",
     fromPrice: 2000,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • DHARAMSHALA",
+        title: "Massages Near McLeod Ganj",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Swedish, Deep Tissue, Abhyanga and herbal Potli massages, a short walk from Dal Lake",
+      },
+      topRightCard: {
+        tag: "SPA SOJOURN",
+        title: "Deep Sleep",
+        subtitle:
+          "120 minutes of Deep Tissue, Marma head and Foot to Knee after a day around Naddi",
+      },
+      bottomRightCard: {
+        tag: "COUPLE SPA",
+        title: "Couple's Retreat",
+        subtitle:
+          "90 minutes side by side, with a fruit bowl and detox juice to share",
+      },
+    },
   },
   "asia-spa-dharamshala": {
     name: "Asia Spa & Resort, Dharamshala",
@@ -46,6 +77,26 @@ const SPAS: Record<string, SpaFacts> = {
     state: "Himachal Pradesh",
     address: "Dharamshala, Himachal Pradesh",
     fromPrice: 2000,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • DHARAMSHALA CANTT",
+        title: "Aroma & Abhyanga Massages",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Warm essential and herbal oils, minutes from Dal Lake and Naddi View Point",
+      },
+      topRightCard: {
+        tag: "COUPLE SPA",
+        title: "Couple's Bliss",
+        subtitle: "A synchronised 60-minute massage for two in a private suite",
+      },
+      bottomRightCard: {
+        tag: "RAPID RELAX",
+        title: "Foot to Knee Bliss",
+        subtitle:
+          "30 minutes of reflexology for tired feet after a trek or a day outdoors",
+      },
+    },
   },
   "indraprastha-dalhousie": {
     name: "Indraprastha Spa Resort, Dalhousie",
@@ -56,6 +107,27 @@ const SPAS: Record<string, SpaFacts> = {
       "Dalhousie – Chamba Rd, Near Bus Stand, Moti Tiba, Dalhousie, Himachal Pradesh 176304",
     hours: "08:00 – 20:00 Daily",
     fromPrice: 1100,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • DALHOUSIE",
+        title: "Massages with Mountain Views",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Swedish, Deep Tissue and Abhyanga, a short drive from Gandhi Chowk",
+      },
+      topRightCard: {
+        tag: "SPA SOJOURN",
+        title: "Royal Renewal",
+        subtitle:
+          "Five 60-minute massages in one week, made for a longer hill-station stay",
+      },
+      bottomRightCard: {
+        tag: "GLAMOUR GLOW",
+        title: "Shine & Young & Radiant Facials",
+        subtitle:
+          "Cleanse, exfoliate and mud pack, finished with SPF protection for the mountain sun",
+      },
+    },
   },
   "bhanjwar-palace": {
     name: "Bhanwar Singh Palace, Pushkar",
@@ -65,6 +137,27 @@ const SPAS: Record<string, SpaFacts> = {
     address:
       "Bhanwar Singh Palace, Village Hokra, Ajmer–Pushkar Bypass, Pushkar, Rajasthan 305022",
     fromPrice: 2000,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • PUSHKAR",
+        title: "Signature Therapy",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Massage with yoga stretches and acupressure, on the Ajmer–Pushkar road",
+      },
+      topRightCard: {
+        tag: "SPA SOJOURN",
+        title: "Royal Renewal: Six Massages",
+        subtitle:
+          "At this spa, Royal Renewal is six 60-minute massages in a week",
+      },
+      bottomRightCard: {
+        tag: "GLAMOUR GLOW",
+        title: "Soothe & Revive Body Masque",
+        subtitle:
+          "Turmeric, Multani Mitti and rose water, about ten minutes from Pushkar Lake",
+      },
+    },
   },
   "rawai-tents": {
     name: "Rawai Luxury Tents, Pushkar",
@@ -74,6 +167,27 @@ const SPAS: Record<string, SpaFacts> = {
     address:
       "Brahma Mandir Rd, near Savitri Mata Temple, Pushkar, Rajasthan 305022",
     fromPrice: 2000,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • PUSHKAR",
+        title: "Massages Near Brahma Temple",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Swedish, Deep Tissue, Aroma and Potli, a five-minute walk from the temple",
+      },
+      topRightCard: {
+        tag: "SPA SOJOURN",
+        title: "Nourish",
+        subtitle:
+          "A 60-minute massage and a 60-minute facial after a day at Pushkar Lake",
+      },
+      bottomRightCard: {
+        tag: "RAPID RELAX",
+        title: "Kansa Foot Revive",
+        subtitle:
+          "A warm herbal-oil foot massage with a kansa wand after walking the ghats",
+      },
+    },
   },
   "infinitea-palampur": {
     name: "Infinitea Sports Club & Tea Garden Resort, Palampur",
@@ -83,6 +197,27 @@ const SPAS: Record<string, SpaFacts> = {
     address: "Bundla Tea Estate, Chopati, Palampur, Himachal Pradesh 176061",
     hours: "10:00 – 20:00 Daily",
     fromPrice: 1100,
+    gallery: {
+      mainCard: {
+        tag: "KYNTA SPA • PALAMPUR TEA ESTATE",
+        title: "Massages in a Tea Garden",
+        badge: "60 / 90 MIN",
+        subtitle:
+          "Swedish, Deep Tissue and Abhyanga at Bundla Tea Estate, with mountain views",
+      },
+      topRightCard: {
+        tag: "AFTER SPORT",
+        title: "Deep Tissue & Signature Therapy",
+        subtitle:
+          "Firm pressure and yoga stretches to recover after a swim or a workout",
+      },
+      bottomRightCard: {
+        tag: "SPA SOJOURN",
+        title: "Deep Sleep",
+        subtitle:
+          "A 120-minute ritual to end a day among the Palampur tea gardens",
+      },
+    },
   },
 };
 
@@ -158,24 +293,7 @@ export function realLocationText(slug: string): RealLocationText | null {
         subtitle: "30-minute head, face, foot & back",
       },
     ],
-    gallery: {
-      mainCard: {
-        tag: `KYNTA SPA • ${spa.city.toUpperCase()}`,
-        title: "Massage Selections",
-        badge: "60 / 90 MIN",
-        subtitle: "Swedish, Deep Tissue, Aroma, Abhyanga, Potli & Signature",
-      },
-      topRightCard: {
-        tag: "COUPLE SPA",
-        title: "Couple's Retreat & Couple's Bliss",
-        subtitle: "Side by side in a private suite",
-      },
-      bottomRightCard: {
-        tag: "GLAMOUR GLOW",
-        title: "Facials & Body Treatments",
-        subtitle: "Scrubs, polishers, masques & facials",
-      },
-    },
+    gallery: spa.gallery,
   };
 }
 

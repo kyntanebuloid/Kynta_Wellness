@@ -5,6 +5,7 @@
 // Backups of both documents go to sanity/backups/ first.
 //
 // Preview:  npm run apply:real-text -- --dry-run
+// Photo captions only:  npm run apply:real-text -- --gallery-only
 // Write:    npm run apply:real-text
 // Needs SANITY_API_WRITE_TOKEN in .env.local.
 
@@ -25,6 +26,8 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const token = process.env.SANITY_API_WRITE_TOKEN;
 const dryRun = process.argv.includes("--dry-run");
+// Only the captions on the three photos of each spa page.
+const galleryOnly = process.argv.includes("--gallery-only");
 
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
 if (!token) throw new Error("Missing SANITY_API_WRITE_TOKEN");
@@ -88,12 +91,14 @@ function aboutFields(doc: Record<string, unknown>) {
 
 function locationsFields(doc: Record<string, unknown>) {
   const p = realLocationsPageText;
-  const set: Record<string, unknown> = {
-    hero: p.hero,
-    filterLabels: p.filterLabels,
-    glanceHeading: "Spa at a Glance",
-    ctaSection: p.ctaSection,
-  };
+  const set: Record<string, unknown> = galleryOnly
+    ? {}
+    : {
+        hero: p.hero,
+        filterLabels: p.filterLabels,
+        glanceHeading: "Spa at a Glance",
+        ctaSection: p.ctaSection,
+      };
   const slugs = ((doc.locations as { slug?: string }[] | undefined) ?? []).map(
     (l) => l.slug,
   );
@@ -101,21 +106,22 @@ function locationsFields(doc: Record<string, unknown>) {
     const real = slug ? realLocationText(slug) : null;
     if (!real) continue;
     const at = (field: string) => `locations[slug=="${slug}"].${field}`;
-    Object.assign(set, {
-      [at("name")]: real.name,
-      [at("address")]: real.address,
-      [at("hours")]: real.hours,
-      [at("phone")]: real.phone,
-      [at("price")]: real.price,
-      [at("cardDescription")]: real.cardDescription,
-      [at("breadcrumbEyebrow")]: real.breadcrumbEyebrow,
-      [at("description")]: real.description,
-      [at("sanctuaryId")]: real.sanctuaryId,
-      [at("sanctuaryInfo")]: keyed("infoRow", real.sanctuaryInfo),
-      [at("primaryCta")]: real.primaryCta,
-      [at("services")]: real.services,
-      [at("facilities")]: keyed("facility", real.facilities),
-    });
+    if (!galleryOnly)
+      Object.assign(set, {
+        [at("name")]: real.name,
+        [at("address")]: real.address,
+        [at("hours")]: real.hours,
+        [at("phone")]: real.phone,
+        [at("price")]: real.price,
+        [at("cardDescription")]: real.cardDescription,
+        [at("breadcrumbEyebrow")]: real.breadcrumbEyebrow,
+        [at("description")]: real.description,
+        [at("sanctuaryId")]: real.sanctuaryId,
+        [at("sanctuaryInfo")]: keyed("infoRow", real.sanctuaryInfo),
+        [at("primaryCta")]: real.primaryCta,
+        [at("services")]: real.services,
+        [at("facilities")]: keyed("facility", real.facilities),
+      });
     for (const card of [
       "mainCard",
       "topRightCard",
@@ -144,6 +150,7 @@ async function main() {
   const tx = client.transaction();
   for (const doc of docs) {
     const id = doc._id as string;
+    if (galleryOnly && doc._type === "aboutPage") continue;
     const set =
       doc._type === "aboutPage" ? aboutFields(doc) : locationsFields(doc);
     tx.patch(id, (p) => p.set(set));
