@@ -90,86 +90,87 @@ export interface AboutPageContent {
 
 export const aboutDefaults = {
   hero: {
-    eyebrow: "A Monograph on Heritage & Equilibrium",
-    heading: "Ancient Wisdom.\nArchitectural Stillness.",
+    eyebrow: "About Kynta Wellness",
+    heading: "Rooted in Ayurveda.\nCrafted for Calm.",
     description:
-      "Kynta was conceived at the quiet crossroads where classical Ayurvedic therapeutics intersect with modern architectural composure. We construct sensory sanctuaries where the nervous system unwinds, breathing life into unhurried restorative traditions within the world's most discerning luxury hospitality environments.",
+      "Kynta Wellness is a luxury wellness and spa brand dedicated to holistic healing and deep relaxation. Rooted in Ayurvedic wisdom, it offers therapeutic massages and rejuvenating spa experiences designed to balance the body, calm the mind and restore inner harmony. Every treatment is thoughtfully curated to promote well-being, relaxation and renewal, creating a serene escape from everyday stress.",
     philosophyLabel: "Explore Our Philosophy",
 
     secondaryCta: { label: "Inquire With Concierge", url: "/contact" },
     image: {
       url: "/about-hero.jpg",
-      alt: "Kynta sanctuary interior with heritage architecture and turquoise plunge pool",
+      alt: "Kynta Wellness spa interior",
     },
-    imageCaption: "Spatial Concept · Sanctum 01",
-    badgeLabel: "Lineage Assured",
-    badgeText: "8th-Generation Herbal\nApothecary Traditions",
+    imageCaption: "Kynta Wellness",
+    badgeLabel: "Our Values",
+    badgeText: "Balance · Healing · Inner Peace\nHarmony · Vitality",
     stats: [
       {
-        value: "14+",
-        label: "Sanctuaries Curated",
-        description: "Across premier heritage palaces and coastal hideaways",
+        value: "6",
+        label: "Spa Locations",
+        description: "Across Himachal Pradesh & Rajasthan",
       },
       {
-        value: "100%",
-        label: "Wild & Organic Harvest",
-        description: "Cold-pressed botanicals from Kerala & Western Ghats",
+        value: "22",
+        label: "Treatments",
+        description: "From 30-minute therapies to five-session journeys",
       },
       {
-        value: "120+",
-        label: "Master Vaidyas & Healers",
-        description: "Marma therapy adepts and licensed somatic clinicians",
+        value: "5",
+        label: "Treatment Categories",
+        description:
+          "Spa Sojourns, Couple Spa, Massages, Glamour Glow & Rapid Relax",
       },
       {
-        value: "5.0",
-        label: "Guest Excellence Rating",
-        description: "Sustained across five-star global hospitality audits",
+        value: "3",
+        label: "Membership Plans",
+        description: "Kynta Revibe: Peace, Serenity & Tranquility",
       },
     ],
   },
   triadSection: {
-    eyebrow: "The Triad of Intent",
-    heading: "The Three Pillars of Sanctuary Design",
+    eyebrow: "What We Stand For",
+    heading: "Three Promises in Every Treatment",
     description:
-      "Every spatial footprint, herb infusion, and human interaction is calibrated against an immutable sacred framework.",
+      "Every treatment is thoughtfully curated to promote well-being, relaxation and renewal.",
     cards: [
       {
         number: "01",
-        title: "Vedic Authenticity & Pure Formulations",
+        title: "Rooted in Ayurvedic Wisdom",
         description:
-          "We reject synthetic binders, parabens, and diluted carrier bases. Our oils are simmered for 72 consecutive hours over slow red-sand furnaces in Kerala using ancient taila-paka methods, aligning formulations with regional doshic seasons.",
+          "Our therapies draw on traditional Indian techniques: Abhyanga with warm herbal oils, herbal Potli compresses and marma-point massage, to balance the body, calm the mind and restore inner harmony.",
         image: {
           url: "/triad-vedic.jpg",
-          alt: "Vedic Authenticity & Pure Formulations",
+          alt: "Ayurvedic oils and herbs",
         },
         iconColor: "teal",
-        footerLabel: "Botanical Integrity",
-        footerValue: "100% Raw Lineage",
+        footerLabel: "Our Roots",
+        footerValue: "Ayurveda",
         footerValueColor: "rust",
       },
       {
         number: "02",
-        title: "Sensory & Spatial Architecture",
+        title: "Thoughtfully Curated Treatments",
         description:
-          "A restorative experience is governed by spatial biology. Our treatment suites feature low reverberation acoustics (<24dB), natural lime-wash walls that breathe, hand-turned teakwood joinery, and circadian warmth illumination that restores melatonin rhythm.",
+          "Twenty-two treatments across five categories, from focused 30-minute Rapid Relax therapies to the five-massage Royal Renewal, each designed to leave you refreshed and deeply restored.",
         image: {
           url: "/triad-spatial.jpg",
-          alt: "Sensory & Spatial Architecture",
+          alt: "Kynta Wellness treatment room",
         },
         iconColor: "rust",
-        footerLabel: "Acoustic & Thermal",
-        footerValue: "Decibel Calibrated",
+        footerLabel: "Our Menu",
+        footerValue: "22 Treatments",
         footerValueColor: "rust",
       },
       {
         number: "03",
-        title: "Masterful Human Touch",
+        title: "Skilled, Respectful Care",
         description:
-          "Touch is an energetic transmission, not a mechanical routine. Kynta therapists undergo over 1,200 hours of somatic alignment, breath synchronization, and nadi pressure point training. We enforce deliberate, unhurried 90 to 120-minute therapeutic cadences.",
-        image: { url: "/triad-touch.jpg", alt: "Masterful Human Touch" },
+          "Expert therapists tailor every treatment to you, with professional draping throughout and a calm, quiet setting that respects your privacy and comfort.",
+        image: { url: "/triad-touch.jpg", alt: "Therapist giving a massage" },
         iconColor: "teal",
-        footerLabel: "Clinical Standards",
-        footerValue: "1,200+ Training Hours",
+        footerLabel: "Our Care",
+        footerValue: "Privacy First",
         footerValueColor: "teal",
       },
     ],
@@ -294,44 +295,44 @@ export const aboutDefaults = {
     ],
   },
   stewardshipSection: {
-    eyebrow: "ECOLOGICAL STEWARDSHIP",
-    heading: "Honoring the Soil That Restores Us",
+    eyebrow: "A SERENE ESCAPE",
+    heading: "Designed for Calm, Comfort and Renewal",
     description:
-      "True wellness cannot be extracted at the expense of local communities or living ecosystems. Our whole-plant botanicals are hand-harvested according to traditional lunar cycles by indigenous tribal cooperatives in the Nilgiri and Western Ghats biospheres.",
+      "Every visit is planned around your comfort: a quiet setting, skilled hands and treatments tailored to you, so you leave refreshed, glowing and deeply restored from within.",
     features: [
       {
-        title: "Direct Fair-Trade Foraging Alliances",
+        title: "Calm, Quiet Spaces",
         description:
-          "Supporting 240+ tribal farming families with stable year-round honorariums.",
+          "Phones on silent and soft voices keep every Kynta spa serene for all guests.",
       },
       {
-        title: "100% Zero Single-Use Synthetics",
+        title: "Your Privacy Respected",
         description:
-          "All vessel packaging is hand-blown amber glass or unglazed terracotta earthenware.",
+          "Professional draping throughout every treatment, with disposable undergarments provided.",
       },
       {
-        title: "Closed-Loop Hydro Systems",
+        title: "Premium Oil Blends",
         description:
-          "Thermal suites utilize mineral stone filtering to recycle 94% of restorative water.",
+          "Add one of our premium oil blends to any treatment, at an additional charge.",
       },
     ],
     // Photo grid order: top-left, bottom-left, top-right, bottom-right.
     images: [
       {
         url: "/stewardship-foraging.jpg",
-        alt: "Indigenous women harvesting botanicals according to lunar cycles in Nilgiri hills",
+        alt: "Fresh herbs and botanicals",
       },
       {
         url: "/stewardship-extraction.jpg",
-        alt: "Clay distillation vessel dripping pure herbal essence into laboratory beakers",
+        alt: "Herbal oil being prepared",
       },
       {
         url: "/stewardship-apothecary.jpg",
-        alt: "Ceramic apothecary elixir vessels and dried botanical herbs on linen",
+        alt: "Oils and dried herbs",
       },
       {
         url: "/stewardship-hydro.jpg",
-        alt: "Biophilic sanctuary garden with pebble water stream and lush tropical foliage",
+        alt: "Garden with a water feature",
       },
     ],
   },

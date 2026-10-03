@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 import { getAboutPage, getSiteSettings } from "@/lib/sanity/data";
-import { AboutAccreditationsSection } from "../components/AboutAccreditationsSection";
 import { AboutHeroSection } from "../components/AboutHeroSection";
-import { AboutLeadershipSection } from "../components/AboutLeadershipSection";
 import { AboutStewardshipSection } from "../components/AboutStewardshipSection";
-import { AboutTimelineSection } from "../components/AboutTimelineSection";
 import { AboutTriadSection } from "../components/AboutTriadSection";
 import { Footer } from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "About | Kynta Wellness Group",
   description:
-    "Ancient wisdom meets architectural stillness. Kynta constructs sensory sanctuaries where classical Ayurvedic therapeutics intersect with modern luxury hospitality.",
+    "Kynta Wellness is a luxury wellness and spa brand rooted in Ayurvedic wisdom, offering therapeutic massages and rejuvenating spa experiences at six spas across Himachal Pradesh and Rajasthan.",
 };
 
 export default async function AboutPage() {
@@ -25,10 +22,10 @@ export default async function AboutPage() {
       <main>
         <AboutHeroSection data={about?.hero} />
         <AboutTriadSection data={about?.triadSection} />
-        <AboutTimelineSection data={about?.timelineSection} />
-        <AboutLeadershipSection data={about?.leadershipSection} />
+        {/* Timeline, leadership and awards are hidden until real details
+            are provided (their content was placeholder). The components
+            and Sanity fields are still there to switch them back on. */}
         <AboutStewardshipSection data={about?.stewardshipSection} />
-        <AboutAccreditationsSection data={about?.accreditationsSection} />
       </main>
       <Footer settings={siteSettings} />
     </>

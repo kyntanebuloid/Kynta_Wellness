@@ -7,7 +7,7 @@ import { SanctuaryCTASection } from "../components/SanctuaryCTASection";
 export const metadata: Metadata = {
   title: "Locations | Kynta Wellness Group",
   description:
-    "Five sacred havens across tranquil Himalayan cedar valleys, royal heritage courtyards, and silent desert dunes — each offering NABH-certified classical Ayurvedic rejuvenation.",
+    "Kynta Wellness spas at six hotels and resorts in Dharamshala, Dalhousie, Palampur and Pushkar, offering Ayurveda-rooted massages, facials, couple spa and spa journeys.",
 };
 
 export default async function LocationsPage() {
