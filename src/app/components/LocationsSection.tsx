@@ -134,7 +134,7 @@ function LocationCard({
   facilities,
   detailsHref,
   detailsLabel,
-  aspectRatio = "1 / 0.85",
+  aspectRatio = "4 / 3",
 }: Destination & { aspectRatio?: string }) {
   return (
     <Link
@@ -259,10 +259,6 @@ export function LocationsSection({ page }: LocationsSectionProps) {
       ? mappedDestinations
       : mappedDestinations.filter((d) => d.region === activeFilter);
 
-  const row1 = filtered.slice(0, 3);
-  const row2 = filtered.slice(3, 5);
-  const row3 = filtered.slice(5, 6);
-
   const eyebrow = text(page?.hero?.eyebrow, d.hero.eyebrow);
   const headingHeading = text(page?.hero?.heading, d.hero.heading);
   const description = text(page?.hero?.subheading, d.hero.subheading);
@@ -315,26 +311,10 @@ export function LocationsSection({ page }: LocationsSectionProps) {
           })}
         </div>
 
-        {row1.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
-            {row1.map((d) => (
-              <LocationCard key={d.id} {...d} aspectRatio="1 / 0.9" />
-            ))}
-          </div>
-        )}
-
-        {row2.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-            {row2.map((d) => (
-              <LocationCard key={d.id} {...d} aspectRatio="1 / 0.7" />
-            ))}
-          </div>
-        )}
-
-        {row3.length > 0 && (
-          <div className="grid grid-cols-1 gap-5">
-            {row3.map((d) => (
-              <LocationCard key={d.id} {...d} aspectRatio="16 / 6" />
+        {filtered.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filtered.map((d) => (
+              <LocationCard key={d.id} {...d} />
             ))}
           </div>
         )}
