@@ -227,6 +227,62 @@ const location = defineField({
       group: "booking",
       of: [menuItem],
     }),
+    defineField({
+      name: "membership",
+      title: "Kynta Revibe Membership Plans",
+      description:
+        "Shown on the Experiences page when this spa is chosen. Leave empty to hide membership for this spa.",
+      type: "array",
+      group: "booking",
+      of: [
+        defineField({
+          name: "membershipPlan",
+          title: "Plan",
+          type: "object",
+          fields: [
+            str("plan", "Plan Name", { description: "e.g. Peace" }),
+            defineField({ name: "pay", title: "Pay (₹)", type: "number" }),
+            defineField({
+              name: "openingBalance",
+              title: "Opening Balance (₹)",
+              type: "number",
+            }),
+            str("discount", "Effective Discount", { description: "e.g. 25%" }),
+            defineField({
+              name: "services",
+              title: "Expected No. of Services",
+              type: "number",
+            }),
+            defineField({
+              name: "validityMonths",
+              title: "Validity (months)",
+              type: "number",
+            }),
+            defineField({
+              name: "sharing",
+              title: "Sharing with Friends & Family",
+              type: "boolean",
+              initialValue: true,
+            }),
+          ],
+          preview: {
+            select: { title: "plan", pay: "pay", balance: "openingBalance" },
+            prepare: ({ title, pay, balance }) => ({
+              title,
+              subtitle: `Pay ₹${pay ?? "?"} → ₹${balance ?? "?"}`,
+            }),
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: "membershipBasePrice",
+      title: "Membership – Example Price (₹)",
+      description:
+        'The 60-minute Swedish Massage price the "expected services" are worked out from, e.g. 3900.',
+      type: "number",
+      group: "booking",
+    }),
   ],
   preview: { select: { title: "name", subtitle: "address", media: "image" } },
 });

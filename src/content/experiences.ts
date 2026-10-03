@@ -64,6 +64,22 @@ export interface ExperiencesPageContent {
       color?: AccentColor;
     }[];
   };
+  /** Plans and prices come from each spa (Pages → Locations). */
+  membershipSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    benefits?: { title: string; description: string }[];
+    note?: string;
+    terms?: string[];
+    ctaLabel?: string;
+  };
+  goodToKnowSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    groups?: { title: string; items: string[] }[];
+  };
 }
 
 // Everything below comes from the printed Kynta spa menus (same treatments at
@@ -311,6 +327,83 @@ export const experiencesPageDefaults = {
           "Let us know at least 4 working hours before your appointment if you need to cancel. Late cancellations are charged 50%.",
         duration: "4 Working Hours",
         color: "teal",
+      },
+    ],
+  },
+  // From the menus' "Kynta Revibe" page.
+  membershipSection: {
+    eyebrow: "Kynta Revibe Membership",
+    heading: "Commit to Wellness with Kynta Revibe",
+    description:
+      "Kynta Revibe is the perfect way to make wellness part of your routine. A membership with Kynta offers a wide range of value-added extras in a luxurious environment, so a good spa therapy is no longer a drain on your pocket. Escape the chaos of daily life and rejuvenate in an oasis of calm.",
+    benefits: [
+      {
+        title: "More Spa",
+        description:
+          "Attractive membership discounts get you more spa services.",
+      },
+      {
+        title: "Cashless",
+        description: "No hassle of paying on each visit.",
+      },
+      {
+        title: "Sharing",
+        description: "Spread wellness cheer with your friends and family.",
+      },
+      {
+        title: "More Discounts",
+        description:
+          "Flat 25% off with the Tranquility membership at select Kynta locations.",
+      },
+    ],
+    note: "The expected number of services is worked out on a 60-minute Swedish Massage and changes with the treatments you choose. Taxes extra.",
+    terms: [
+      "Kynta Revibe is a prepaid spa membership plan from Kynta Wellness.",
+      "The membership can be redeemed only at your home centre.",
+      "Pay in advance and go cashless for every booking under the membership.",
+      "Memberships can be used during spa operating hours; a 24-hour prior appointment is required.",
+      "Membership plans are not applicable to Spa Sojourns.",
+      "Membership packages are non-refundable and can only be used with a membership card or booklet.",
+    ],
+    ctaLabel: "Ask About Membership",
+  },
+  // From the menus' "General Information" page.
+  goodToKnowSection: {
+    eyebrow: "General Information",
+    heading: "Good to Know",
+    description:
+      "A few things to help every guest enjoy a calm, comfortable visit.",
+    groups: [
+      {
+        title: "Reservation & Cancellation",
+        items: [
+          "Please arrive 15 minutes before your scheduled spa session.",
+          "For the convenience of other guests, kindly tell us about any cancellation at least 4 working hours before your appointment.",
+          "Late cancellations are charged a 50% cancellation fee.",
+          "Promotional offers are not applicable on Spa Sojourns, Couple Spa and Rapid Relax.",
+          "Premium oil blends are available at an additional charge. All prices are plus taxes.",
+        ],
+      },
+      {
+        title: "Spa Etiquette",
+        items: [
+          "Help us keep the spa serene by keeping mobile phones silent and speaking softly.",
+          "Guests under the age of 16 are not permitted in the spa unless accompanied by an adult.",
+          "Smoking and alcohol are not allowed in the spa area.",
+          "The spa management may decline to serve guests under the influence of alcohol.",
+          "Gentlemen are advised to shave at least 3 hours before a facial session.",
+          "Disposable undergarments are provided for your comfort; kindly wear them during your session.",
+          "Our therapists always use draping techniques during treatments to maintain your comfort and privacy.",
+        ],
+      },
+      {
+        title: "Considerations",
+        items: [
+          "Membership packages are non-refundable and can only be used with a membership card or booklet.",
+          "Pregnant guests and guests with any medical condition should consult their doctor before booking and tell the spa therapist about the condition.",
+          "Our spa treatments are professional in nature. Any illicit or sexually suggestive behaviour, remarks or advances will end the session immediately and may result in legal action; the full charge for the service still applies.",
+          "Spa treatments serve general well-being and are not a substitute for professional medical treatment. Kynta Wellness, its employees and representatives are not liable for any incident experienced during or after a spa service.",
+        ],
       },
     ],
   },

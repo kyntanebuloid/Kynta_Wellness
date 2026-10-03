@@ -5,6 +5,8 @@
 // Preview:  npm run seed:menus -- --dry-run
 // Write:    npm run seed:menus
 // Only some spas:  npm run seed:menus -- --only=indraprastha-dalhousie
+// Membership only (leaves the treatment menus untouched):
+//                   npm run seed:menus -- --membership-only
 // The Brahma Mandir Rd (Pushkar) menu is skipped until it is confirmed which
 // spa it belongs to; then run with  --brahma-mandir=<location slug>.
 //
@@ -26,6 +28,7 @@ const arg = (name: string) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const only = arg("only")?.split(",");
 const brahmaMandirSlug = arg("brahma-mandir");
+const membershipOnly = process.argv.includes("--membership-only");
 
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
 if (!dryRun && !token) {
@@ -277,6 +280,70 @@ if (brahmaMandirSlug) {
   });
 }
 
+// Kynta Revibe membership, as printed on each spa's menu:
+// [plan, pay, opening balance, discount, expected services, validity months]
+type Plan = [string, number, number, string, number, number];
+const DHARAMSHALA_MEMBERSHIP: { base: number; plans: Plan[] } = {
+  base: 3900,
+  plans: [
+    ["Peace", 17550, 23400, "25%", 6, 6],
+    ["Serenity", 23517, 35100, "33%", 9, 9],
+    ["Tranquility", 35100, 70200, "50%", 18, 16],
+  ],
+};
+const MEMBERSHIPS: Record<string, { base: number; plans: Plan[] }> = {
+  "indraprastha-dharamshala": DHARAMSHALA_MEMBERSHIP,
+  "asia-spa-dharamshala": DHARAMSHALA_MEMBERSHIP,
+  "infinitea-palampur": DHARAMSHALA_MEMBERSHIP,
+  "indraprastha-dalhousie": {
+    base: 2100,
+    plans: [
+      ["Peace", 9499, 12600, "25%", 6, 6],
+      ["Serenity", 12669, 18900, "33%", 9, 9],
+      ["Tranquility", 18499, 33600, "45%", 16, 12],
+    ],
+  },
+  "bhanjwar-palace": {
+    base: 3200,
+    plans: [
+      ["Peace", 14999, 19200, "20%", 6, 6],
+      ["Serenity", 18999, 28800, "33%", 9, 12],
+      ["Tranquility", 31999, 57600, "45%", 18, 18],
+    ],
+  },
+  // Brahma Mandir Rd menu. Tranquility is printed as "748000"; 22 services
+  // at ₹3,400 make ₹74,800, so that is used.
+  "rawai-tents": {
+    base: 3400,
+    plans: [
+      ["Peace", 14999, 20400, "25%", 6, 6],
+      ["Serenity", 18999, 30600, "35%", 9, 9],
+      ["Tranquility", 31999, 74800, "55%", 22, 16],
+    ],
+  },
+};
+
+function membershipFields(slug: string) {
+  const m = MEMBERSHIPS[slug];
+  if (!m) return {};
+  return {
+    [`locations[slug=="${slug}"].membership`]: m.plans.map(
+      ([plan, pay, openingBalance, discount, services, validityMonths]) => ({
+        _key: key("m"),
+        _type: "membershipPlan",
+        plan,
+        pay,
+        openingBalance,
+        discount,
+        services,
+        validityMonths,
+        sharing: true,
+      }),
+    ),
+    [`locations[slug=="${slug}"].membershipBasePrice`]: m.base,
+  };
+}
+
 async function main() {
   const ids: string[] = await client.fetch(
     `*[_type == "locationsPage"]._id`,
@@ -289,8 +356,15 @@ async function main() {
   mkdirSync(backupDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
-  const targets = MENUS.filter((m) => !only || only.includes(m.slug));
-  if (targets.length === 0) throw new Error(`Nothing matches --only=${only}`);
+  const targets = membershipOnly
+    ? []
+    : MENUS.filter((m) => !only || only.includes(m.slug));
+  const membershipTargets = Object.keys(MEMBERSHIPS).filter(
+    (slug) => !only || only.includes(slug),
+  );
+  if (targets.length === 0 && membershipTargets.length === 0) {
+    throw new Error(`Nothing matches --only=${only}`);
+  }
 
   // Write to the published page and to any unpublished draft of it, so
   // publishing a draft later doesn't drop the menus.
@@ -321,10 +395,23 @@ async function main() {
       tx = tx.set({
         [`locations[slug=="${menu.slug}"].menu`]: items,
         [`locations[slug=="${menu.slug}"].phone`]: menu.phone,
+        ...membershipFields(menu.slug),
       });
       console.log(
         `  ${dryRun ? "would set" : "✓"} ${id}: ${menu.label} — ${items.length} treatments`,
       );
+    }
+    if (membershipOnly) {
+      for (const slug of membershipTargets) {
+        if (!slugs.has(slug)) {
+          console.warn(`  ! ${id}: no location with slug "${slug}", skipped`);
+          continue;
+        }
+        tx = tx.set(membershipFields(slug));
+        console.log(
+          `  ${dryRun ? "would set" : "✓"} ${id}: ${slug} — membership (${MEMBERSHIPS[slug].plans.length} plans)`,
+        );
+      }
     }
     if (!dryRun) await tx.commit();
   }

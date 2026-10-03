@@ -93,7 +93,8 @@ export default defineType({
         str("duration", "Duration (bottom-right of photo)"),
         str("title", "Title"),
         str("slug", "Experience Slug", {
-          description: "The Explore link goes to /experiences/<slug>, e.g. spa-sojourns.",
+          description:
+            "The Explore link goes to /experiences/<slug>, e.g. spa-sojourns.",
         }),
         txt("description", "Description", 4),
         str("sensoryNote", "Sensory Note"),
@@ -109,6 +110,35 @@ export default defineType({
         txt("description", "Description"),
         str("duration", "Duration"),
         accentColor("color", "Number Colour"),
+      ]),
+    ]),
+    obj(
+      "membershipSection",
+      "5. Kynta Revibe Membership",
+      [
+        str("eyebrow", "Small Label"),
+        str("heading", "Heading"),
+        txt("description", "Description", 3),
+        objList("benefits", "Benefits", "membershipBenefit", "Benefit", [
+          str("title", "Title"),
+          str("description", "Text"),
+        ]),
+        txt("note", "Note Under the Table", 2),
+        strList("terms", "Terms & Conditions"),
+        str("ctaLabel", "Button Label"),
+      ],
+      {
+        description:
+          "The plans and prices come from each spa: Pages → Locations → spa → Booking Menu → Membership Plans.",
+      },
+    ),
+    obj("goodToKnowSection", "6. Good to Know", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      objList("groups", "Groups", "infoGroup", "Group", [
+        str("title", "Title"),
+        strList("items", "Points"),
       ]),
     ]),
     seo(),

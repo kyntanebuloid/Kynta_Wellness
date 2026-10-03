@@ -1,6 +1,18 @@
 import type { MenuCategory } from "@/lib/booking/menu";
 import type { ContentFile, ContentImage, ContentLink } from "./types";
 
+/** A Kynta Revibe prepaid membership plan, as printed on a spa's menu. */
+export interface MembershipPlan {
+  _key?: string;
+  plan: string;
+  pay: number;
+  openingBalance: number;
+  discount?: string;
+  services?: number;
+  validityMonths?: number;
+  sharing?: boolean;
+}
+
 /** A treatment on a spa's booking menu, with a price per duration. */
 export interface SpaMenuItem {
   _key: string;
@@ -50,6 +62,10 @@ export interface LocationContent {
   mapEmbedUrl?: string;
   /** Treatments bookable online here; empty means call / WhatsApp to book. */
   menu?: SpaMenuItem[];
+  /** Kynta Revibe membership plans at this spa (Experiences page). */
+  membership?: MembershipPlan[];
+  /** 60-min Swedish price the membership "expected services" are based on. */
+  membershipBasePrice?: number;
 
   gallery?: {
     mainCard?: GalleryCardContent;
