@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCarousel } from "./useCarousel";
 import type { LocationContent } from "@/content/locations";
+import { whatsappChatUrl } from "@/lib/whatsapp";
 import type { Homepage } from "@/types/sanity";
 import { NoPhoto } from "./NoPhoto";
+import { useCarousel } from "./useCarousel";
 
 interface DestinationsSectionProps {
   data?: Homepage["destinationsSection"];
@@ -109,7 +110,7 @@ function DestinationCard({
         </div>
         <div className="flex items-center justify-between mt-auto pt-2">
           <Link
-            href="https://wa.me/917250333494"
+            href={whatsappChatUrl()}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-[13px] font-medium text-kynta-teal hover:text-kynta-teal-light transition-colors"

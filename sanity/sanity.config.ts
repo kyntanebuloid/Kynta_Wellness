@@ -125,6 +125,16 @@ export default defineConfig({
             S.listItem()
               .title("FAQs")
               .child(S.documentTypeList("faq").title("FAQs")),
+            S.divider(),
+            S.listItem()
+              .title("Newsletter Subscribers")
+              .child(
+                S.documentTypeList("newsletterSubscriber")
+                  .title("Newsletter Subscribers")
+                  .defaultOrdering([
+                    { field: "subscribedAt", direction: "desc" },
+                  ]),
+              ),
           ]),
     }),
   ],

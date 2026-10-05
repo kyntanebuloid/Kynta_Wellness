@@ -8,6 +8,7 @@ import faq from "./faq";
 import homepage from "./homepage";
 import hospitalityPage from "./hospitalityPage";
 import locationsPage from "./locationsPage";
+import newsletterSubscriber from "./newsletterSubscriber";
 import service from "./service";
 import siteSettings from "./siteSettings";
 import testimonial from "./testimonial";
@@ -28,4 +29,5 @@ export const schemaTypes = [
   blogPost,
   testimonial,
   faq,
+  newsletterSubscriber,
 ];

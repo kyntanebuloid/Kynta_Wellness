@@ -16,6 +16,8 @@ import {
   quoteMenuItem,
   splitPayment,
 } from "@/lib/booking/menu";
+import { keepPhoneTogether } from "@/lib/phone";
+import { whatsappChatUrl, withWhatsappMessage } from "@/lib/whatsapp";
 import type { Homepage } from "@/types/sanity";
 
 interface BookingLocation {
@@ -150,8 +152,7 @@ function FieldLabel({
   );
 }
 
-const DEFAULT_WHATSAPP_URL =
-  "https://wa.me/917250333494?text=Hello%20Kynta%20Wellness%20%F0%9F%8C%B8%0A%0AI%E2%80%99d%20love%20to%20explore%20your%20wellness%20and%20spa%20experiences.%20Could%20you%20please%20share%20the%20available%20treatments%2C%20pricing%2C%20and%20appointment%20availability%3F";
+const DEFAULT_WHATSAPP_URL = whatsappChatUrl();
 
 const defaultInfoCards = [
   {
@@ -240,11 +241,7 @@ function CallToBook({
   compact?: boolean;
 }) {
   const digits = phone.replace(/[^\d+]/g, "");
-  const whatsapp = `https://wa.me/${digits.replace(/^\+/, "")}?text=${encodeURIComponent(
-    `Hello Kynta Wellness, I would like to book a treatment${
-      locationName ? ` at ${locationName}` : ""
-    }.`,
-  )}`;
+  const whatsapp = whatsappChatUrl(digits);
 
   if (compact) {
     return (
@@ -322,7 +319,9 @@ export function ReservationSection({
   const whatsappTitle = data?.whatsapp?.title || "Talk to Us";
   const whatsappSubtitle = data?.whatsapp?.subtitle || "Book fast on WhatsApp";
   const whatsappButton = data?.whatsapp?.buttonLabel || "WhatsApp";
-  const whatsappUrl = data?.whatsapp?.url || DEFAULT_WHATSAPP_URL;
+  const whatsappUrl = withWhatsappMessage(
+    data?.whatsapp?.url || DEFAULT_WHATSAPP_URL,
+  );
   const formHeading = data?.formHeading || "Your Booking Details";
   const gstPercent = gstPercentOrDefault(gstSetting);
   const advancePercent = advancePercentOrDefault(advanceSetting);
@@ -357,8 +356,9 @@ export function ReservationSection({
   const item = menu.find((m) => m._key === itemKey);
   const option = item?.options?.find((o) => o.minutes === minutes);
   const isCouple = item?.category === "couple";
-  const phone =
-    location?.phone?.trim() || fallbackPhone?.trim() || DEFAULT_PHONE;
+  const phone = keepPhoneTogether(
+    location?.phone?.trim() || fallbackPhone?.trim() || DEFAULT_PHONE,
+  );
   const quote =
     item && option
       ? quoteMenuItem({
@@ -1080,6 +1080,23 @@ export function ReservationSection({
                       hours before; late cancellations are charged 50%.
                     </p>
                   )}
+                  <p className="text-[11px] leading-[1.5] text-kynta-warm-gray">
+                    By booking, you agree to our{" "}
+                    <Link
+                      href="/terms"
+                      className="underline hover:text-kynta-charcoal"
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/privacy"
+                      className="underline hover:text-kynta-charcoal"
+                    >
+                      Privacy Policy
+                    </Link>
+                    .
+                  </p>
                   <CallToBook
                     compact
                     locationName={location?.name}

@@ -9,6 +9,8 @@ import {
 import type { MembershipPlan } from "@/content/locations";
 import { list, text } from "@/content/types";
 import { locationSlugOf } from "@/lib/booking/menu";
+import { keepPhoneTogether } from "@/lib/phone";
+import { whatsappChatUrl } from "@/lib/whatsapp";
 
 interface MembershipLocation {
   name: string;
@@ -48,11 +50,11 @@ export function ExperienceMembershipSection({
 
   const spa = spas.find((l) => locationSlugOf(l) === slug) ?? spas[0];
   const plans = (spa.membership ?? []).filter((p) => p.plan && p.pay > 0);
-  const phone = spa.phone?.trim() || fallbackPhone?.trim() || "+91 7250333494";
+  const phone = keepPhoneTogether(
+    spa.phone?.trim() || fallbackPhone?.trim() || "+91 7250333494",
+  );
   const digits = phone.replace(/[^\d+]/g, "");
-  const whatsapp = `https://wa.me/${digits.replace(/^\+/, "")}?text=${encodeURIComponent(
-    `Hello Kynta Wellness, I would like to know about the Kynta Revibe membership at ${spa.name}.`,
-  )}`;
+  const whatsapp = whatsappChatUrl(digits);
   const benefits = list(data?.benefits, d.benefits);
   const terms = list(data?.terms, d.terms);
 

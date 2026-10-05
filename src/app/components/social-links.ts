@@ -1,3 +1,4 @@
+import { withWhatsappMessage } from "@/lib/whatsapp";
 import type { SocialLinks } from "@/types/sanity";
 
 const DEFAULT_SOCIAL_LINKS: Required<SocialLinks> = {
@@ -14,6 +15,8 @@ export function resolveSocialLinks(
     instagram: links?.instagram || DEFAULT_SOCIAL_LINKS.instagram,
     facebook: links?.facebook || DEFAULT_SOCIAL_LINKS.facebook,
     linkedin: links?.linkedin || DEFAULT_SOCIAL_LINKS.linkedin,
-    whatsapp: links?.whatsapp || DEFAULT_SOCIAL_LINKS.whatsapp,
+    whatsapp: withWhatsappMessage(
+      links?.whatsapp || DEFAULT_SOCIAL_LINKS.whatsapp,
+    ),
   };
 }

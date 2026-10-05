@@ -440,6 +440,6 @@ export const aboutDefaults = {
       "Book a treatment online and pay in full or a 25% advance, or call us and we will help you choose a spa, a treatment and a time. Regular guests can save with a Kynta Revibe membership.",
     primaryCta: { label: "Book a Treatment", url: "/book" },
     secondaryCta: { label: "Explore Treatments", url: "/experiences" },
-    note: "Spa reservations: +91 7250333494",
+    note: "Spa reservations: +91\u00A07250333494",
   },
 } satisfies Required<AboutPageContent>;

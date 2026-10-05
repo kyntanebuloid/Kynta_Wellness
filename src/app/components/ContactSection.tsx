@@ -10,6 +10,8 @@ import {
 } from "@/content/contact";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
 import { sendContactEnquiry } from "@/lib/actions/contact";
+import { keepPhoneTogether } from "@/lib/phone";
+import { whatsappChatUrl } from "@/lib/whatsapp";
 
 interface ContactSectionProps {
   data?: ContactPageContent;
@@ -59,11 +61,9 @@ function contactPhones(data?: ContactPageContent | null) {
       return {
         whatsapp,
         label: row.label ?? "",
-        number: row.number ?? "",
+        number: keepPhoneTogether(row.number ?? ""),
         note: row.note ?? "",
-        href: whatsapp
-          ? `https://wa.me/${digits.replace(/^\+/, "")}`
-          : `tel:${digits}`,
+        href: whatsapp ? whatsappChatUrl(digits) : `tel:${digits}`,
       };
     });
 }

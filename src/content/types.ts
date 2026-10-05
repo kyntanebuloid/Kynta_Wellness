@@ -1,3 +1,5 @@
+import { keepPhoneTogether } from "@/lib/phone";
+
 // Shapes shared by page content. Sanity documents are converted to these
 // shapes in src/lib/sanity/data.ts (images become plain URLs), and the
 // built-in defaults in this folder use the same shapes, so a component can
@@ -20,12 +22,17 @@ export interface ContentLink {
 
 export type AccentColor = "teal" | "rust";
 
-/** Returns the CMS value unless it is missing or blank. */
+/**
+ * Returns the CMS value unless it is missing or blank. Phone numbers in it
+ * are kept on one line.
+ */
 export function text<T extends string>(
   value: T | null | undefined,
   fallback: T,
 ): T {
-  return typeof value === "string" && value.trim() !== "" ? value : fallback;
+  const chosen =
+    typeof value === "string" && value.trim() !== "" ? value : fallback;
+  return keepPhoneTogether(chosen) as T;
 }
 
 /** Returns the CMS list unless it is missing or empty. */

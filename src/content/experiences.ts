@@ -292,7 +292,7 @@ export const experiencesPageDefaults = {
         number: "01",
         title: "Book Your Treatment",
         description:
-          "Book online and pay in full or a 25% advance, or call us on +91 7250333494.",
+          "Book online and pay in full or a 25% advance, or call us on +91\u00A07250333494.",
         duration: "Online or by Phone",
         color: "teal",
       },

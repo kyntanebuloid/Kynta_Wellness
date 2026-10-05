@@ -4,6 +4,7 @@ import {
   locationsPageDefaults,
 } from "@/content/locations";
 import { text } from "@/content/types";
+import { withWhatsappMessage } from "@/lib/whatsapp";
 
 interface SanctuaryCTASectionProps {
   data?: LocationsPageContent["ctaSection"];
@@ -17,7 +18,9 @@ export function SanctuaryCTASection({ data }: SanctuaryCTASectionProps) {
   const ctaText = text(data?.ctaText, d.ctaText);
   const ctaUrl = text(data?.ctaUrl, d.ctaUrl);
   const whatsappLabel = text(data?.whatsappLabel, d.whatsappLabel);
-  const whatsappUrl = text(data?.whatsappUrl, d.whatsappUrl);
+  const whatsappUrl = withWhatsappMessage(
+    text(data?.whatsappUrl, d.whatsappUrl),
+  );
 
   return (
     <section

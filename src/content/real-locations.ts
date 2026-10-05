@@ -4,6 +4,7 @@
 // Applied to the built-in defaults (src/content/locations.ts) and pushed to
 // Sanity text-only by `npm run apply:real-text`.
 
+import { whatsappChatUrl } from "@/lib/whatsapp";
 import type {
   GalleryCardContent,
   LocationContent,
@@ -11,7 +12,8 @@ import type {
   LocationService,
 } from "./locations";
 
-export const RESERVATION_PHONE = "+91 7250333494";
+// Non-breaking space keeps "+91" and the number on one line.
+export const RESERVATION_PHONE = "+91\u00A07250333494";
 
 const TREATMENT_LIST =
   "Spa Sojourns • Couple Spa • Massages • Glamour Glow • Rapid Relax";
@@ -337,6 +339,6 @@ export const realLocationsPageText = {
     ctaText: "Contact Us",
     ctaUrl: "/contact",
     whatsappLabel: "WhatsApp Us",
-    whatsappUrl: "https://wa.me/917250333494",
+    whatsappUrl: whatsappChatUrl(),
   },
 };
