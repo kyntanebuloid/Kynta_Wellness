@@ -64,20 +64,16 @@ export function Hero({ data }: HeroProps) {
           <div className="container-site w-full">
             <div className="max-w-xl lg:max-w-2xl" data-reveal-stagger>
               <div className="flex items-center gap-2 mb-6">
-                <span
-                  className="inline-block w-2 h-2 rounded-full bg-kynta-gold"
-                  aria-hidden="true"
-                />
-                <span className="section-label text-kynta-charcoal bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full">
+                <span className="section-label text-kynta-charcoal px-3 py-1 rounded-full">
                   {eyebrow}
                 </span>
               </div>
 
               <h1 className="font-serif leading-[1.1] mb-6">
-                <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-kynta-charcoal">
+                <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-kynta-charcoal">
                   {headline}
                 </span>
-                <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl italic font-normal text-kynta-charcoal">
+                <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl italic font-normal text-kynta-charcoal">
                   {italicLead}
                   {uprightWord && (
                     <>

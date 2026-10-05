@@ -8,11 +8,11 @@ import { realBlogPosts } from "./real-blog";
 
 export const realHomeText = {
   hero: {
-    eyebrow: "Indian Spa & Wellness",
+    eyebrow: "Spa & Wellness",
     headline: "Wellness,",
     headlineItalic: "Made with Care.",
     subtitle:
-      "Ayurveda-rooted massages, facials and spa journeys at six hotels and resorts in Himachal Pradesh and Rajasthan.",
+      "Ayurveda-rooted massages, facials and spa journeys at luxury hotels and resorts. Therapeutic wellness, mindful healing, and deep relaxation.",
     primaryCta: { label: "See Our Treatments" },
     secondaryCta: { label: "Partner With Kynta" },
   },
