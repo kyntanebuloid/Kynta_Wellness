@@ -61,7 +61,7 @@ export function BlogInquiriesSection({
       <div className="container-site">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 md:mb-12">
           <div>
-            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-2">
+            <p className="section-label text-kynta-rust mb-2">
               {text(data?.eyebrow, d.eyebrow)}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal">

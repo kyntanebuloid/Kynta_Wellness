@@ -29,7 +29,7 @@ export function HospitalityTransformationsSection({
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-12 md:mb-16">
           <div className="lg:col-span-5 flex flex-col items-start">
-            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-3">
+            <p className="section-label text-kynta-rust mb-3">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 max-w-xl">

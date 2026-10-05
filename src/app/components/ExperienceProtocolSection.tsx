@@ -81,7 +81,7 @@ export function ExperienceProtocolSection({
       style={{ backgroundColor: "#f7f9f7" }}
     >
       <div className="container-site">
-        <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-4">
+        <p className="section-label text-kynta-rust mb-4">
           {eyebrow}
         </p>
         <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-5">

@@ -190,7 +190,7 @@ export function PillarsSection({ data }: PillarsSectionProps) {
   return (
     <section className="w-full bg-kynta-pillars-bg pt-20 md:pt-[85px] pb-20 md:pb-24">
       <div className="container-site">
-        <p className="section-label font-semibold text-kynta-rust tracking-wide mb-4">
+        <p className="section-label text-kynta-rust mb-4">
           {eyebrow}
         </p>
         <h2 className="font-serif text-3xl lg:text-[34px] leading-[1.25] text-kynta-charcoal max-w-2xl mb-12 md:mb-14 whitespace-pre-line">

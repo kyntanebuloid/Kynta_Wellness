@@ -133,7 +133,7 @@ export function PartnershipSection({
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 mb-12 md:mb-14">
           <div>
-            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-4">
+            <p className="section-label text-kynta-rust mb-4">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.2] text-white mb-5 whitespace-pre-line">

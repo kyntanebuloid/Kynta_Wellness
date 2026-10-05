@@ -105,7 +105,7 @@ export function AboutAccreditationsSection({
       style={{ backgroundColor: "#f7faf8" }}
     >
       <div className="container-site">
-        <p className="section-label font-semibold tracking-wide text-kynta-charcoal text-center mb-8 md:mb-10">
+        <p className="section-label text-kynta-charcoal text-center mb-8 md:mb-10">
           {eyebrow}
         </p>
 

@@ -62,7 +62,7 @@ export function ExperienceMembershipSection({
     <section className="w-full bg-white py-16 md:py-20 lg:py-24">
       <div className="container-site">
         <div className="max-w-2xl mb-10">
-          <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-3">
+          <p className="section-label text-kynta-rust mb-3">
             {text(data?.eyebrow, d.eyebrow)}
           </p>
           <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">

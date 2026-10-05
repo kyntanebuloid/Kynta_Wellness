@@ -196,6 +196,12 @@ html[data-low-power] #hero .wisp {
 .section-label {
   font-size: 26px; /* phones: 2 × 13px */
   line-height: 1.15;
+  /* The same weight, spacing and case for every label, whatever the text
+     was typed as, so they all look alike. Only the colour differs (rust on
+     light backgrounds, white on dark ones). */
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 @media (min-width: 640px) {

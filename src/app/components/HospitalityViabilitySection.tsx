@@ -48,7 +48,7 @@ export function HospitalityViabilitySection({
           </div>
 
           <div className="lg:col-span-6 flex flex-col items-start">
-            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-3">
+            <p className="section-label text-kynta-rust mb-3">
               {eyebrow}
             </p>
 

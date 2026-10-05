@@ -136,7 +136,7 @@ export function IntroSection({ data }: IntroSectionProps) {
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 mb-16 md:mb-20">
           <div>
-            <p className="section-label text-kynta-teal tracking-wide mb-4 font-semibold">
+            <p className="section-label text-kynta-teal mb-4">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] leading-[1.2] text-kynta-charcoal whitespace-pre-line">

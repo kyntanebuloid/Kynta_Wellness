@@ -39,7 +39,7 @@ export function AboutStewardshipSection({
                   className="block w-6 h-px bg-white/40 flex-shrink-0"
                   aria-hidden="true"
                 />
-                <span className="section-label font-semibold tracking-wide text-[#e2ede8]">
+                <span className="section-label text-[#e2ede8]">
                   {eyebrow}
                 </span>
               </div>

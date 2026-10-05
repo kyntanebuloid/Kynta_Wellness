@@ -38,7 +38,7 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
                 className="w-1.5 h-1.5 rounded-full bg-kynta-rust flex-shrink-0"
                 aria-hidden="true"
               />
-              <span className="section-label font-semibold tracking-wider uppercase text-kynta-rust">
+              <span className="section-label text-kynta-rust">
                 {eyebrow}
               </span>
             </div>
