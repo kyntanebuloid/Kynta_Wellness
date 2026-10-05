@@ -560,38 +560,14 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
               {/* Desktop / tablet table */}
               <div className="hidden md:block bg-white rounded-lg border border-kynta-border/40 overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[1640px] text-[13px]">
+                  <table className="w-full text-[13px]">
                     <thead>
                       <tr className="bg-kynta-section-bg text-[10px] uppercase tracking-[0.1em] text-kynta-warm-gray">
                         <th
                           scope="col"
                           className="px-3 py-3 text-left font-bold"
                         >
-                          Booking ID
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
                           Guest Name
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Email
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Phone
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Sanctuary Destination
                         </th>
                         <th
                           scope="col"
@@ -603,37 +579,13 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
                           scope="col"
                           className="px-3 py-3 text-left font-bold"
                         >
-                          Experience Price
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Currency
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
                           Target Date
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-left font-bold"
                         >
-                          Time Slot
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Party Size
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Special Requests / Somatic Notes
+                          Price
                         </th>
                         <th
                           scope="col"
@@ -647,18 +599,6 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
                         >
                           Payment Status
                         </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Razorpay Payment ID
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3 text-left font-bold"
-                        >
-                          Booking Created At
-                        </th>
                         <th scope="col" className="px-3 py-3">
                           <span className="sr-only">Details</span>
                         </th>
@@ -670,20 +610,8 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
                           key={booking.id}
                           className="border-t border-kynta-border/40 align-top hover:bg-kynta-cream/60"
                         >
-                          <td className="px-3 py-3 font-mono text-[11px] whitespace-nowrap">
-                            {shortId(booking.id)}
-                          </td>
                           <td className="px-3 py-3 whitespace-nowrap font-medium">
                             {display(booking.guestName)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap text-kynta-warm-gray">
-                            {display(booking.guestEmail)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap text-kynta-warm-gray">
-                            {display(booking.guestPhone)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap">
-                            {display(booking.destination)}
                           </td>
                           <td className="px-3 py-3">
                             <span className="block max-w-[180px] truncate">
@@ -691,37 +619,16 @@ export function BookingsPanel({ data }: { data: AdminBookingsData }) {
                             </span>
                           </td>
                           <td className="px-3 py-3 whitespace-nowrap">
-                            {formatMoney(booking.priceCents, booking.currency)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap">
-                            {booking.currency}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap">
                             {formatDate(booking.bookingDate)}
                           </td>
                           <td className="px-3 py-3 whitespace-nowrap">
-                            {formatTime(booking.startTime)} –{" "}
-                            {formatTime(booking.endTime)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap">
-                            {display(booking.partySize)}
-                          </td>
-                          <td className="px-3 py-3">
-                            <span className="block max-w-[220px] text-[12px] leading-[1.5] text-kynta-warm-gray line-clamp-2">
-                              {display(booking.specialRequests)}
-                            </span>
+                            {formatMoney(booking.priceCents, booking.currency)}
                           </td>
                           <td className="px-3 py-3 whitespace-nowrap">
                             <StatusBadge status={booking.status} />
                           </td>
                           <td className="px-3 py-3 whitespace-nowrap">
                             <StatusBadge status={booking.paymentStatus} />
-                          </td>
-                          <td className="px-3 py-3 font-mono text-[11px] whitespace-nowrap">
-                            {display(booking.razorpayPaymentId)}
-                          </td>
-                          <td className="px-3 py-3 whitespace-nowrap text-kynta-warm-gray">
-                            {formatDateTime(booking.createdAt)}
                           </td>
                           <td className="px-3 py-3 whitespace-nowrap text-right">
                             <button
