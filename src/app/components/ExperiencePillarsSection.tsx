@@ -253,24 +253,21 @@ export function ExperiencePillarsSection({
       style={{ backgroundColor: "#f0f3f1" }}
     >
       <div className="container-site">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
-          <div>
-            <p className="section-label text-kynta-rust mb-4">
-              {eyebrow}
-            </p>
-            <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.22] text-kynta-charcoal">
-              {heading}
-            </h2>
-          </div>
-          <div className="flex items-start md:pt-7">
-            <p className="text-[14px] leading-[1.75] text-kynta-warm-gray max-w-sm">
-              {description}
-            </p>
-          </div>
+        <div className="max-w-3xl mb-12 md:mb-14">
+          <p className="section-label text-kynta-rust mb-4">{eyebrow}</p>
+          <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.22] text-kynta-charcoal mb-4">
+            {heading}
+          </h2>
+          <p className="text-[15px] leading-[1.75] text-kynta-warm-gray max-w-2xl">
+            {description}
+          </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {pillars.map((pillar, index) => (
-            <ExperiencePillarCard key={`${pillar.number}-${index}`} {...pillar} />
+            <ExperiencePillarCard
+              key={`${pillar.number}-${index}`}
+              {...pillar}
+            />
           ))}
         </div>
       </div>

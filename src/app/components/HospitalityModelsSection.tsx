@@ -64,9 +64,7 @@ function ModelCard({ model }: { model: PartnershipModel }) {
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${
-                  isHighlighted
-                    ? "bg-kynta-teal-dark"
-                    : "bg-kynta-rust"
+                  isHighlighted ? "bg-kynta-teal-dark" : "bg-kynta-rust"
                 }`}
                 aria-hidden="true"
               />
@@ -122,21 +120,14 @@ export function HospitalityModelsSection({
       style={{ backgroundColor: "#f7faf8" }}
     >
       <div className="container-site">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12 md:mb-16">
-          <div>
-            <p className="section-label text-kynta-rust mb-3">
-              {eyebrow}
-            </p>
-            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 max-w-xl">
-              {heading}
-            </h2>
-          </div>
-
-          <div className="md:pt-6">
-            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-md">
-              {description}
-            </p>
-          </div>
+        <div className="max-w-3xl mb-12 md:mb-16">
+          <p className="section-label text-kynta-rust mb-3">{eyebrow}</p>
+          <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
+            {heading}
+          </h2>
+          <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-2xl">
+            {description}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">

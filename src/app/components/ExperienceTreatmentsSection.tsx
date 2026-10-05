@@ -2,13 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCarousel } from "./useCarousel";
-
 import {
   type ExperiencesPageContent,
   experiencesPageDefaults,
 } from "@/content/experiences";
 import { imageAlt, imageUrl, list, text } from "@/content/types";
+import { useCarousel } from "./useCarousel";
 
 interface ExperienceTreatmentsSectionProps {
   data?: ExperiencesPageContent["treatmentsSection"];
@@ -169,21 +168,19 @@ export function ExperienceTreatmentsSection({
       style={{ backgroundColor: "#f7f9f7" }}
     >
       <div className="container-site">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
-          <div>
-            <p className="section-label text-kynta-rust mb-4">
-              {eyebrow}
-            </p>
-            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-14">
+          <div className="max-w-3xl">
+            <p className="section-label text-kynta-rust mb-4">{eyebrow}</p>
+            <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading}
             </h2>
-          </div>
-          <div className="flex flex-col justify-between">
-            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-sm">
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-2xl">
               {description}
             </p>
+          </div>
+          <div className="flex-shrink-0">
             <div
-              className={`flex items-center gap-3 mt-6 md:mt-0 md:justify-end ${
+              className={`flex items-center gap-3 md:justify-end ${
                 scrollable ? "" : "invisible"
               }`}
             >

@@ -265,7 +265,7 @@ export function Footer({ settings }: FooterProps) {
           <p className="text-[11px] text-[#8a9690] tracking-wide">
             Designed, developed &amp; maintained by{" "}
             <span className="font-semibold text-[#274f46]">
-              Nebuloid Tech Studio
+              Nebuloid Tech Studio LLP
             </span>
           </p>
         </div>
