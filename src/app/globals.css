@@ -194,7 +194,7 @@ html[data-low-power] #hero .wisp {
    Was 13px on phones / 14px elsewhere; now 2× on phones and up to 2.5× on
    desktop. */
 .section-label {
-  font-size: 13px; /* phones */
+  font-size: 9px; /* phones */
   line-height: 1.15;
   /* The same weight, spacing and case for every label, whatever the text
      was typed as, so they all look alike. Only the colour differs (rust on
@@ -206,12 +206,12 @@ html[data-low-power] #hero .wisp {
 
 @media (min-width: 640px) {
   .section-label {
-    font-size: 15px;
+    font-size: 10px;
   }
 }
 
 @media (min-width: 1024px) {
   .section-label {
-    font-size: 17px; /* desktop */
+    font-size: 11px; /* desktop */
   }
 }
