@@ -1,6 +1,12 @@
 import Image from "next/image";
 import { type AboutPageContent, aboutDefaults } from "@/content/about";
-import { type AccentColor, imageAlt, imageUrl, list, text } from "@/content/types";
+import {
+  type AccentColor,
+  imageAlt,
+  imageUrl,
+  list,
+  text,
+} from "@/content/types";
 
 function CardIcon({ color }: { color: AccentColor }) {
   const bgClass = color === "rust" ? "bg-kynta-rust/10" : "bg-kynta-teal/10";
@@ -152,7 +158,8 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
       style={{ backgroundColor: "#f7f9f7" }}
     >
       <div className="container-site">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
+        {/* Label, heading and description stacked, description under the heading. */}
+        <div className="max-w-3xl mb-12 md:mb-14">
           <div>
             <div className="flex items-center gap-4 mb-4">
               <span
@@ -164,23 +171,24 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="section-label text-kynta-rust">
-                {eyebrow}
-              </span>
+              <span className="section-label text-kynta-rust">{eyebrow}</span>
             </div>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading}
             </h2>
           </div>
 
-          <div className="flex items-start md:pt-4" data-reveal>
-            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-lg">
+          <div data-reveal>
+            <p className="text-[15px] leading-[1.7] text-kynta-warm-gray max-w-2xl">
               {description}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-stagger>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          data-reveal-stagger
+        >
           {cards.map((card, i) => (
             <TriadCard key={`${card.number}-${i}`} {...card} />
           ))}
