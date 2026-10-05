@@ -65,6 +65,13 @@ function aboutFields(doc: Record<string, unknown>) {
     "stewardshipSection.eyebrow": a.stewardshipSection.eyebrow,
     "stewardshipSection.heading": a.stewardshipSection.heading,
     "stewardshipSection.description": a.stewardshipSection.description,
+    valuesSection: {
+      ...a.valuesSection,
+      values: keyed("aboutValue", a.valuesSection.values),
+    },
+    treatmentsSection: a.treatmentsSection,
+    spasSection: a.spasSection,
+    ctaSection: a.ctaSection,
     "stewardshipSection.features": keyed(
       "feature",
       a.stewardshipSection.features,

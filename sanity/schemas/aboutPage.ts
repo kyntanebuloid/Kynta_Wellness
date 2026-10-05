@@ -140,6 +140,49 @@ export default defineType({
         ]),
       ]),
     ]),
+    obj("valuesSection", "7. Our Values", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 2),
+      objList("values", "Values", "aboutValue", "Value", [
+        str("title", "Title"),
+        txt("description", "Description", 2),
+      ]),
+    ]),
+    obj(
+      "treatmentsSection",
+      "8. Our Treatments",
+      [
+        str("eyebrow", "Small Label"),
+        str("heading", "Heading"),
+        txt("description", "Description", 2),
+      ],
+      {
+        description:
+          "The treatment cards come from the experience pages (Experiences in the sidebar).",
+      },
+    ),
+    obj(
+      "spasSection",
+      "9. Our Spas",
+      [
+        str("eyebrow", "Small Label"),
+        str("heading", "Heading"),
+        txt("description", "Description", 2),
+      ],
+      {
+        description:
+          "The spa cards come from Pages → Locations (names, photos, addresses).",
+      },
+    ),
+    obj("ctaSection", "10. Visit Kynta (closing banner)", [
+      str("eyebrow", "Small Label"),
+      str("heading", "Heading"),
+      txt("description", "Description", 3),
+      linkObj("primaryCta", "Main Button"),
+      linkObj("secondaryCta", "Second Button"),
+      str("note", "Small Note", { description: "e.g. the reservation number" }),
+    ]),
     seo(),
   ],
   preview: {

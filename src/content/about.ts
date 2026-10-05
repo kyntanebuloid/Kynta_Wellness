@@ -86,6 +86,33 @@ export interface AboutPageContent {
       icon?: AccreditationIcon;
     }[];
   };
+  /** The five values printed on every Kynta menu. */
+  valuesSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    values?: { title: string; description: string }[];
+  };
+  /** Cards come from the experience pages automatically. */
+  treatmentsSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+  };
+  /** Cards come from the Locations page automatically. */
+  spasSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+  };
+  ctaSection?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    primaryCta?: ContentLink;
+    secondaryCta?: ContentLink;
+    note?: string;
+  };
 }
 
 export const aboutDefaults = {
@@ -360,5 +387,59 @@ export const aboutDefaults = {
         icon: "eco",
       },
     ],
+  },
+  valuesSection: {
+    eyebrow: "Our Values",
+    heading: "Balance · Healing · Inner Peace · Harmony · Vitality",
+    description:
+      "Five words appear on every Kynta menu. They shape how each treatment is designed and how every guest is looked after.",
+    values: [
+      {
+        title: "Balance",
+        description:
+          "Treatments rooted in Ayurvedic principles that bring the body and mind back into balance.",
+      },
+      {
+        title: "Healing",
+        description:
+          "Therapeutic touch, warm herbal oils and Potli compresses that ease tension, knots and fatigue.",
+      },
+      {
+        title: "Inner Peace",
+        description:
+          "Calm, private spaces where phones stay silent and the mind is free to rest.",
+      },
+      {
+        title: "Harmony",
+        description:
+          "Every treatment is designed to restore inner harmony, from a 30-minute head massage to a five-session journey.",
+      },
+      {
+        title: "Vitality",
+        description:
+          "Leave refreshed, glowing and re-energised, ready to step back into your day with renewed ease.",
+      },
+    ],
+  },
+  treatmentsSection: {
+    eyebrow: "Our Treatments",
+    heading: "Five Ways to Unwind",
+    description:
+      "The same menu at every Kynta spa: twenty-two treatments across five categories, each tailored to you by skilled therapists.",
+  },
+  spasSection: {
+    eyebrow: "Our Spas",
+    heading: "Find Kynta in Himachal Pradesh & Rajasthan",
+    description:
+      "Kynta Wellness spas at six hotels and resorts, from the hills of Dharamshala, Dalhousie and Palampur to the temple town of Pushkar.",
+  },
+  ctaSection: {
+    eyebrow: "Visit Kynta",
+    heading: "A Serene Escape from Everyday Stress",
+    description:
+      "Book a treatment online and pay in full or a 25% advance, or call us and we will help you choose a spa, a treatment and a time. Regular guests can save with a Kynta Revibe membership.",
+    primaryCta: { label: "Book a Treatment", url: "/book" },
+    secondaryCta: { label: "Explore Treatments", url: "/experiences" },
+    note: "Spa reservations: +91 7250333494",
   },
 } satisfies Required<AboutPageContent>;
