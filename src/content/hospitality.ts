@@ -1,3 +1,4 @@
+import { realHospitalityText } from "./real-hospitality";
 import type { ContentFile, ContentImage, ContentLink } from "./types";
 
 export type AssuranceIcon = "certified" | "housing" | "closed-loop" | "pms";
@@ -63,207 +64,42 @@ export interface HospitalityPageContent {
   };
 }
 
+// Text comes from ./real-hospitality.ts (real facts only); photos stay here.
+const r = realHospitalityText;
+
 export const hospitalityPageDefaults = {
   hero: {
-    eyebrow: "INSTITUTIONAL HOSPITALITY & SANCTUARY PARTNERSHIPS",
-    heading: "Elevating Luxury Hospitality Through Restorative Architecture.",
-    description:
-      "We convert underutilized hotel square footage into high-yield, brand-defining sanctuaries of unhurried restorative stillness and clinical Ayurvedic excellence.",
-    primaryCta: { label: "REQUEST FEASIBILITY STUDY", url: "/contact" },
+    eyebrow: r.hero.eyebrow,
+    heading: r.hero.heading,
+    description: r.hero.description,
+    primaryCta: r.hero.primaryCta,
     prospectusLabel: "DOWNLOAD PROSPECTUS",
-    badges: [
-      "ACCREDITED CLINICAL VAIDYA STAFFING",
-      "TURNKEY FORBES LQA PROTOCOLS",
-    ],
-    image: {
-      url: "/hospitality-pool.jpg",
-      alt: "Luxury hotel wellness indoor pool sanctuary with water wall and lounge seating",
-    },
-    imageCaption: "TURNKEY GOVERNANCE · 100% OPERATIONAL INTEGRATION",
+    badges: r.hero.badges,
+    image: { url: "/hospitality-pool.jpg", alt: r.hero.imageAlt },
+    imageCaption: r.hero.imageCaption,
   },
-  statsSection: {
-    metrics: [
-      {
-        value: "+38%",
-        label: "REVPAR & SPA CAPTURE",
-        description: "Direct guest spend accretion",
-      },
-      {
-        value: "14+",
-        label: "SANCTUARIES MANAGED",
-        description: "Flagship resorts & heritage estates",
-      },
-      {
-        value: "1,200h",
-        label: "CLINICAL RIGOR STANDARD",
-        description: "Certified Vaidya somatic training",
-      },
-      {
-        value: "0%",
-        label: "NET HYDRO WASTE",
-        description: "Closed-loop thermal recirculation",
-      },
-    ],
-  },
-  modelsSection: {
-    eyebrow: "FLEXIBLE INTEGRATION",
-    heading: "Three Bespoke Partnership Models",
-    description:
-      "Calibrated to ownership governance, development stage, and target capital efficiency.",
-    models: [
-      {
-        number: "01",
-        pillLabel: "TIER A",
-        highlighted: false,
-        title: "Full Turnkey Management",
-        description:
-          "Autonomous operational stewardship spanning certified talent, botanical provisioning, and full P&L governance.",
-        features: [
-          "Full P&L custodianship & transparent ledger reporting",
-          "Proprietary Vaidya somatic staffing pipeline",
-          "Forbes 5–Star spa readiness protocols",
-        ],
-        ctaLabel: "EXPLORE TURNKEY TERMS",
-        ctaUrl: "/contact?tier=turnkey",
-      },
-      {
-        number: "02",
-        pillLabel: "ARCHITECT PICK",
-        highlighted: true,
-        title: "Spatial & Acoustic Masterplanning",
-        description:
-          "Architectural co-creation, hydrothermal circuit engineering, circadian lighting, and sub-24dB sound isolation.",
-        features: [
-          "Sub-24dB acoustic decoupling blueprints",
-          "Circadian photobiology & hydrothermal zoning",
-          "Biophilic local stone & timber integration",
-        ],
-        ctaLabel: "INQUIRE DESIGN ADVISORY",
-        ctaUrl: "/contact?tier=advisory",
-      },
-      {
-        number: "03",
-        pillLabel: "TIER C",
-        highlighted: false,
-        title: "White-Label Sanctuary Licensing",
-        description:
-          "Wild-harvested herbal formulation lines under your resort's banner, backed by Kynta curative standards.",
-        features: [
-          "Co-branded organic apothecary formulations",
-          "Certified 28-day restorative ritual menus",
-          "Quarterly somatic audits & masterclasses",
-        ],
-        ctaLabel: "REQUEST LICENSING KIT",
-        ctaUrl: "/contact?tier=licensing",
-      },
-    ],
-  },
+  statsSection: r.statsSection,
+  modelsSection: r.modelsSection,
   viabilitySection: {
-    eyebrow: "COMMERCIAL VIABILITY",
-    heading: "Tangible Asset Enhancement",
-    description:
-      "Transforming spatial footprint into predictable, premium-yielding hospitality assets.",
+    eyebrow: r.viabilitySection.eyebrow,
+    heading: r.viabilitySection.heading,
+    description: r.viabilitySection.description,
     image: {
       url: "/hospitality-chamber.jpg",
-      alt: "Apothecary and marma therapy treatment chamber with teakwood louvers and natural stone textures",
+      alt: r.viabilitySection.imageAlt,
     },
-    imageCaption: "APOTHECARY & MARMA CHAMBER DETAILING",
-    stats: [
-      {
-        value: "+2.4 Days",
-        label: "LENGTH OF STAY",
-        description:
-          "Curated curative retreat programs convert overnight guests to extended-stay wellness patrons.",
-      },
-      {
-        value: "62%",
-        label: "OFF-SEASON RESILIENCE",
-        description:
-          "Monsoon panchakarma and seasonal thermal therapies maintain high occupancy through shoulder months.",
-      },
-      {
-        value: "42%",
-        label: "RETAIL ATTACHMENT",
-        description:
-          "Hand-crafted tisanes, dosha oils, and wellness lifestyle wares generating top-tier retail gross margins.",
-      },
-      {
-        value: "Tier-1",
-        label: "GLOBAL ACCREDITATIONS",
-        description:
-          "Immediate readiness for Condé Nast Johansens, Tatler Spa Awards, and Global Wellness Institute benchmarks.",
-      },
-    ],
+    imageCaption: r.viabilitySection.imageCaption,
+    stats: r.viabilitySection.stats,
   },
   transformationsSection: {
-    eyebrow: "PROVEN TRANSFORMATIONS",
-    heading: "Sanctuaries Across Diverse Terrains",
-    description:
-      "Each sanctuary is uniquely contextualized to geographic topology, indigenous flora, and native architecture.",
+    eyebrow: r.transformationsSection.eyebrow,
+    heading: r.transformationsSection.heading,
+    description: r.transformationsSection.description,
     image: {
       url: "/hospitality-terrains.jpg",
-      alt: "Luxury resort sanctuary outdoor hydro pool with waterfall and loungers",
+      alt: r.transformationsSection.imageAlt,
     },
-    transformations: [
-      {
-        location: "UDAIPUR, RAJASTHAN",
-        metric: "+44% Yield",
-        metricHighlighted: true,
-        title: "The Royal Stepped Reservoir",
-        description:
-          "16,000 sq ft subterranean stepped reservoir converted into cavernous hydrothermal suites and acoustic salt-immersion grottos.",
-        footerLabel: "HISTORIC PALACE HERITAGE CONVERSION",
-      },
-      {
-        location: "SHIMLA, HIMALAYAS",
-        metric: "+3.1d Stay",
-        metricHighlighted: false,
-        title: "The Pine Canopy Pavilion",
-        description:
-          "Glass-enclosed cedar hydro-sanctuary with altitude-acclimatizing herbal steam circuits and panoramic alpine views.",
-        footerLabel: "ALPINE BIOPHILIC HYDROTHERAPY",
-      },
-      {
-        location: "NORTH GOA COAST",
-        metric: "98.6% Rating",
-        metricHighlighted: true,
-        title: "The Coconut Grove Hermitage",
-        description:
-          "Woven bamboo open-air pavilions and warm sea-salt hydro pools integrating Marma point bodywork and Ayurvedic compresses.",
-        footerLabel: "COASTAL WELLNESS SANCTUARY",
-      },
-    ],
+    transformations: r.transformationsSection.transformations,
   },
-  assuranceSection: {
-    eyebrow: "INSTITUTIONAL ASSURANCE",
-    heading: "Uncompromising Operational Rigor",
-    description:
-      "Statutory clinical compliance, ecological safeguards, and seamless technical integration to protect your property's brand equity.",
-    pillars: [
-      {
-        icon: "certified",
-        title: "NABH & Ayush Certified",
-        description:
-          "100% adherence to statutory clinical benchmarks and wild-harvested botanicals with zero synthetics.",
-      },
-      {
-        icon: "housing",
-        title: "Fair-Wage & Housing",
-        description:
-          "Dedicated staff accommodation, ethical remuneration, and continuous career mastery ensuring 94% retention.",
-      },
-      {
-        icon: "closed-loop",
-        title: "Zero-Plastic Closed-Loop",
-        description:
-          "Closed-loop graywater botanical regeneration and zero single-use plastics throughout all treatment grottos.",
-      },
-      {
-        icon: "pms",
-        title: "Seamless PMS Integration",
-        description:
-          "Native synchronization with Oracle Opera Cloud, Infor HMS, Protel, and enterprise CRS ledgers.",
-      },
-    ],
-  },
+  assuranceSection: r.assuranceSection,
 } satisfies Required<HospitalityPageContent>;

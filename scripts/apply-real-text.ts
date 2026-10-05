@@ -14,6 +14,7 @@ import path from "node:path";
 import { createClient } from "@sanity/client";
 import { config } from "dotenv";
 import { aboutDefaults } from "../src/content/about";
+import { realHospitalityText } from "../src/content/real-hospitality";
 import {
   realLocationsPageText,
   realLocationText,
@@ -96,6 +97,55 @@ function aboutFields(doc: Record<string, unknown>) {
   return set;
 }
 
+function hospitalityFields(doc: Record<string, unknown>) {
+  const r = realHospitalityText;
+  const has = (path: string) =>
+    path
+      .split(".")
+      .reduce<unknown>(
+        (value, key) => (value as Record<string, unknown> | undefined)?.[key],
+        doc,
+      ) !== undefined;
+  const set: Record<string, unknown> = {
+    "hero.eyebrow": r.hero.eyebrow,
+    "hero.heading": r.hero.heading,
+    "hero.description": r.hero.description,
+    "hero.primaryCta": r.hero.primaryCta,
+    "hero.badges": r.hero.badges,
+    "hero.imageCaption": r.hero.imageCaption,
+    "statsSection.metrics": keyed("metric", r.statsSection.metrics),
+    modelsSection: {
+      ...r.modelsSection,
+      models: keyed("model", r.modelsSection.models),
+    },
+    "viabilitySection.eyebrow": r.viabilitySection.eyebrow,
+    "viabilitySection.heading": r.viabilitySection.heading,
+    "viabilitySection.description": r.viabilitySection.description,
+    "viabilitySection.imageCaption": r.viabilitySection.imageCaption,
+    "viabilitySection.stats": keyed("stat", r.viabilitySection.stats),
+    "transformationsSection.eyebrow": r.transformationsSection.eyebrow,
+    "transformationsSection.heading": r.transformationsSection.heading,
+    "transformationsSection.description": r.transformationsSection.description,
+    "transformationsSection.transformations": keyed(
+      "transformation",
+      r.transformationsSection.transformations,
+    ),
+    assuranceSection: {
+      ...r.assuranceSection,
+      pillars: keyed("assurancePillar", r.assuranceSection.pillars),
+    },
+  };
+  // Alt text only where a photo is uploaded; the photos themselves stay.
+  if (has("hero.image")) set["hero.image.alt"] = r.hero.imageAlt;
+  if (has("viabilitySection.image")) {
+    set["viabilitySection.image.alt"] = r.viabilitySection.imageAlt;
+  }
+  if (has("transformationsSection.image")) {
+    set["transformationsSection.image.alt"] = r.transformationsSection.imageAlt;
+  }
+  return set;
+}
+
 function locationsFields(doc: Record<string, unknown>) {
   const p = realLocationsPageText;
   const set: Record<string, unknown> = galleryOnly
@@ -144,7 +194,7 @@ function locationsFields(doc: Record<string, unknown>) {
 
 async function main() {
   const docs: Record<string, unknown>[] = await client.fetch(
-    `*[_type in ["aboutPage", "locationsPage"]]`,
+    `*[_type in ["aboutPage", "locationsPage", "hospitalityPage"]]`,
   );
   const backupDir = path.join(process.cwd(), "sanity", "backups");
   mkdirSync(backupDir, { recursive: true });
@@ -157,9 +207,13 @@ async function main() {
   const tx = client.transaction();
   for (const doc of docs) {
     const id = doc._id as string;
-    if (galleryOnly && doc._type === "aboutPage") continue;
+    if (galleryOnly && doc._type !== "locationsPage") continue;
     const set =
-      doc._type === "aboutPage" ? aboutFields(doc) : locationsFields(doc);
+      doc._type === "aboutPage"
+        ? aboutFields(doc)
+        : doc._type === "hospitalityPage"
+          ? hospitalityFields(doc)
+          : locationsFields(doc);
     tx.patch(id, (p) => p.set(set));
     console.log(
       `  ${dryRun ? "would update" : "✓"} ${id}: ${Object.keys(set).length} text fields`,

@@ -9,9 +9,9 @@ import { HospitalityTransformationsSection } from "../components/HospitalityTran
 import { HospitalityViabilitySection } from "../components/HospitalityViabilitySection";
 
 export const metadata: Metadata = {
-  title: "For Hospitality | Kynta Wellness Group",
+  title: "For Hotels | Kynta Wellness Group",
   description:
-    "Elevating Luxury Hospitality Through Restorative Architecture. Turnkey governance and 100% operational integration for premier hotels and resort sanctuaries.",
+    "Kynta Wellness runs Ayurveda-rooted spas inside six hotels and resorts in Himachal Pradesh and Rajasthan. Spa management, spa design and products for your property.",
 };
 
 export default async function ForHospitalityPage() {
