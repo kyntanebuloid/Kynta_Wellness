@@ -41,7 +41,7 @@ export default async function PartnerPage() {
         <HospitalityAssuranceSection data={hospitality?.assuranceSection} />
         <section className="w-full bg-kynta-teal-dark py-16 md:py-20">
           <div className="container-site text-center text-white">
-            <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-white/70 mb-3">
+            <p className="section-label font-semibold tracking-[0.16em] uppercase text-white/70 mb-3">
               Let&apos;s Talk
             </p>
             <h2 className="font-serif text-3xl lg:text-[40px] leading-[1.2] mb-4 max-w-2xl mx-auto">

@@ -123,7 +123,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
               style={{ backgroundColor: "var(--kynta-gold)" }}
               aria-hidden="true"
             />
-            <span className="text-[13px] sm:text-[14px] font-semibold tracking-[0.14em] uppercase text-kynta-warm-gray">
+            <span className="section-label font-semibold tracking-[0.14em] uppercase text-kynta-warm-gray">
               {location.breadcrumbEyebrow}
             </span>
           </div>
@@ -240,7 +240,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                       <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-kynta-warm-gray mb-1">
                         {info.label}
                       </p>
-                      <p className="text-[13px] sm:text-[14px] leading-[1.5] text-kynta-charcoal font-medium">
+                      <p className="section-label leading-[1.5] text-kynta-charcoal font-medium">
                         {info.title}
                       </p>
                     </div>
@@ -361,7 +361,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
                   {facilityIconMap[facility.icon] || facilityIconMap.sun}
                 </div>
                 <div>
-                  <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-charcoal leading-tight mb-0.5">
+                  <p className="section-label font-semibold text-kynta-charcoal leading-tight mb-0.5">
                     {facility.title}
                   </p>
                   <p className="text-[11px] sm:text-[12px] text-kynta-warm-gray leading-snug">

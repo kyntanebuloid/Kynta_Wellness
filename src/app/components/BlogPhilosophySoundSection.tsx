@@ -31,7 +31,7 @@ export function BlogPhilosophySoundSection({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-start">
           <div className="flex flex-col">
             <div className="mb-8">
-              <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-2">
+              <p className="section-label font-semibold text-kynta-rust tracking-wide mb-2">
                 {text(data?.eyebrow, d.eyebrow)}
               </p>
               <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">
@@ -72,7 +72,7 @@ export function BlogPhilosophySoundSection({
 
           <div className="flex flex-col">
             <div className="mb-8">
-              <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-2">
+              <p className="section-label font-semibold text-kynta-rust tracking-wide mb-2">
                 {text(data?.soundEyebrow, d.soundEyebrow)}
               </p>
               <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal font-normal mb-3">

@@ -23,7 +23,7 @@ function SectionHeading({
     <div
       className={`max-w-2xl mb-10 md:mb-12 ${center ? "mx-auto text-center" : ""}`}
     >
-      <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-3">
+      <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-3">
         {eyebrow}
       </p>
       <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
@@ -256,7 +256,7 @@ export function AboutCtaSection({
   return (
     <section className="w-full bg-kynta-teal-dark py-16 md:py-20">
       <div className="container-site text-center text-white">
-        <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.18em] uppercase text-white/70 mb-3">
+        <p className="section-label font-semibold tracking-[0.18em] uppercase text-white/70 mb-3">
           {text(data?.eyebrow, d.eyebrow)}
         </p>
         <h2 className="font-serif text-3xl lg:text-[40px] leading-[1.2] mb-4 max-w-2xl mx-auto">

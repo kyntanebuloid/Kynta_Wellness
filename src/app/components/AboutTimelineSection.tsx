@@ -170,7 +170,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
     >
       <div className="container-site">
         <div className="text-center mb-14 md:mb-20">
-          <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-3">
+          <p className="section-label font-semibold text-kynta-rust tracking-wide mb-3">
             {eyebrow}
           </p>
           <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4">
@@ -217,7 +217,7 @@ export function AboutTimelineSection({ data }: AboutTimelineSectionProps) {
                   <h3 className="font-serif text-lg md:text-xl text-kynta-charcoal leading-snug mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-[13px] sm:text-[14px] leading-[1.7] text-kynta-warm-gray mb-3">
+                  <p className="section-label leading-[1.7] text-kynta-warm-gray mb-3">
                     {item.description}
                   </p>
                   <div

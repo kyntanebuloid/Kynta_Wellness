@@ -69,7 +69,7 @@ export function ServicesSection({ data }: ServicesSectionProps) {
       <div className="container-site">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-2">
+            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-2">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl md:text-4xl text-kynta-charcoal">

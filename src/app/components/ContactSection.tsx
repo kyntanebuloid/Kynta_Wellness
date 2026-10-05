@@ -235,7 +235,7 @@ export function ContactSection({
         <div className="mb-12 sm:mb-14 lg:mb-16">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-kynta-rust flex-shrink-0" />
-            <span className="text-[13px] sm:text-[14px] font-semibold tracking-wider uppercase text-kynta-rust">
+            <span className="section-label font-semibold tracking-wider uppercase text-kynta-rust">
               {hero.eyebrow}
             </span>
           </div>
@@ -250,7 +250,7 @@ export function ContactSection({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <div className="lg:col-span-5 flex flex-col">
             <div className="mb-6">
-              <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-1.5">
+              <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-1.5">
                 {desks.eyebrow}
               </p>
               <h2 className="font-serif text-[26px] sm:text-[30px] md:text-[32px] leading-tight text-kynta-teal-dark font-normal mb-2.5">
@@ -407,7 +407,7 @@ export function ContactSection({
           </div>
 
           <div className="lg:col-span-7 bg-white rounded-[16px] p-6 sm:p-8 md:p-10 border border-kynta-border/40 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
-            <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
+            <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-2">
               {form.eyebrow}
             </p>
             <h2 className="font-serif text-[28px] sm:text-[34px] leading-tight text-kynta-teal-dark font-normal mb-2.5">

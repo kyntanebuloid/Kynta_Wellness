@@ -682,7 +682,7 @@ export function ReservationSection({
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-[44%_1fr] gap-7">
           <div className="flex flex-col">
-            <p className="text-[13px] sm:text-[14px] font-bold tracking-[0.15em] uppercase text-kynta-rust mb-3">
+            <p className="section-label font-bold tracking-[0.15em] uppercase text-kynta-rust mb-3">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[34px] leading-[1.2] text-kynta-charcoal mb-4">

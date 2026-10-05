@@ -198,7 +198,7 @@ export function GuestPathSection({
       <section className="w-full bg-kynta-section-bg pt-16 md:pt-20 pb-16 md:pb-20">
         <div className="container-site">
           <div className="text-center mb-10 md:mb-12">
-            <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-3">
+            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mx-auto max-w-xl mb-4 whitespace-pre-line">

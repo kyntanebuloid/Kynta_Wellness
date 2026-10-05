@@ -41,7 +41,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide">
+              <span className="section-label font-semibold text-kynta-rust tracking-wide">
                 {eyebrow}
               </span>
             </div>

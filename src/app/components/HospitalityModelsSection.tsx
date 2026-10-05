@@ -124,7 +124,7 @@ export function HospitalityModelsSection({
       <div className="container-site">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12 md:mb-16">
           <div>
-            <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-3">
+            <p className="section-label font-semibold text-kynta-rust tracking-wide mb-3">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 max-w-xl">

@@ -255,7 +255,7 @@ export function ExperiencePillarsSection({
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-12 md:mb-14">
           <div>
-            <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-4">
+            <p className="section-label font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-4">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.22] text-kynta-charcoal">

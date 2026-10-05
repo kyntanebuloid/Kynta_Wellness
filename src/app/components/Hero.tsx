@@ -65,7 +65,7 @@ export function Hero({ data }: HeroProps) {
                   className="inline-block w-2 h-2 rounded-full bg-kynta-gold"
                   aria-hidden="true"
                 />
-                <span className="text-[13px] sm:text-[14px] tracking-wide text-kynta-charcoal bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full font-semibold">
+                <span className="section-label tracking-wide text-kynta-charcoal bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full font-semibold">
                   {eyebrow}
                 </span>
               </div>

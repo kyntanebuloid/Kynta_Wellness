@@ -187,3 +187,25 @@ html[data-low-power] #hero .wisp {
   transform-origin: left center;
   will-change: transform;
 }
+
+/* ── Section labels ("For Hotel Owners", "Our Treatments", …) ───────────
+   The small line above each section heading. One class for the whole site
+   (used as className="section-label"), so the size is changed here only.
+   Was 13px on phones / 14px elsewhere; now 2× on phones and up to 2.5× on
+   desktop. */
+.section-label {
+  font-size: 26px; /* phones: 2 × 13px */
+  line-height: 1.15;
+}
+
+@media (min-width: 640px) {
+  .section-label {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-label {
+    font-size: 35px; /* desktop: 2.5 × 14px */
+  }
+}
