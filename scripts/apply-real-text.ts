@@ -14,7 +14,10 @@ import path from "node:path";
 import { createClient } from "@sanity/client";
 import { config } from "dotenv";
 import { aboutDefaults } from "../src/content/about";
-import { realHospitalityText } from "../src/content/real-hospitality";
+import {
+  realHospitalityText,
+  realPartnershipText,
+} from "../src/content/real-hospitality";
 import {
   realLocationsPageText,
   realLocationText,
@@ -59,6 +62,7 @@ function aboutFields(doc: Record<string, unknown>) {
     "hero.imageCaption": a.hero.imageCaption,
     "hero.badgeLabel": a.hero.badgeLabel,
     "hero.badgeText": a.hero.badgeText,
+    "hero.secondaryCta": a.hero.secondaryCta,
     "hero.stats": keyed("stat", a.hero.stats),
     "triadSection.eyebrow": a.triadSection.eyebrow,
     "triadSection.heading": a.triadSection.heading,
@@ -194,7 +198,7 @@ function locationsFields(doc: Record<string, unknown>) {
 
 async function main() {
   const docs: Record<string, unknown>[] = await client.fetch(
-    `*[_type in ["aboutPage", "locationsPage", "hospitalityPage"]]`,
+    `*[_type in ["aboutPage", "locationsPage", "hospitalityPage", "homepage"]]`,
   );
   const backupDir = path.join(process.cwd(), "sanity", "backups");
   mkdirSync(backupDir, { recursive: true });
@@ -213,7 +217,17 @@ async function main() {
         ? aboutFields(doc)
         : doc._type === "hospitalityPage"
           ? hospitalityFields(doc)
-          : locationsFields(doc);
+          : doc._type === "homepage"
+            ? {
+                partnershipSection: {
+                  ...realPartnershipText,
+                  services: keyed(
+                    "homepageServiceItem",
+                    realPartnershipText.services,
+                  ),
+                },
+              }
+            : locationsFields(doc);
     tx.patch(id, (p) => p.set(set));
     console.log(
       `  ${dryRun ? "would update" : "✓"} ${id}: ${Object.keys(set).length} text fields`,

@@ -1,48 +1,14 @@
 import Link from "next/link";
+import { realPartnershipText } from "@/content/real-hospitality";
 import type { Homepage } from "@/types/sanity";
 
 interface PartnershipSectionProps {
   data?: Homepage["partnershipSection"];
+  /** Hide the two buttons (e.g. on /partner, where they'd link to itself). */
+  hideButtons?: boolean;
 }
 
-const defaultServices = [
-  {
-    icon: "spatial",
-    title: "Spa Design & Planning",
-    description:
-      "We help you plan the spa rooms, water areas, quiet spaces and the full layout.",
-  },
-  {
-    icon: "management",
-    title: "We Run Your Spa Daily",
-    description:
-      "We do everything: bookings, guest service, supplies, towels and safety checks.",
-  },
-  {
-    icon: "sourcing",
-    title: "Trained Therapists",
-    description:
-      "We hire and train the therapists. We pay them and take care of all their paperwork.",
-  },
-  {
-    icon: "formulation",
-    title: "Our Own Herbal Products",
-    description:
-      "Pure herbal oils and products, even with your hotel's name on them, in eco-friendly glass bottles.",
-  },
-  {
-    icon: "revpash",
-    title: "More Spa Income",
-    description:
-      "Smart booking keeps your spa rooms busy at all hours, so your hotel earns more money.",
-  },
-  {
-    icon: "brand",
-    title: "Better Hotel Reviews",
-    description:
-      "A great spa makes your hotel look better. Our partner hotels get higher ratings on sites like TripAdvisor.",
-  },
-];
+const defaultServices = realPartnershipText.services;
 
 function ServiceIcon({ type }: { type: string }) {
   const common = {
@@ -138,16 +104,18 @@ function ServiceCard({
   );
 }
 
-export function PartnershipSection({ data }: PartnershipSectionProps) {
-  const eyebrow = data?.eyebrow || "For Hotel Owners";
-  const heading = data?.heading || "We run your hotel spa for you.";
-  const description =
-    data?.description ||
-    "Running a spa is hard work. We do it all for you. We plan the space, hire trained therapists, run the spa every day, and help your hotel earn more.";
-  const primaryLabel = data?.primaryCta?.label || "Get Partner Details";
-  const primaryUrl = data?.primaryCta?.url || "/partner";
-  const secondaryLabel = data?.secondaryCta?.label || "Book a Call With Us";
-  const secondaryUrl = data?.secondaryCta?.url || "/contact";
+export function PartnershipSection({
+  data,
+  hideButtons = false,
+}: PartnershipSectionProps) {
+  const r = realPartnershipText;
+  const eyebrow = data?.eyebrow || r.eyebrow;
+  const heading = data?.heading || r.heading;
+  const description = data?.description || r.description;
+  const primaryLabel = data?.primaryCta?.label || r.primaryCta.label;
+  const primaryUrl = data?.primaryCta?.url || r.primaryCta.url;
+  const secondaryLabel = data?.secondaryCta?.label || r.secondaryCta.label;
+  const secondaryUrl = data?.secondaryCta?.url || r.secondaryCta.url;
 
   const services = data?.services?.length
     ? data.services.map((s) => ({
@@ -165,7 +133,7 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 mb-12 md:mb-14">
           <div>
-            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-4">
+            <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-4">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.2] text-white mb-5 whitespace-pre-line">
@@ -175,7 +143,9 @@ export function PartnershipSection({ data }: PartnershipSectionProps) {
               {description}
             </p>
           </div>
-          <div className="flex flex-col justify-end gap-3 md:max-w-sm md:ml-auto">
+          <div
+            className={`flex flex-col justify-end gap-3 md:max-w-sm md:ml-auto ${hideButtons ? "hidden" : ""}`}
+          >
             <Link
               href={primaryUrl}
               className="flex items-center justify-center gap-2 w-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white rounded-md transition-colors"

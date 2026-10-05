@@ -26,7 +26,7 @@ export function LegalPage({
     <article className="w-full bg-[#f7f9f7] py-14 md:py-20">
       <div className="container-site">
         <div className="mx-auto max-w-3xl">
-          <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-3">
+          <p className="text-[13px] sm:text-[14px] font-semibold tracking-[0.16em] uppercase text-kynta-rust mb-3">
             {eyebrow}
           </p>
           <h1 className="font-serif text-[34px] sm:text-[44px] leading-[1.15] text-kynta-charcoal mb-3">

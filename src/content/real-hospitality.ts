@@ -229,3 +229,51 @@ export const realHospitalityText = {
     ],
   } satisfies Section<"assuranceSection">,
 };
+
+/** The "For Hotel Owners" section on the home page and /partner. */
+export const realPartnershipText = {
+  eyebrow: "For Hotel Owners",
+  heading: "We run your hotel spa for you.",
+  description:
+    "Running a spa takes time and skill. Kynta can plan it, staff it with trained therapists and run it every day, with the full Kynta menu, online booking and a membership that brings guests back.",
+  primaryCta: { label: "Get Partner Details", url: "/partner" },
+  secondaryCta: { label: "Book a Call With Us", url: "/contact?tier=turnkey" },
+  services: [
+    {
+      icon: "spatial",
+      title: "Spa Design & Planning",
+      description:
+        "We help you plan treatment rooms, couple's suites and a calm, private journey for every guest.",
+    },
+    {
+      icon: "management",
+      title: "We Run Your Spa Daily",
+      description:
+        "Day-to-day spa operations, from guest bookings and service to supplies.",
+    },
+    {
+      icon: "sourcing",
+      title: "Trained Therapists",
+      description:
+        "Skilled Kynta therapists who tailor every treatment and follow our professional standards, with draping throughout.",
+    },
+    {
+      icon: "formulation",
+      title: "The Kynta Menu",
+      description:
+        "22 treatments across five categories, from Ayurvedic massages and facials to Spa Sojourns, at your spa's own price list.",
+    },
+    {
+      icon: "revpash",
+      title: "Online Booking & Payments",
+      description:
+        "Guests book online and pay in full or a 25% advance, with a confirmation email for every booking.",
+    },
+    {
+      icon: "brand",
+      title: "Kynta Revibe Membership",
+      description:
+        "A prepaid spa membership with Peace, Serenity and Tranquility plans that brings guests and locals back to your spa.",
+    },
+  ],
+};

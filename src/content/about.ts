@@ -123,14 +123,15 @@ export const aboutDefaults = {
       "Kynta Wellness is a luxury wellness and spa brand dedicated to holistic healing and deep relaxation. Rooted in Ayurvedic wisdom, it offers therapeutic massages and rejuvenating spa experiences designed to balance the body, calm the mind and restore inner harmony. Every treatment is thoughtfully curated to promote well-being, relaxation and renewal, creating a serene escape from everyday stress.",
     philosophyLabel: "Explore Our Philosophy",
 
-    secondaryCta: { label: "Inquire With Concierge", url: "/contact" },
+    secondaryCta: { label: "Talk to Our Team", url: "/contact" },
     image: {
       url: "/about-hero.jpg",
       alt: "Kynta Wellness spa interior",
     },
     imageCaption: "Kynta Wellness",
-    badgeLabel: "Our Values",
-    badgeText: "Balance · Healing · Inner Peace\nHarmony · Vitality",
+    // Empty hides the badge on the photo.
+    badgeLabel: "",
+    badgeText: "",
     stats: [
       {
         value: "6",

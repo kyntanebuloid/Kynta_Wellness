@@ -123,7 +123,7 @@ export function LocationDetailHero({ location }: LocationDetailHeroProps) {
               style={{ backgroundColor: "var(--kynta-gold)" }}
               aria-hidden="true"
             />
-            <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase text-kynta-warm-gray">
+            <span className="text-[13px] sm:text-[14px] font-semibold tracking-[0.14em] uppercase text-kynta-warm-gray">
               {location.breadcrumbEyebrow}
             </span>
           </div>

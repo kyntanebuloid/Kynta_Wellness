@@ -41,7 +41,7 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="text-sm font-medium text-kynta-rust tracking-wide">
+              <span className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide">
                 {eyebrow}
               </span>
             </div>
@@ -126,44 +126,46 @@ export function AboutHeroSection({ data }: AboutHeroSectionProps) {
               </div>
             </div>
 
-            <div
-              className="absolute -bottom-6 left-0 lg:-left-6 flex items-center gap-3.5 bg-white px-5 py-4 z-10"
-              style={{
-                borderRadius: "12px",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                maxWidth: "280px",
-              }}
-            >
+            {(badgeLabel || badgeText) && (
               <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: "#f7ddd0" }}
+                className="absolute -bottom-6 left-0 lg:-left-6 flex items-center gap-3.5 bg-white px-5 py-4 z-10"
+                style={{
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                  maxWidth: "280px",
+                }}
               >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-kynta-rust"
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: "#f7ddd0" }}
                 >
-                  <title>Heritage</title>
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-              </div>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-kynta-rust"
+                  >
+                    <title>Heritage</title>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                </div>
 
-              <div>
-                <p className="text-[10px] font-semibold tracking-[0.12em] uppercase text-kynta-rust mb-0.5">
-                  {badgeLabel}
-                </p>
-                <p className="text-[13px] font-medium text-kynta-charcoal leading-snug whitespace-pre-line">
-                  {badgeText}
-                </p>
+                <div>
+                  <p className="text-[10px] font-semibold tracking-[0.12em] uppercase text-kynta-rust mb-0.5">
+                    {badgeLabel}
+                  </p>
+                  <p className="text-[13px] font-medium text-kynta-charcoal leading-snug whitespace-pre-line">
+                    {badgeText}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 

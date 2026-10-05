@@ -32,13 +32,13 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
     >
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          <div className="lg:col-span-7 flex flex-col items-start">
+          <div className="lg:col-span-6 flex flex-col items-start">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#eee9df] border border-kynta-border/50 mb-6">
               <span
                 className="w-1.5 h-1.5 rounded-full bg-kynta-rust flex-shrink-0"
                 aria-hidden="true"
               />
-              <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
+              <span className="text-[13px] sm:text-[14px] font-semibold tracking-wider uppercase text-kynta-rust">
                 {eyebrow}
               </span>
             </div>
@@ -147,13 +147,13 @@ export function HospitalityHeroSection({ data }: HospitalityHeroSectionProps) {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-[430px] aspect-[405/278] rounded-[22px] sm:rounded-[26px] overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.09)]">
+          <div className="lg:col-span-6 flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-[640px] aspect-[4/3] rounded-[22px] sm:rounded-[26px] overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.09)]">
               <Image
                 src={photo}
                 alt={photoAlt}
                 fill
-                sizes="(max-width: 768px) 100vw, 430px"
+                sizes="(max-width: 1024px) 100vw, 640px"
                 priority
                 className="object-cover"
               />

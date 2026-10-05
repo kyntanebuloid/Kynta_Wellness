@@ -111,7 +111,7 @@ export function HospitalityAssuranceSection({
     >
       <div className="container-site">
         <div className="mb-12 md:mb-16">
-          <p className="text-sm font-medium text-[#a5c8c2] tracking-wide mb-3">
+          <p className="text-[13px] sm:text-[14px] font-semibold text-[#a5c8c2] tracking-wide mb-3">
             {eyebrow}
           </p>
           <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-white mb-4">

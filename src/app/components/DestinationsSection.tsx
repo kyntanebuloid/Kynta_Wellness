@@ -186,7 +186,7 @@ export function DestinationsSection({
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-10 md:mb-12">
           <div>
-            <p className="text-sm font-medium text-kynta-rust tracking-wide mb-4">
+            <p className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide mb-4">
               {eyebrow}
             </p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 whitespace-pre-line">

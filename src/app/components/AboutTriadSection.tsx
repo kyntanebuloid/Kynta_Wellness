@@ -164,7 +164,7 @@ export function AboutTriadSection({ data }: AboutTriadSectionProps) {
                 }}
                 aria-hidden="true"
               />
-              <span className="text-sm font-medium text-kynta-rust tracking-wide">
+              <span className="text-[13px] sm:text-[14px] font-semibold text-kynta-rust tracking-wide">
                 {eyebrow}
               </span>
             </div>

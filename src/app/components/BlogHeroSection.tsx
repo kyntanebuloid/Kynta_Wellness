@@ -120,7 +120,7 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
             className="w-1.5 h-1.5 rounded-full bg-kynta-rust flex-shrink-0"
             aria-hidden="true"
           />
-          <span className="text-xs font-semibold tracking-wider uppercase text-kynta-rust">
+          <span className="text-[13px] sm:text-[14px] font-semibold tracking-wider uppercase text-kynta-rust">
             {text(data?.eyebrow, d.eyebrow)}
           </span>
         </div>
