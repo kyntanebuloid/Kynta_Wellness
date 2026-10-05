@@ -27,6 +27,8 @@ type SpaFacts = {
   address: string;
   /** Leave out when the team hasn't confirmed the timings yet. */
   hours?: string;
+  /** Google Maps link for the "Open in Google Maps" button. */
+  mapUrl?: string;
   /** Lowest treatment price on this spa's menu (before tax). */
   fromPrice: number;
   /** Captions for the three photos on this spa's page. */
@@ -48,7 +50,9 @@ const SPAS: Record<string, SpaFacts> = {
     city: "Dharamshala",
     state: "Himachal Pradesh",
     address:
-      "Strawberry Hills, Satobari, near Dal Lake – McLeod Ganj, Dharamshala, Dhial, Himachal Pradesh 176216",
+      "Strawberry Hills, Satobari, at Indraprastha Resort & Spa, near Dal Lake – McLeod Ganj, Dharamshala, Himachal Pradesh 176216",
+    hours: "10:00 – 20:00 Daily",
+    mapUrl: "https://maps.app.goo.gl/xWFtgM8v1NHuA91y8",
     fromPrice: 2000,
     gallery: {
       mainCard: {
@@ -78,6 +82,8 @@ const SPAS: Record<string, SpaFacts> = {
     city: "Dharamshala",
     state: "Himachal Pradesh",
     address: "Dharamshala, Himachal Pradesh",
+    hours: "10:00 – 20:00 Daily",
+    mapUrl: "https://maps.app.goo.gl/kDRuucaVyp9jCcLV9",
     fromPrice: 2000,
     gallery: {
       mainCard: {
@@ -137,7 +143,9 @@ const SPAS: Record<string, SpaFacts> = {
     city: "Pushkar",
     state: "Rajasthan",
     address:
-      "Bhanwar Singh Palace, Village Hokra, Ajmer–Pushkar Bypass, Pushkar, Rajasthan 305022",
+      "Bhanwar Singh Palace, Village Honkra, Ajmer–Pushkar Bypass, Pushkar, Rajasthan 305022",
+    hours: "10:00 – 20:00 Daily",
+    mapUrl: "https://maps.app.goo.gl/uTT5gnz3wQjWiDZT7",
     fromPrice: 2000,
     gallery: {
       mainCard: {
@@ -168,6 +176,8 @@ const SPAS: Record<string, SpaFacts> = {
     state: "Rajasthan",
     address:
       "Brahma Mandir Rd, near Savitri Mata Temple, Pushkar, Rajasthan 305022",
+    hours: "10:00 – 20:00 Daily",
+    mapUrl: "https://maps.app.goo.gl/Z2y34nVU476UeVL89",
     fromPrice: 2000,
     gallery: {
       mainCard: {
@@ -242,6 +252,7 @@ export type RealLocationText = Required<
     | "primaryCta"
   >
 > & {
+  mapUrl?: string;
   services: LocationService[];
   facilities: { icon: LocationFacilityIcon; title: string; subtitle: string }[];
   gallery: {
@@ -260,6 +271,7 @@ export function realLocationText(slug: string): RealLocationText | null {
     address: spa.address,
     hours,
     phone: RESERVATION_PHONE,
+    mapUrl: spa.mapUrl,
     price: `Treatments from ${inr(spa.fromPrice)}`,
     cardDescription: `Massages, facials, couple spa and Spa Sojourns at ${spa.hotel}, rooted in Ayurvedic wisdom.`,
     breadcrumbEyebrow: `KYNTA SPA • ${spa.city.toUpperCase()}, ${spa.state.toUpperCase()}`,

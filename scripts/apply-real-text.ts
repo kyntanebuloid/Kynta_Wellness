@@ -172,6 +172,7 @@ function locationsFields(doc: Record<string, unknown>) {
         [at("name")]: real.name,
         [at("address")]: real.address,
         [at("hours")]: real.hours,
+        ...(real.mapUrl ? { [at("mapUrl")]: real.mapUrl } : {}),
         [at("phone")]: real.phone,
         [at("price")]: real.price,
         [at("cardDescription")]: real.cardDescription,

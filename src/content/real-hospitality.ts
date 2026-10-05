@@ -146,7 +146,7 @@ export const realHospitalityText = {
         metricHighlighted: true,
         title: "Indraprastha Resort",
         description:
-          "Satobari, near Dal Lake and McLeod Ganj. A full Kynta menu for guests exploring Naddi and the Dhauladhar foothills.",
+          "Satobari, near Dal Lake and McLeod Ganj. A full Kynta menu for guests exploring Naddi and the Dhauladhar foothills. Open 10:00 to 20:00 daily.",
         footerLabel: "KYNTA SPA",
       },
       {
@@ -155,7 +155,7 @@ export const realHospitalityText = {
         metricHighlighted: false,
         title: "Asia Spa & Resort",
         description:
-          "In Dharamshala Cantt, minutes from Dal Lake and Naddi View Point, with couple's treatment rooms.",
+          "In Dharamshala Cantt, minutes from Dal Lake and Naddi View Point, with couple's treatment rooms. Open 10:00 to 20:00 daily.",
         footerLabel: "KYNTA SPA",
       },
       {
@@ -182,7 +182,7 @@ export const realHospitalityText = {
         metricHighlighted: true,
         title: "Bhanwar Singh Palace",
         description:
-          "On the Ajmer–Pushkar road at Village Hokra, about ten minutes from Pushkar Lake.",
+          "On the Ajmer–Pushkar road at Village Honkra, about ten minutes from Pushkar Lake. Open 10:00 to 20:00 daily.",
         footerLabel: "KYNTA SPA",
       },
       {
@@ -191,7 +191,7 @@ export const realHospitalityText = {
         metricHighlighted: false,
         title: "Rawai Luxury Tents",
         description:
-          "On Brahma Mandir Road, a five-minute walk from the Brahma and Savitri Mata temples.",
+          "On Brahma Mandir Road, a five-minute walk from the Brahma and Savitri Mata temples. Open 10:00 to 20:00 daily.",
         footerLabel: "KYNTA SPA",
       },
     ],
