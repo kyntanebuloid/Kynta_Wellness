@@ -12,12 +12,12 @@ const defaultServices = realPartnershipText.services;
 
 function ServiceIcon({ type }: { type: string }) {
   const common = {
-    width: 18,
-    height: 18,
+    width: 16,
+    height: 16,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.5,
+    strokeWidth: 2,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
@@ -91,7 +91,11 @@ function ServiceCard({
 }) {
   return (
     <div className="flex flex-col rounded-[5px] border border-white/10 bg-white/[0.06] p-[18px]">
-      <div className="w-9 h-9 rounded-md bg-white/[0.08] border border-white/10 flex items-center justify-center text-kynta-teal-light mb-4">
+      {/* Same icon style as the "Kynta Standard" cards on For Hotels. */}
+      <div
+        className="w-9 h-9 rounded-[8px] flex items-center justify-center flex-shrink-0 text-[#6ee7b7] mb-5"
+        style={{ backgroundColor: "#0d5f66" }}
+      >
         <ServiceIcon type={icon} />
       </div>
       <h3 className="font-serif text-[16px] text-white leading-snug mb-2.5">
@@ -133,9 +137,7 @@ export function PartnershipSection({
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 mb-12 md:mb-14">
           <div>
-            <p className="section-label text-kynta-rust mb-4">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-4">{eyebrow}</p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.2] text-white mb-5 whitespace-pre-line">
               {heading}
             </h2>
