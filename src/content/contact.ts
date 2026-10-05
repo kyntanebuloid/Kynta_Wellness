@@ -85,18 +85,13 @@ export const contactPageDefaults = {
     eyebrow: "CONTACT DETAILS",
     heading: "Speak to Our Team",
     description: "Call, message or email us, whichever is easiest for you.",
+    // One number for calls and WhatsApp (the WhatsApp button uses it too).
     phones: [
       {
         kind: "phone",
-        label: "BOOKINGS & ENQUIRIES",
+        label: "CALL OR WHATSAPP",
         number: "+91 7250333494",
-        note: "07:00 – 22:00 IST",
-      },
-      {
-        kind: "whatsapp",
-        label: "WHATSAPP",
-        number: "+91 98200 48300",
-        note: "QUICK REPLY",
+        note: "10:00 – 20:00 IST",
       },
     ] satisfies ContactPhone[],
     emailHeading: "EMAIL",
@@ -112,7 +107,7 @@ export const contactPageDefaults = {
     imageCaption: "A Kynta Wellness treatment room",
     hoursHeading: "OPENING HOURS",
     hoursText:
-      "Our team is available by phone from 07:00 to 22:00 IST, seven days a week. Emails and messages sent through this page are answered within one working day.",
+      "Our team is available by phone and WhatsApp from 10:00 to 20:00 IST. Emails and messages sent through this page are answered within one working day.",
   },
   form: {
     eyebrow: "GET IN TOUCH",
