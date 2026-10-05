@@ -129,6 +129,10 @@ function BookingDetailModal({
   booking: AdminBookingListItem | null;
   onClose: () => void;
 }) {
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+  const [cancelSuccess, setCancelSuccess] = useState(false);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
@@ -141,6 +145,39 @@ function BookingDetailModal({
       document.body.style.overflow = previousOverflow;
     };
   }, [onClose]);
+
+  const handleCancelBooking = async () => {
+    if (!booking || booking.status === "cancelled") return;
+    if (!window.confirm("Cancel this booking? Guest will be notified by email."))
+      return;
+
+    setIsCancelling(true);
+    setCancelError(null);
+    setCancelSuccess(false);
+
+    try {
+      const res = await fetch(
+        `/api/admin/bookings/${booking.id}/cancel`,
+        { method: "POST" },
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCancelError(data.error || "Failed to cancel booking");
+        return;
+      }
+
+      setCancelSuccess(true);
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      setCancelError(err instanceof Error ? err.message : "Network error");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-40 bg-kynta-charcoal/40 flex items-end sm:items-center justify-center sm:p-6">
@@ -278,6 +315,30 @@ function BookingDetailModal({
               />
             )}
           </dl>
+        )}
+
+        {/* Cancel booking section */}
+        {booking && booking.status !== "cancelled" && (
+          <div className="border-t border-kynta-border/60 px-5 sm:px-6 py-5">
+            {cancelSuccess ? (
+              <div className="p-3 bg-kynta-badge-green text-kynta-teal-dark text-[13px] rounded-md mb-3">
+                ✓ Booking cancelled. Guest notified via email.
+              </div>
+            ) : null}
+            {cancelError ? (
+              <div className="p-3 bg-kynta-rust/5 text-kynta-rust text-[13px] rounded-md mb-3">
+                ✗ {cancelError}
+              </div>
+            ) : null}
+            <button
+              type="button"
+              onClick={handleCancelBooking}
+              disabled={isCancelling || cancelSuccess}
+              className="w-full px-4 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-rust hover:bg-kynta-rust/90 disabled:bg-kynta-rust/50 disabled:cursor-not-allowed rounded-md transition-colors"
+            >
+              {isCancelling ? "Cancelling..." : "Cancel This Booking"}
+            </button>
+          </div>
         )}
       </div>
     </div>
