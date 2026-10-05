@@ -24,7 +24,8 @@
     "blog:delete": "npx tsx scripts/delete-blog-post.ts",
     "seed:menus": "npx tsx scripts/seed-spa-menus.ts",
     "seed:experiences": "npx tsx scripts/seed-real-experiences.ts",
-    "apply:real-text": "npx tsx scripts/apply-real-text.ts"
+    "apply:real-text": "npx tsx scripts/apply-real-text.ts",
+    "seed:blog": "npx tsx scripts/seed-real-blog.ts"
   },
   "dependencies": {
     "@sanity/client": "^8.6.1",

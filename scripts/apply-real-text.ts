@@ -14,6 +14,8 @@ import path from "node:path";
 import { createClient } from "@sanity/client";
 import { config } from "dotenv";
 import { aboutDefaults } from "../src/content/about";
+import { locationsPageDefaults } from "../src/content/locations";
+import { realHomeText } from "../src/content/real-home";
 import {
   realHospitalityText,
   realPartnershipText,
@@ -150,6 +152,67 @@ function hospitalityFields(doc: Record<string, unknown>) {
   return set;
 }
 
+// Home page: text only. Cards with photos (services, blog fallback cards)
+// are patched field by field so their photos stay.
+function homepageFields() {
+  const h = realHomeText;
+  const set: Record<string, unknown> = {
+    partnershipSection: {
+      ...realPartnershipText,
+      services: keyed("homepageServiceItem", realPartnershipText.services),
+    },
+    "hero.eyebrow": h.hero.eyebrow,
+    "hero.headline": h.hero.headline,
+    "hero.headlineItalic": h.hero.headlineItalic,
+    "hero.subtitle": h.hero.subtitle,
+    "hero.primaryCta.label": h.hero.primaryCta.label,
+    "hero.secondaryCta.label": h.hero.secondaryCta.label,
+    "servicesSection.eyebrow": h.servicesSection.eyebrow,
+    "servicesSection.heading": h.servicesSection.heading,
+    "destinationsSection.eyebrow": h.destinationsSection.eyebrow,
+    "destinationsSection.heading": h.destinationsSection.heading,
+    "destinationsSection.description": h.destinationsSection.description,
+    "guestPathSection.eyebrow": h.guestPathSection.eyebrow,
+    "guestPathSection.heading": h.guestPathSection.heading,
+    "guestPathSection.description": h.guestPathSection.description,
+    "guestPathSection.steps": keyed("step", h.guestPathSection.steps),
+    "guestPathSection.stats": keyed("stat", h.guestPathSection.stats),
+    "guestPathSection.trustedByHeading": h.guestPathSection.trustedByHeading,
+    // The site shows the Locations page hotels; keep the typed list real too.
+    "guestPathSection.hotelNames": locationsPageDefaults.locations.map(
+      (l) => l.name,
+    ),
+    "reservationSection.eyebrow": h.reservationSection.eyebrow,
+    "reservationSection.heading": h.reservationSection.heading,
+    "reservationSection.description": h.reservationSection.description,
+    "reservationSection.formHeading": h.reservationSection.formHeading,
+    "reservationSection.infoCards": keyed(
+      "infoCard",
+      h.reservationSection.infoCards,
+    ),
+    "reservationSection.whatsapp.title": h.reservationSection.whatsapp.title,
+    "reservationSection.whatsapp.subtitle":
+      h.reservationSection.whatsapp.subtitle,
+    "reservationSection.whatsapp.buttonLabel":
+      h.reservationSection.whatsapp.buttonLabel,
+    "journalSection.eyebrow": h.journalSection.eyebrow,
+    "journalSection.heading": h.journalSection.heading,
+    "journalSection.allArticlesLink.label":
+      h.journalSection.allArticlesLink.label,
+  };
+  h.servicesSection.services.forEach((service, i) => {
+    for (const [field, value] of Object.entries(service)) {
+      set[`servicesSection.services[${i}].${field}`] = value;
+    }
+  });
+  h.journalSection.articles.forEach((article, i) => {
+    for (const [field, value] of Object.entries(article)) {
+      set[`journalSection.articles[${i}].${field}`] = value;
+    }
+  });
+  return set;
+}
+
 function locationsFields(doc: Record<string, unknown>) {
   const p = realLocationsPageText;
   const set: Record<string, unknown> = galleryOnly
@@ -219,15 +282,7 @@ async function main() {
         : doc._type === "hospitalityPage"
           ? hospitalityFields(doc)
           : doc._type === "homepage"
-            ? {
-                partnershipSection: {
-                  ...realPartnershipText,
-                  services: keyed(
-                    "homepageServiceItem",
-                    realPartnershipText.services,
-                  ),
-                },
-              }
+            ? homepageFields()
             : locationsFields(doc);
     tx.patch(id, (p) => p.set(set));
     console.log(

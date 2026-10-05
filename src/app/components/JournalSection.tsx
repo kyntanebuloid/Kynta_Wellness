@@ -5,6 +5,8 @@ import {
   blogPageDefaults,
   blogPostMeta,
 } from "@/content/blog";
+import { realBlogPosts } from "@/content/real-blog";
+import { realHomeText } from "@/content/real-home";
 import { imageUrl } from "@/content/types";
 import type { Homepage } from "@/types/sanity";
 
@@ -17,35 +19,14 @@ interface JournalSectionProps {
 // The same stand-in photo the blog page uses for a post without one.
 const blogFallbackImage = blogPageDefaults.inquiriesSection.articles[0].image;
 
-const defaultArticles = [
-  {
-    image: "/article-herbal-compress.jpg",
-    category: "Health",
-    meta: "6 Min Read • Ayurveda",
-    title: "How Warm Herbal Bags Help You Recover From Stress",
-    description:
-      "Warm bags filled with herbs relax deep muscles and help lower stress in your body.",
-    href: "/blog",
-  },
-  {
-    image: "/article-spa-design.jpg",
-    category: "Spa Design",
-    meta: "8 Min Read • Design",
-    title: "How to Build a Calm Spa With Nature and Ayurveda",
-    description:
-      "How stone, quiet rooms and natural light help your body relax on its own.",
-    href: "/blog",
-  },
-  {
-    image: "/article-revpash.jpg",
-    category: "Hotel Business",
-    meta: "5 Min Read • Hotels",
-    title: "How a Good Spa Helps a Hotel Earn More",
-    description:
-      "Why smart hotel owners turn empty spa space into busy spas that bring in more money.",
-    href: "/blog",
-  },
-];
+const defaultArticles = realBlogPosts.slice(0, 3).map((post) => ({
+  image: post.image,
+  category: post.category,
+  meta: post.readTime,
+  title: post.title,
+  description: post.excerpt,
+  href: `/blog/${post.slug}`,
+}));
 
 function ArticleCard({
   image,
@@ -113,8 +94,7 @@ function ArticleCard({
 
 export function JournalSection({ data, posts = [] }: JournalSectionProps) {
   const eyebrow = data?.eyebrow || "Kynta Blog";
-  const heading =
-    data?.heading || "Read about herbs, spa design and hotel business.";
+  const heading = data?.heading || realHomeText.journalSection.heading;
   const allArticlesLabel = data?.allArticlesLink?.label || "Read All Articles";
   const allArticlesUrl = data?.allArticlesLink?.url || "/blog";
 
@@ -148,9 +128,7 @@ export function JournalSection({ data, posts = [] }: JournalSectionProps) {
       <div className="container-site">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-10 md:mb-12">
           <div>
-            <p className="section-label text-kynta-rust mb-3">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-3">{eyebrow}</p>
             <h2 className="font-serif text-3xl lg:text-[36px] leading-[1.2] text-kynta-charcoal whitespace-pre-line">
               {heading}
             </h2>

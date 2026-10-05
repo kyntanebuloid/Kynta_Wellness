@@ -1,3 +1,4 @@
+import { BLOG_AUTHOR, realBlogPosts } from "./real-blog";
 import type {
   AccentColor,
   ContentFile,
@@ -148,180 +149,58 @@ export function blogPostMeta(post: BlogPostSummary): string {
     .join(" · ");
 }
 
+/** A blog category button, filled from its Kynta blog post. */
+function blogCategoryDefault(
+  label: string,
+  postIndex: number,
+  badge = "",
+): BlogCategory & { image: ContentImage } {
+  const post = realBlogPosts[postIndex];
+  return {
+    label,
+    image: { url: post.image, alt: post.imageAlt },
+    badge,
+    category: post.category,
+    issue: "",
+    readTime: post.readTime,
+    title: post.title,
+    description: post.excerpt,
+    authorInitials: "KW",
+    authorName: BLOG_AUTHOR.toUpperCase(),
+    authorRole: "",
+    url: `/blog/${post.slug}`,
+    linkLabel: "READ ARTICLE",
+  };
+}
+
 export const blogPageDefaults = {
   hero: {
-    eyebrow: "THE KYNTA SANCTUARY GAZETTE — VOL. IV",
-    heading:
-      "Treatises on Stillness, Botanical Formulations & Restorative Space.",
+    eyebrow: "THE KYNTA JOURNAL",
+    heading: "Notes on Ayurveda, Massage and Restful Living.",
     subheading:
-      "Dispatches from our Ayurvedic practitioners, spatial masterplanners, and apothecary artisans exploring the intersection of Vedic healing, circadian biology, and contemporary architecture.",
+      "Stories from Kynta Wellness on Ayurvedic care, mindful rest and the spaces designed for it, with the treatments from our spa menu.",
     categories: [
-      {
-        label: "ALL ESSAYS",
-        image: {
-          url: "/blog-featured-kashayam.jpg",
-          alt: "Ayurvedic botanical oil extraction with golden elixir dropper into hammered bronze bowl",
-        },
-        badge: "COVER MONOGRAPH",
-        category: "BOTANICAL APOTHECARY",
-        issue: "ISSUE 28",
-        readTime: "8 MIN READ",
-        title:
-          "The Alchemy of Fresh Wildcrafted Botanicals: Seasonal Kashayams in High-Stress Restoration",
-        description:
-          "Why fresh-pressed decoctions and artisanal marma formulations yield biological equilibrium far beyond standardized extracts. Dr. Ananya Varma details our 48-hour wildcrafting harvest protocols in the Nilgiri foothills.",
-        authorInitials: "AV",
-        authorName: "DR. ANANYA VARMA",
-        authorRole: "Chief Vaidya & Botanical Formulation Director",
-        url: "",
-        linkLabel: "READ TREATISE",
-      },
-      {
-        label: "BOTANICAL APOTHECARY",
-        image: {
-          url: "/article-herbal-compress.jpg",
-          alt: "Warm herbal compress bundles",
-        },
-        badge: "APOTHECARY NOTES",
-        category: "BOTANICAL APOTHECARY",
-        issue: "ISSUE 27",
-        readTime: "6 MIN READ",
-        title: "How Warm Herbal Compresses Help the Body Recover From Stress",
-        description:
-          "Warm bundles filled with herbs relax deep muscles and help lower stress in the body.",
-        authorInitials: "HN",
-        authorName: "DR. HARISH NAMBOODIRI",
-        authorRole: "Chief Ayurvedic Vaidya",
-        url: "",
-        linkLabel: "READ TREATISE",
-      },
-      {
-        label: "SANCTUARY ARCHITECTURE",
-        image: {
-          url: "/inquiry-architecture.jpg",
-          alt: "Serene stepped courtyard pool garden with stone walkway and pergola",
-        },
-        badge: "ARCHITECTURE NOTE",
-        category: "SANCTUARY ARCHITECTURE",
-        issue: "ISSUE 26",
-        readTime: "6 MIN READ",
-        title:
-          "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries",
-        description:
-          "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.",
-        authorInitials: "DS",
-        authorName: "DEVENDRA SENGUPTA",
-        authorRole: "Head of Spatial Architecture",
-        url: "",
-        linkLabel: "READ ARCHITECTURE NOTE",
-      },
-      {
-        label: "CIRCADIAN SOMATICS",
-        image: {
-          url: "/timeline-kerala.jpg",
-          alt: "Misty herbal plantation terraces at dawn",
-        },
-        badge: "FIELD NOTE",
-        category: "CIRCADIAN SOMATICS",
-        issue: "ISSUE 25",
-        readTime: "4 MIN READ",
-        title: "On the Sacred Stillness of Bramha Muhurta",
-        description:
-          "The ninety minutes prior to sunrise possess a rarefied rhythm. When meditating before ambient light saturates the courtyard, cellular metabolic tension settles into genuine rest.",
-        authorInitials: "SN",
-        authorName: "VAIDYA SURESH NAIR",
-        authorRole: "Kumarakom Retreat",
-        url: "",
-        linkLabel: "READ FIELD NOTE",
-      },
-      {
-        label: "AYURVEDIC SCIENCE",
-        image: {
-          url: "/inquiry-ayurveda.jpg",
-          alt: "Traditional warm bronze oil vessel with red linen cloth and rolled towels",
-        },
-        badge: "CLINICAL INSIGHT",
-        category: "AYURVEDIC SCIENCE",
-        issue: "ISSUE 24",
-        readTime: "7 MIN READ",
-        title: "Circadian Chronobiology & The Art of the Evening Abhyanga",
-        description:
-          "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.",
-        authorInitials: "HN",
-        authorName: "DR. HARISH NAMBOODIRI",
-        authorRole: "Chief Ayurvedic Vaidya",
-        url: "",
-        linkLabel: "READ CLINICAL INSIGHT",
-      },
-      {
-        label: "VAIDYA CASE STUDIES",
-        image: {
-          url: "/inquiry-hydrotherapy.jpg",
-          alt: "Calm stone thermal hydro plunge pool with waterfall and loungers",
-        },
-        badge: "CASE STUDY",
-        category: "VAIDYA CASE STUDIES",
-        issue: "ISSUE 23",
-        readTime: "5 MIN READ",
-        title:
-          "Thermal Transitions: The Physiological Protocol of Salt Grottos",
-        description:
-          "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.",
-        authorInitials: "HN",
-        authorName: "DR. HARISH NAMBOODIRI",
-        authorRole: "Chief Ayurvedic Vaidya",
-        url: "",
-        linkLabel: "READ CASE STUDY",
-      },
+      blogCategoryDefault("ALL ESSAYS", 0, "LATEST ARTICLE"),
+      blogCategoryDefault("BOTANICAL APOTHECARY", 0),
+      blogCategoryDefault("SANCTUARY ARCHITECTURE", 1),
+      blogCategoryDefault("CIRCADIAN SOMATICS", 2),
+      blogCategoryDefault("AYURVEDIC SCIENCE", 3),
+      blogCategoryDefault("VAIDYA CASE STUDIES", 4),
     ],
   },
   inquiriesSection: {
-    eyebrow: "PEER-REVIEWED FIELDWORK",
-    heading: "Recent Inquiries & Protocols",
-    note: "REFLECTING 2024–2025 SANCTUARY TRIALS",
-    articles: [
-      {
-        image: {
-          url: "/inquiry-architecture.jpg",
-          alt: "Serene stepped courtyard pool garden with stone walkway and pergola",
-        },
-        tag: "ARCHITECTURE",
-        meta: "SANCTUARY ARCHITECTURE • 6 MIN READ",
-        title:
-          "Acoustic Silence and Sub-24dB Spatial Attenuation in Luxury Sanctuaries",
-        description:
-          "How porous limestone, stepped courtyards, and subterranean water circuits recalibrate autonomic nervous system reactivity.",
-        linkLabel: "READ ARCHITECTURE NOTE",
-        url: "",
-      },
-      {
-        image: {
-          url: "/inquiry-ayurveda.jpg",
-          alt: "Traditional warm bronze oil vessel with red linen cloth and rolled towels",
-        },
-        tag: "AYURVEDIC SCIENCE",
-        meta: "AYURVEDIC SCIENCE • 7 MIN READ",
-        title: "Circadian Chronobiology & The Art of the Evening Abhyanga",
-        description:
-          "Aligning therapeutic pressure sequences with pituitary gland melatonin cycles for deep regenerative sleep.",
-        linkLabel: "READ CLINICAL INSIGHT",
-        url: "",
-      },
-      {
-        image: {
-          url: "/inquiry-hydrotherapy.jpg",
-          alt: "Calm stone thermal hydro plunge pool with waterfall and loungers",
-        },
-        tag: "HYDROTHERAPY",
-        meta: "HYDROTHERMAL THERAPY • 5 MIN READ",
-        title:
-          "Thermal Transitions: The Physiological Protocol of Salt Grottos",
-        description:
-          "Balancing hot vapor rooms with cold mineral plunge immersion to stimulate lymphatic vascular flushing.",
-        linkLabel: "READ FIELD REPORT",
-        url: "",
-      },
-    ],
+    eyebrow: "FROM THE JOURNAL",
+    heading: "All Articles",
+    note: "",
+    articles: realBlogPosts.slice(1, 4).map((post) => ({
+      image: { url: post.image, alt: post.imageAlt },
+      tag: post.category,
+      meta: `${post.category} • ${post.readTime}`,
+      title: post.title,
+      description: post.excerpt,
+      linkLabel: "READ ARTICLE",
+      url: `/blog/${post.slug}`,
+    })),
   },
   compendiumSection: {
     eyebrow: "SPECIAL MONOGRAPH COLLECTION",

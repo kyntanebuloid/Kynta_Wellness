@@ -1,3 +1,4 @@
+import { realHomeText } from "@/content/real-home";
 import type { Homepage } from "@/types/sanity";
 
 interface GuestPathSectionProps {
@@ -6,50 +7,9 @@ interface GuestPathSectionProps {
   hotelNames?: string[];
 }
 
-const defaultGuestSteps = [
-  {
-    number: "01",
-    title: "ARRIVE & RELAX",
-    description:
-      "We wash your feet in warm flower water and give you a cool herbal drink.",
-    icon: "footbath",
-  },
-  {
-    number: "02",
-    title: "CHECK-UP",
-    description:
-      "We talk with you about your body, your stress, where it hurts, and the smells you like.",
-    icon: "clipboard",
-  },
-  {
-    number: "03",
-    title: "MASSAGE",
-    description:
-      "Natural oils, warmed just right, used by gentle and skilled hands.",
-    icon: "hands",
-  },
-  {
-    number: "04",
-    title: "REST",
-    description: "Rest in a quiet room with hot Kashmiri tea and dry fruits.",
-    icon: "cup",
-  },
-  {
-    number: "05",
-    title: "CARE AT HOME",
-    description:
-      "We give you simple tips, breathing exercises, and oils to use at home.",
-    icon: "infinity",
-  },
-];
+const defaultGuestSteps = realHomeText.guestPathSection.steps;
 
-const defaultStats = [
-  { value: "18+", label: "Spas" },
-  { value: "9", label: "Cities in India" },
-  { value: "140+", label: "Trained Therapists" },
-  { value: "85k+", label: "Treatments Given" },
-  { value: "98.4%", label: "Happy Guests", highlight: true },
-];
+const defaultStats = realHomeText.guestPathSection.stats;
 
 function StepIcon({ type }: { type: string }) {
   const cls = "text-kynta-rust";
@@ -169,8 +129,7 @@ export function GuestPathSection({
   const eyebrow = data?.eyebrow || "Your Visit in 5 Steps";
   const heading = data?.heading || "A calm visit, from start to finish.";
   const description =
-    data?.description ||
-    "From the moment you arrive until after you go home, we take care of every small detail.";
+    data?.description || realHomeText.guestPathSection.description;
 
   const guestSteps = data?.steps?.length
     ? data.steps.map((s, i) => ({
@@ -183,7 +142,7 @@ export function GuestPathSection({
 
   const stats = data?.stats?.length ? data.stats : defaultStats;
   const trustedByHeading =
-    data?.trustedByHeading || "Trusted by Top Hotels in India";
+    data?.trustedByHeading || realHomeText.guestPathSection.trustedByHeading;
   // The real partner hotels (Locations page) always win over typed names.
   const hotelNames = locationHotelNames.length
     ? locationHotelNames
@@ -198,9 +157,7 @@ export function GuestPathSection({
       <section className="w-full bg-kynta-section-bg pt-16 md:pt-20 pb-16 md:pb-20">
         <div className="container-site">
           <div className="text-center mb-10 md:mb-12">
-            <p className="section-label text-kynta-rust mb-3">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-3">{eyebrow}</p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mx-auto max-w-xl mb-4 whitespace-pre-line">
               {heading}
             </h2>

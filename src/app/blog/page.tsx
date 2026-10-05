@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { getBlogPage, getBlogPosts, getSiteSettings } from "@/lib/sanity/data";
-import { BlogCompendiumSection } from "../components/BlogCompendiumSection";
 import { BlogHeroSection } from "../components/BlogHeroSection";
 import { BlogInquiriesSection } from "../components/BlogInquiriesSection";
-import { BlogPhilosophySoundSection } from "../components/BlogPhilosophySoundSection";
 import { Footer } from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "The Gazette & Journal | Kynta Wellness Group",
+  title: "The Kynta Journal | Kynta Wellness",
   description:
-    "Treatises on Stillness, Botanical Formulations & Restorative Space. Dispatches from our Ayurvedic practitioners, spatial masterplanners, and apothecary artisans.",
+    "Stories from Kynta Wellness on Ayurvedic care, massage, mindful rest and the spaces designed for it.",
 };
 
+// The compendium and field-notes sections are left out until there is real
+// content for them (their Sanity fields and components are kept).
 export default async function BlogPage() {
   const [blog, posts, siteSettings] = await Promise.all([
     getBlogPage(),
@@ -24,8 +24,6 @@ export default async function BlogPage() {
       <main>
         <BlogHeroSection data={blog?.hero} />
         <BlogInquiriesSection data={blog?.inquiriesSection} posts={posts} />
-        <BlogCompendiumSection data={blog?.compendiumSection} />
-        <BlogPhilosophySoundSection data={blog?.philosophySection} />
       </main>
       <Footer settings={siteSettings} />
     </>

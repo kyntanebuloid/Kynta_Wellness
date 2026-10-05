@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { LocationContent } from "@/content/locations";
+import {
+  type LocationContent,
+  locationsPageDefaults,
+} from "@/content/locations";
+import { realHomeText } from "@/content/real-home";
 import { whatsappChatUrl } from "@/lib/whatsapp";
 import type { Homepage } from "@/types/sanity";
 import { NoPhoto } from "./NoPhoto";
@@ -12,41 +16,6 @@ interface DestinationsSectionProps {
   data?: Homepage["destinationsSection"];
   locations?: LocationContent[];
 }
-
-const defaultDestinations = [
-  {
-    image: "/destination-heritage.jpg",
-    locationPill: "Aravalli Foothills • Jaipur, Rajasthan",
-    hours: "08:00 – 21:00 Daily",
-    title: "Kynta at The Heritage Retreat",
-    address: "Amer Palace Road, Kukas Valley, Jaipur 302028",
-    description:
-      "A spa inside an old stepwell courtyard, around 300 years old. Enjoy royal Rajasthani treatments and private rooms next to fruit gardens.",
-    tags: [
-      "Cold Water Pool",
-      "Herbal Steam Room",
-      "Couples Room",
-      "Foot Massage Path",
-    ],
-    detailsHref: "/locations/heritage-retreat",
-  },
-  {
-    image: "/destination-glenwood.jpg",
-    locationPill: "Himalayan Pines • Shimla, HP",
-    hours: "07:30 – 21:00 Daily",
-    title: "Kynta at Glenwood Manor & Spa",
-    address: "Mashobra Ridge Forest Reserve, Shimla 171007",
-    description:
-      "A spa high up in the mountains, inside a pine forest. Try hot water baths, warm stone massages and natural flower oils.",
-    tags: [
-      "Hot Tub With Forest View",
-      "Pine Wood Sauna",
-      "Breathing Deck",
-      "Warm Stone Beds",
-    ],
-    detailsHref: "/locations/glenwood-manor",
-  },
-];
 
 function DestinationCard({
   image,
@@ -163,32 +132,31 @@ export function DestinationsSection({
   const eyebrow = data?.eyebrow || "Our Spa Locations";
   const heading = data?.heading || "Our spas across India.";
   const description =
-    data?.description ||
-    "Find us in the hills of Rajasthan, the mountains of Himachal, and other beautiful places in India.";
+    data?.description || realHomeText.destinationsSection.description;
   const noPhotoText = data?.noPhotoText || "Photo coming soon";
 
-  const destinations =
-    locations?.map((d) => ({
+  // Without Sanity, the six real spas from the built-in content.
+  const destinations = (locations ?? locationsPageDefaults.locations).map(
+    (d) => ({
       // No photo in Sanity: the card shows a NoPhoto panel instead.
       image: d.image?.url || d.imagePath || null,
       locationPill: d.address || "",
-      hours: d.hours || "08:00 – 21:00 Daily",
+      hours: d.hours || "Call for timings",
       title: d.name,
       address: d.address || "",
       description: d.cardDescription || d.address || "A calm and relaxing spa",
       tags: d.services || [],
       detailsHref:
         d.detailsUrl || (d.slug ? `/locations/${d.slug}` : "/locations"),
-    })) || defaultDestinations;
+    }),
+  );
 
   return (
     <section className="w-full bg-kynta-section-bg pt-10 pb-16 md:pt-12 md:pb-24">
       <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-10 md:mb-12">
           <div>
-            <p className="section-label text-kynta-rust mb-4">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-4">{eyebrow}</p>
             <h2 className="font-serif text-3xl lg:text-[38px] leading-[1.2] text-kynta-charcoal mb-4 whitespace-pre-line">
               {heading}
             </h2>

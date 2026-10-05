@@ -1,43 +1,28 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { useCarousel } from "./useCarousel";
+import Link from "next/link";
+import { realHomeText } from "@/content/real-home";
 import type { Homepage } from "@/types/sanity";
 import { NoPhoto } from "./NoPhoto";
+import { useCarousel } from "./useCarousel";
 
 interface ServicesSectionProps {
   data?: Homepage["servicesSection"];
 }
 
-const defaultServices = [
-  {
-    name: "Massages",
-    description: "Healing massages that relax your body and take away pain.",
-    image: "/treatment-massage.jpg",
-  },
-  {
-    name: "Beauty Care",
-    description: "Face and skin care made with natural plants and herbs.",
-    image: "/treatment-glamour-glow.jpg",
-  },
-  {
-    name: "Couple Massage",
-    description: "A relaxing massage for two people, side by side.",
-    image: "/treatment-spa-sojourns.jpg",
-  },
-  {
-    name: "Quick Treatments",
-    description: "Short treatments for when you do not have much time.",
-    image: "/treatment-massage.jpg",
-  },
-  {
-    name: "Full Spa Day",
-    description:
-      "Long spa sessions that mix old Indian healing with modern comfort.",
-    image: "/treatment-spa-sojourns.jpg",
-  },
+const defaultImages = [
+  "/treatment-massage.jpg",
+  "/treatment-glamour-glow.jpg",
+  "/treatment-massage.jpg",
+  "/treatment-spa-sojourns.jpg",
+  "/treatment-spa-sojourns.jpg",
 ];
+const defaultServices = realHomeText.servicesSection.services.map((s, i) => ({
+  name: s.name,
+  description: s.description,
+  image: defaultImages[i],
+}));
 
 export function ServicesSection({ data }: ServicesSectionProps) {
   const { trackRef, scrollable, next, prev } = useCarousel({
@@ -69,9 +54,7 @@ export function ServicesSection({ data }: ServicesSectionProps) {
       <div className="container-site">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <p className="section-label text-kynta-rust mb-2">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-2">{eyebrow}</p>
             <h2 className="font-serif text-3xl md:text-4xl text-kynta-charcoal">
               {heading}
             </h2>

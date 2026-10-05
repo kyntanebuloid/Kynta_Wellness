@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { realHomeText } from "@/content/real-home";
 import type { Homepage } from "@/types/sanity";
 
 interface HeroProps {
@@ -10,16 +11,15 @@ export function Hero({ data }: HeroProps) {
   const eyebrow = data?.eyebrow || "Indian Spa & Wellness";
   const headline = data?.headline || "Wellness,";
   const headlineItalic = data?.headlineItalic || "Made with Care.";
-  const subtitle =
-    data?.subtitle ||
-    "Relaxing Ayurvedic spa treatments inside the best hotels, palaces and nature resorts in India.";
+  const subtitle = data?.subtitle || realHomeText.hero.subtitle;
   const ctaText = data?.primaryCta?.label || "See Our Treatments";
   const ctaUrl = data?.primaryCta?.url || "/experiences";
   const secondaryText = data?.secondaryCta?.label || "Partner With Kynta";
   const secondaryUrl = data?.secondaryCta?.url || "/partner";
   const imageSrc = data?.image?.url || "/hero-bg.jpg";
   const imageAlt =
-    data?.image?.alt || "Luxurious Indian heritage spa courtyard with lotus pool";
+    data?.image?.alt ||
+    "Luxurious Indian heritage spa courtyard with lotus pool";
 
   // The last word of the italic line is set upright, e.g. "Made with *Care.*"
   const italicWords = headlineItalic.trim().split(/\s+/);
@@ -29,7 +29,10 @@ export function Hero({ data }: HeroProps) {
   return (
     <section className="relative w-full overflow-hidden -mt-[72px]" id="hero">
       <div className="hero-frame relative w-full">
-        <div className="absolute inset-x-0 -top-[10%] bottom-0" data-parallax="8">
+        <div
+          className="absolute inset-x-0 -top-[10%] bottom-0"
+          data-parallax="8"
+        >
           <Image
             src={imageSrc}
             alt={imageAlt}

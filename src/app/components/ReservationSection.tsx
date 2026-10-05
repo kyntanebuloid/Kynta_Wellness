@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { SpaMenuItem } from "@/content/locations";
+import { realHomeText } from "@/content/real-home";
 import { sendBookingRequest } from "@/lib/actions/booking-request";
 import { createBooking } from "@/lib/actions/bookings";
 import {
@@ -154,20 +155,7 @@ function FieldLabel({
 
 const DEFAULT_WHATSAPP_URL = whatsappChatUrl();
 
-const defaultInfoCards = [
-  {
-    icon: "clock",
-    title: "No Rush, No Crowds",
-    description:
-      "We take only a few bookings each day, so the spa always stays quiet and calm.",
-  },
-  {
-    icon: "shield",
-    title: "Your Privacy Matters",
-    description:
-      "Tell us about food needs, private travel or a private room. We keep it all private.",
-  },
-];
+const defaultInfoCards = realHomeText.reservationSection.infoCards;
 
 function formatInr(paise: number): string {
   const rupees = paise / 100;
@@ -306,8 +294,7 @@ export function ReservationSection({
   const eyebrow = data?.eyebrow || "Book Your Spa Visit";
   const heading = data?.heading || "Book a Treatment";
   const description =
-    data?.description ||
-    "Book one short session or a stay of many days. Our team will plan every detail for you.";
+    data?.description || realHomeText.reservationSection.description;
 
   const infoCards = data?.infoCards?.length
     ? data.infoCards.map((c) => ({
@@ -317,7 +304,9 @@ export function ReservationSection({
       }))
     : defaultInfoCards;
   const whatsappTitle = data?.whatsapp?.title || "Talk to Us";
-  const whatsappSubtitle = data?.whatsapp?.subtitle || "Book fast on WhatsApp";
+  const whatsappSubtitle =
+    data?.whatsapp?.subtitle ||
+    realHomeText.reservationSection.whatsapp.subtitle;
   const whatsappButton = data?.whatsapp?.buttonLabel || "WhatsApp";
   const whatsappUrl = withWhatsappMessage(
     data?.whatsapp?.url || DEFAULT_WHATSAPP_URL,
@@ -682,9 +671,7 @@ export function ReservationSection({
       <div className="container-site">
         <div className="grid grid-cols-1 lg:grid-cols-[44%_1fr] gap-7">
           <div className="flex flex-col">
-            <p className="section-label text-kynta-rust mb-3">
-              {eyebrow}
-            </p>
+            <p className="section-label text-kynta-rust mb-3">{eyebrow}</p>
             <h2 className="font-serif text-3xl lg:text-[34px] leading-[1.2] text-kynta-charcoal mb-4">
               {heading}
             </h2>

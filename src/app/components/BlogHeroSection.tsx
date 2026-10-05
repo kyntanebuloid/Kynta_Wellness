@@ -82,9 +82,9 @@ export function BlogHeroSection({ data }: BlogHeroSectionProps) {
     return {
       label: c.label,
       image: post?.featuredImage?.url || imageUrl(c.image, fallback.image),
-      imageAlt:
-        post?.featuredImage?.alt ||
-        (post ? post.title : imageAlt(c.image, { alt: title })),
+      imageAlt: post?.featuredImage?.url
+        ? post.featuredImage.alt || post.title
+        : imageAlt(c.image, { alt: title }),
       badge: c.badge ?? "",
       meta: [
         post?.category || c.category,
