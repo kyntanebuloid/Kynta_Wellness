@@ -63,7 +63,7 @@ export function Hero({ data }: HeroProps) {
         <div className="hero-content absolute inset-0 flex items-center">
           <div className="container-site w-full">
             <div className="max-w-xl lg:max-w-2xl" data-reveal-stagger>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-6 -ml-3">
                 <span className="section-label text-kynta-charcoal px-3 py-1 rounded-full">
                   {eyebrow}
                 </span>
