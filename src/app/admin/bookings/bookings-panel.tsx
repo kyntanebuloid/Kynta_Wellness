@@ -132,6 +132,13 @@ function BookingDetailModal({
   const [isCancelling, setIsCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [cancelSuccess, setCancelSuccess] = useState(false);
+  const [showReschedule, setShowReschedule] = useState(false);
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [rescheduleError, setRescheduleError] = useState<string | null>(null);
+  const [rescheduleSuccess, setRescheduleSuccess] = useState(false);
+  const [newDate, setNewDate] = useState(booking?.bookingDate || "");
+  const [newStartTime, setNewStartTime] = useState(booking?.startTime || "");
+  const [newEndTime, setNewEndTime] = useState(booking?.endTime || "");
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -176,6 +183,48 @@ function BookingDetailModal({
       setCancelError(err instanceof Error ? err.message : "Network error");
     } finally {
       setIsCancelling(false);
+    }
+  };
+
+  const handleRescheduleBooking = async () => {
+    if (!booking || !newDate || !newStartTime || !newEndTime) {
+      setRescheduleError("Please fill in all date and time fields");
+      return;
+    }
+
+    setIsRescheduling(true);
+    setRescheduleError(null);
+    setRescheduleSuccess(false);
+
+    try {
+      const res = await fetch(
+        `/api/admin/bookings/${booking.id}/reschedule`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            newDate,
+            newStartTime,
+            newEndTime,
+          }),
+        },
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        setRescheduleError(data.error || "Failed to reschedule");
+        return;
+      }
+
+      setRescheduleSuccess(true);
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      setRescheduleError(err instanceof Error ? err.message : "Network error");
+    } finally {
+      setIsRescheduling(false);
     }
   };
 
@@ -330,14 +379,83 @@ function BookingDetailModal({
                 ✗ {cancelError}
               </div>
             ) : null}
-            <button
-              type="button"
-              onClick={handleCancelBooking}
-              disabled={isCancelling || cancelSuccess}
-              className="w-full px-4 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-rust hover:bg-kynta-rust/90 disabled:bg-kynta-rust/50 disabled:cursor-not-allowed rounded-md transition-colors"
-            >
-              {isCancelling ? "Cancelling..." : "Cancel This Booking"}
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleCancelBooking}
+                disabled={isCancelling || cancelSuccess}
+                className="flex-1 px-4 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-rust hover:bg-kynta-rust/90 disabled:bg-kynta-rust/50 disabled:cursor-not-allowed rounded-md transition-colors"
+              >
+                {isCancelling ? "Cancelling..." : "Cancel"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowReschedule(!showReschedule)}
+                className="flex-1 px-4 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-teal-dark hover:bg-kynta-teal rounded-md transition-colors"
+              >
+                Reschedule
+              </button>
+            </div>
+
+            {showReschedule && (
+              <div className="mt-4 p-4 bg-kynta-section-bg rounded-md border border-kynta-border/40">
+                {rescheduleSuccess ? (
+                  <div className="p-3 bg-kynta-badge-green text-kynta-teal-dark text-[13px] rounded-md mb-3">
+                    ✓ Booking rescheduled. Guest notified via email.
+                  </div>
+                ) : null}
+                {rescheduleError ? (
+                  <div className="p-3 bg-kynta-rust/5 text-kynta-rust text-[13px] rounded-md mb-3">
+                    ✗ {rescheduleError}
+                  </div>
+                ) : null}
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[10px] font-bold tracking-[0.12em] uppercase text-kynta-charcoal mb-1.5">
+                      New Date
+                    </label>
+                    <input
+                      type="date"
+                      value={newDate}
+                      onChange={(e) => setNewDate(e.target.value)}
+                      className="w-full px-3 py-2 text-[13px] border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold tracking-[0.12em] uppercase text-kynta-charcoal mb-1.5">
+                        Start Time
+                      </label>
+                      <input
+                        type="time"
+                        value={newStartTime}
+                        onChange={(e) => setNewStartTime(e.target.value)}
+                        className="w-full px-3 py-2 text-[13px] border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold tracking-[0.12em] uppercase text-kynta-charcoal mb-1.5">
+                        End Time
+                      </label>
+                      <input
+                        type="time"
+                        value={newEndTime}
+                        onChange={(e) => setNewEndTime(e.target.value)}
+                        className="w-full px-3 py-2 text-[13px] border border-kynta-border/40 rounded-md focus:outline-none focus:border-kynta-teal"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRescheduleBooking}
+                    disabled={isRescheduling || rescheduleSuccess}
+                    className="w-full px-4 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white bg-kynta-teal-dark hover:bg-kynta-teal disabled:bg-kynta-teal/50 disabled:cursor-not-allowed rounded-md transition-colors mt-3"
+                  >
+                    {isRescheduling ? "Rescheduling..." : "Confirm Reschedule"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
