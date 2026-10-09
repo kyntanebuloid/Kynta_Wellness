@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /studio
+Disallow: /api/
+Disallow: /.next/
+
+Sitemap: https://kyntawellness.com/sitemap.xml
