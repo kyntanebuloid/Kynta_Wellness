@@ -16,17 +16,20 @@ const staticPages = [
 
 async function getBlogPostSlugs() {
   const query = `*[_type == "blogPost"]{ slug, _updatedAt }`;
-  return sanityNoCdnClient.fetch(query);
+  const client = sanityNoCdnClient();
+  return client.fetch(query);
 }
 
 async function getExperienceSlugs() {
   const query = `*[_type == "experience"]{ slug, _updatedAt }`;
-  return sanityNoCdnClient.fetch(query);
+  const client = sanityNoCdnClient();
+  return client.fetch(query);
 }
 
 async function getLocationSlugs() {
   const query = `*[_type == "location"]{ slug, _updatedAt }`;
-  return sanityNoCdnClient.fetch(query);
+  const client = sanityNoCdnClient();
+  return client.fetch(query);
 }
 
 function generateSiteMap(urls: Array<{ url: string; lastmod?: string; priority?: number; changefreq?: string }>) {
