@@ -2,6 +2,19 @@ import { sanityNoCdnClient } from "@/lib/sanity/client";
 
 const DOMAIN = "https://kyntawellness.com";
 
+function escapeXml(str: string) {
+  return str.replace(/[&<>"']/g, (char) => {
+    const chars: { [key: string]: string } = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&apos;",
+    };
+    return chars[char];
+  });
+}
+
 const staticPages = [
   { url: "/", priority: 1.0, changefreq: "weekly" },
   { url: "/about", priority: 0.9, changefreq: "monthly" },
@@ -38,10 +51,10 @@ function generateSiteMap(urls: Array<{ url: string; lastmod?: string; priority?:
   ${urls
     .map(({ url, lastmod, priority, changefreq }) => {
       return `  <url>
-    <loc>${url}</loc>
-    ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}
+    <loc>${escapeXml(url)}</loc>
+    ${lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : ""}
     ${priority ? `<priority>${priority}</priority>` : ""}
-    ${changefreq ? `<changefreq>${changefreq}</changefreq>` : ""}
+    ${changefreq ? `<changefreq>${escapeXml(changefreq)}</changefreq>` : ""}
   </url>`;
     })
     .join("\n")}
