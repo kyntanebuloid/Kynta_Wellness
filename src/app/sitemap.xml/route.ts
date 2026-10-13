@@ -1,19 +1,4 @@
-import { sanityNoCdnClient } from "@/lib/sanity/client";
-
 const DOMAIN = "https://kyntawellness.com";
-
-function escapeXml(str: string) {
-  return str.replace(/[&<>"']/g, (char) => {
-    const chars: { [key: string]: string } = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&apos;",
-    };
-    return chars[char];
-  });
-}
 
 const staticPages = [
   { url: "/", priority: 1.0, changefreq: "weekly" },
@@ -27,34 +12,15 @@ const staticPages = [
   { url: "/partner", priority: 0.7, changefreq: "monthly" },
 ];
 
-async function getBlogPostSlugs() {
-  const query = `*[_type == "blogPost"]{ slug, _updatedAt }`;
-  const client = sanityNoCdnClient();
-  return client.fetch(query);
-}
-
-async function getExperienceSlugs() {
-  const query = `*[_type == "experience"]{ slug, _updatedAt }`;
-  const client = sanityNoCdnClient();
-  return client.fetch(query);
-}
-
-async function getLocationSlugs() {
-  const query = `*[_type == "location"]{ slug, _updatedAt }`;
-  const client = sanityNoCdnClient();
-  return client.fetch(query);
-}
-
-function generateSiteMap(urls: Array<{ url: string; lastmod?: string; priority?: number; changefreq?: string }>) {
+function generateSiteMap(urls: Array<{ url: string; priority?: number; changefreq?: string }>) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${urls
-    .map(({ url, lastmod, priority, changefreq }) => {
+    .map(({ url, priority, changefreq }) => {
       return `  <url>
-    <loc>${escapeXml(url)}</loc>
-    ${lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : ""}
+    <loc>${url}</loc>
     ${priority ? `<priority>${priority}</priority>` : ""}
-    ${changefreq ? `<changefreq>${escapeXml(changefreq)}</changefreq>` : ""}
+    ${changefreq ? `<changefreq>${changefreq}</changefreq>` : ""}
   </url>`;
     })
     .join("\n")}
@@ -63,74 +29,22 @@ function generateSiteMap(urls: Array<{ url: string; lastmod?: string; priority?:
 
 export async function GET() {
   try {
-    const [blogPosts, experiences, locations] = await Promise.all([
-      getBlogPostSlugs().catch((e) => {
-        console.error("Blog fetch error:", e);
-        return [];
-      }),
-      getExperienceSlugs().catch((e) => {
-        console.error("Experience fetch error:", e);
-        return [];
-      }),
-      getLocationSlugs().catch((e) => {
-        console.error("Location fetch error:", e);
-        return [];
-      }),
-    ]);
-
-    const urls = [
-      ...staticPages.map((page) => ({
-        url: `${DOMAIN}${page.url}`,
-        priority: page.priority,
-        changefreq: page.changefreq,
-      })),
-      ...(Array.isArray(blogPosts)
-        ? blogPosts.map((post: { slug: { current: string }; _updatedAt: string }) => ({
-            url: `${DOMAIN}/blog/${post.slug.current}`,
-            lastmod: post._updatedAt?.split("T")[0],
-            priority: 0.8,
-            changefreq: "monthly",
-          }))
-        : []),
-      ...(Array.isArray(experiences)
-        ? experiences.map((exp: { slug: { current: string }; _updatedAt: string }) => ({
-            url: `${DOMAIN}/experiences/${exp.slug.current}`,
-            lastmod: exp._updatedAt?.split("T")[0],
-            priority: 0.8,
-            changefreq: "monthly",
-          }))
-        : []),
-      ...(Array.isArray(locations)
-        ? locations.map((loc: { slug: { current: string }; _updatedAt: string }) => ({
-            url: `${DOMAIN}/locations/${loc.slug.current}`,
-            lastmod: loc._updatedAt?.split("T")[0],
-            priority: 0.8,
-            changefreq: "monthly",
-          }))
-        : []),
-    ];
+    const urls = staticPages.map((page) => ({
+      url: `${DOMAIN}${page.url}`,
+      priority: page.priority,
+      changefreq: page.changefreq,
+    }));
 
     const sitemap = generateSiteMap(urls);
 
     return new Response(sitemap, {
       headers: {
         "Content-Type": "application/xml; charset=utf-8",
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": "public, s-maxage=86400",
       },
     });
   } catch (error) {
     console.error("Sitemap generation error:", error);
-    const fallbackSitemap = generateSiteMap(
-      staticPages.map((page) => ({
-        url: `${DOMAIN}${page.url}`,
-        priority: page.priority,
-        changefreq: page.changefreq,
-      }))
-    );
-    return new Response(fallbackSitemap, {
-      headers: {
-        "Content-Type": "application/xml; charset=utf-8",
-      },
-    });
+    return new Response("Failed to generate sitemap", { status: 500 });
   }
 }
