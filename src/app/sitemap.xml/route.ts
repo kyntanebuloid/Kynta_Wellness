@@ -64,9 +64,18 @@ function generateSiteMap(urls: Array<{ url: string; lastmod?: string; priority?:
 export async function GET() {
   try {
     const [blogPosts, experiences, locations] = await Promise.all([
-      getBlogPostSlugs(),
-      getExperienceSlugs(),
-      getLocationSlugs(),
+      getBlogPostSlugs().catch((e) => {
+        console.error("Blog fetch error:", e);
+        return [];
+      }),
+      getExperienceSlugs().catch((e) => {
+        console.error("Experience fetch error:", e);
+        return [];
+      }),
+      getLocationSlugs().catch((e) => {
+        console.error("Location fetch error:", e);
+        return [];
+      }),
     ]);
 
     const urls = [
@@ -75,24 +84,30 @@ export async function GET() {
         priority: page.priority,
         changefreq: page.changefreq,
       })),
-      ...blogPosts.map((post: { slug: { current: string }; _updatedAt: string }) => ({
-        url: `${DOMAIN}/blog/${post.slug.current}`,
-        lastmod: post._updatedAt?.split("T")[0],
-        priority: 0.8,
-        changefreq: "monthly",
-      })),
-      ...experiences.map((exp: { slug: { current: string }; _updatedAt: string }) => ({
-        url: `${DOMAIN}/experiences/${exp.slug.current}`,
-        lastmod: exp._updatedAt?.split("T")[0],
-        priority: 0.8,
-        changefreq: "monthly",
-      })),
-      ...locations.map((loc: { slug: { current: string }; _updatedAt: string }) => ({
-        url: `${DOMAIN}/locations/${loc.slug.current}`,
-        lastmod: loc._updatedAt?.split("T")[0],
-        priority: 0.8,
-        changefreq: "monthly",
-      })),
+      ...(Array.isArray(blogPosts)
+        ? blogPosts.map((post: { slug: { current: string }; _updatedAt: string }) => ({
+            url: `${DOMAIN}/blog/${post.slug.current}`,
+            lastmod: post._updatedAt?.split("T")[0],
+            priority: 0.8,
+            changefreq: "monthly",
+          }))
+        : []),
+      ...(Array.isArray(experiences)
+        ? experiences.map((exp: { slug: { current: string }; _updatedAt: string }) => ({
+            url: `${DOMAIN}/experiences/${exp.slug.current}`,
+            lastmod: exp._updatedAt?.split("T")[0],
+            priority: 0.8,
+            changefreq: "monthly",
+          }))
+        : []),
+      ...(Array.isArray(locations)
+        ? locations.map((loc: { slug: { current: string }; _updatedAt: string }) => ({
+            url: `${DOMAIN}/locations/${loc.slug.current}`,
+            lastmod: loc._updatedAt?.split("T")[0],
+            priority: 0.8,
+            changefreq: "monthly",
+          }))
+        : []),
     ];
 
     const sitemap = generateSiteMap(urls);
@@ -105,6 +120,17 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Sitemap generation error:", error);
-    return new Response("Failed to generate sitemap", { status: 500 });
+    const fallbackSitemap = generateSiteMap(
+      staticPages.map((page) => ({
+        url: `${DOMAIN}${page.url}`,
+        priority: page.priority,
+        changefreq: page.changefreq,
+      }))
+    );
+    return new Response(fallbackSitemap, {
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+      },
+    });
   }
 }
