@@ -57,7 +57,7 @@ import {
 } from "./queries";
 
 export const SANITY_CACHE_TAG = "sanity";
-const SANITY_REVALIDATE_SECONDS = 60;
+const SANITY_REVALIDATE_SECONDS = 60 * 60 * 6;
 const IS_DEV = process.env.NODE_ENV === "development";
 // Builds fetch every page at once, so allow more time than a live request.
 const SANITY_TIMEOUT_MS =
